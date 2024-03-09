@@ -1,5 +1,5 @@
 # Set the minimum required version of cmake for this project
-cmake_minimum_required(VERSION 3.26.4)
+cmake_minimum_required(VERSION 3.22.1)
 
 # Define the C++ standard whose features we request to build this project
 set(CMAKE_CXX_STANDARD 11)
