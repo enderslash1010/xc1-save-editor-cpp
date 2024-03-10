@@ -2,18 +2,8 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <fstream>
-#include <DataObject.h>
-#include <unordered_map>
-
-class DataObject;
-
-union test
-{
-    uint64_t intValue;
-    std::vector<uint8_t> byteValue;
-};
+#include <SaveFieldID.h>
+#include <SaveDefines.h>
 
 class SaveFile
 {

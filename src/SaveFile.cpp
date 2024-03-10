@@ -1,6 +1,28 @@
 #include "SaveFile.h"
+#include <iostream>
+#include <fstream>
+#include <DataObject.h>
 
-class DataObject;
+#define NUM_SECTIONS 12
+
+const int sectionRanges[NUM_SECTIONS][2] =
+{
+	{0x20, 0x9CA0},      // THUM 0
+	{0xA030, 0xB244},    // FLAG 1
+	{0xB260, 0x11E88},   // GAME 2
+	{0x11EB0, 0x11EBC},  // TIME 3
+	{0x11EE0, 0x11F14},  // PCPM 4
+	{0x11F30, 0x11F40},  // CAMD 5
+	{0x11F60, 0x24080},  // ITEM 6
+	{0x24090, 0x240A0},  // WTHR 7
+	{0x240C0, 0x240D0},  // SNDS 8
+	{0x240F0, 0x24474},  // MINE 9
+	{0x244A0, 0x246D4}, // TBOX 10
+	{0x248B0, 0x248F0}  // OPTD 11
+};
+
+const int checksumLocations[NUM_SECTIONS] = { 0x1E, 0xA02E, 0xB25E, 0x11EAE, 0x11EDE, 0x11F2E, 0x11F5E, 0x2408E, 0x240BE, 0x240EE, 0x2449E, 0x248AE };
+const char* sectionNames[NUM_SECTIONS] = { "THUM", "FLAG", "GAME", "TIME", "PCPM", "CAMD", "ITEM", "WTHR", "SNDS", "MINE", "TBOX", "OPTD" };
 
 // dataMap stores all DataObjects in the save file
 // Make sure there is a SaveFieldID enum for each DataObject here, in order
@@ -124,25 +146,6 @@ const DataObject dataMap[] =
 	DataObject(0x248E1, 1), // OPTDFastDialogueText
 	DataObject(0x248E2, 1) // OPTDShowSubtitles
 };
-
-const int sectionRanges[NUM_SECTIONS][2] =
-{
-	{0x20, 0x9CA0},      // THUM 0
-	{0xA030, 0xB244},    // FLAG 1
-	{0xB260, 0x11E88},   // GAME 2
-	{0x11EB0, 0x11EBC},  // TIME 3
-	{0x11EE0, 0x11F14},  // PCPM 4
-	{0x11F30, 0x11F40},  // CAMD 5
-	{0x11F60, 0x24080},  // ITEM 6
-	{0x24090, 0x240A0},  // WTHR 7
-	{0x240C0, 0x240D0},  // SNDS 8
-	{0x240F0, 0x24474},  // MINE 9
-	{0x244A0, 0x246D4}, // TBOX 10
-	{0x248B0, 0x248F0}  // OPTD 11
-};
-
-const int checksumLocations[NUM_SECTIONS] = { 0x1E, 0xA02E, 0xB25E, 0x11EAE, 0x11EDE, 0x11F2E, 0x11F5E, 0x2408E, 0x240BE, 0x240EE, 0x2449E, 0x248AE };
-const char* sectionNames[NUM_SECTIONS] = { "THUM", "FLAG", "GAME", "TIME", "PCPM", "CAMD", "ITEM", "WTHR", "SNDS", "MINE", "TBOX", "OPTD" };
 
 static void fixChecksums(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES]);
 

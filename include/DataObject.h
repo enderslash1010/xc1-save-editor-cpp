@@ -1,5 +1,5 @@
 #pragma once
-#include "SaveConfig.h"
+#include "SaveDefines.h"
 #include <vector>
 #include <stdint.h>
 

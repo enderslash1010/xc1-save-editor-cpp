@@ -1,5 +1,4 @@
-#define SAVEFILE_LENGTH_BYTES 0x28000
-#define NUM_SECTIONS 12
+#pragma once
 
 // Maps to Data Objects in SaveFile's dataMap
 enum SaveFieldID

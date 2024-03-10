@@ -1,4 +1,5 @@
 #include "SaveFile.h"
+#include <iostream>
 
 int main()
 {
@@ -16,7 +17,6 @@ int main()
 
 		saveFile->setRawBytes(ITEMMoney, 42069);
 		saveFile->saveToFile();
-
 	}
 	catch (std::exception& e)
 	{
