@@ -26,9 +26,3 @@ public:
 
     template <typename T> void setValue(SaveFieldID sfID, T value);
 };
-
-template<typename T>
-inline void SaveFile::setValue(SaveFieldID sfID, T value)
-{
-    setRawBytes(sfID, value);
-}

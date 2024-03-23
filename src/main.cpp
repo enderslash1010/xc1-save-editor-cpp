@@ -17,7 +17,7 @@ int main()
 
 		saveFile->setRawBytes(ITEMMoney, (uint64_t) 42069);
 		saveFile->setRawBytes(ITEMMoney, { 0x12, 0x34 });
-		saveFile->setValue(ITEMMoney, 0xABCDEF00);
+		saveFile->setValue(ITEMMoney, "abcd");
 		saveFile->saveToFile();
 	}
 	catch (std::exception& e)

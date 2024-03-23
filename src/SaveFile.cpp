@@ -213,6 +213,23 @@ void SaveFile::setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value)
 	((DataObject) dataMap[sfID]).setRawBytes(this->saveFile, value);
 }
 
+template<typename T>
+inline void SaveFile::setValue(SaveFieldID sfID, T value)
+{
+	setRawBytes(sfID, value);
+}
+
+// setValue with string argument
+// Need this specialized template function to convert const char* to vector to use setRawBytes
+template <> void SaveFile::setValue<const char*>(SaveFieldID sfID, const char* value)
+{
+	// Convert const char* to vector to pass to setRawBytes
+	std::vector<uint8_t> v;
+	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t) *ptr);
+
+	this->setRawBytes(sfID, v);
+}
+
 // CRC16 Polynomial: 1 + x^2 + x^15 + x^16 -> 0x8005 (1000 0000 0000 0101)
 const int lookupTable[] =
 {
