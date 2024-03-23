@@ -3,7 +3,11 @@
 #include <string>
 #include <vector>
 #include <SaveFieldID.h>
-#include <SaveDefines.h>
+#include <iostream>
+#include <fstream>
+#include <DataObject.h>
+
+#define SAVEFILE_LENGTH_BYTES 0x28000
 
 class SaveFile
 {
@@ -19,4 +23,12 @@ public:
     void setRawBytes(SaveFieldID sfID, uint64_t value);
     void setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value);
     void saveToFile();
+
+    template <typename T> void setValue(SaveFieldID sfID, T value);
 };
+
+template<typename T>
+inline void SaveFile::setValue(SaveFieldID sfID, T value)
+{
+    setRawBytes(sfID, value);
+}
