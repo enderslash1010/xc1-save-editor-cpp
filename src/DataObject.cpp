@@ -1,9 +1,10 @@
 #include "DataObject.h"
 
-DataObject::DataObject(unsigned int startByte, unsigned int lengthInBytes)
+DataObject::DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type)
 {
 	this->startByte = startByte;
 	this->size = lengthInBytes;
+	this->type = type;
 }
 
 std::vector<uint8_t> DataObject::getRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH_BYTES])

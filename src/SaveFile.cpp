@@ -1,129 +1,6 @@
 #include "SaveFile.h"
 
-class DataObject;
-
-// dataMap stores all DataObjects in the save file
-// Make sure there is a SaveFieldID enum for each DataObject here, in order
-const DataObject dataMap[] =
-{
-	// THUM
-	DataObject(0x84, 2), // THUMLevel
-	DataObject(0x2A, 2), // THUMPlayTimeHours
-	DataObject(0x2C, 2), // THUMPlayTimeMinutes
-	DataObject(0x23, 1), // THUMPlayTimeSeconds
-	DataObject(0x29, 2), // THUMSaveTimeDay
-	DataObject(0x26, 2), // THUMSaveTimeMonth
-	DataObject(0x24, 2), // THUMSaveTimeYear
-	DataObject(0x28, 1), // THUMSaveTimeHour
-	DataObject(0x22, 1), // THUMSaveTimeMinute
-	DataObject(0x37, 1), // THUMPictureSlot1
-	DataObject(0x3B, 1), // THUMPictureSlot2
-	DataObject(0x3F, 1), // THUMPictureSlot3
-	DataObject(0x43, 1), // THUMPicutreSlot4
-	DataObject(0x47, 1), // THUMPictureSlot5
-	DataObject(0x4B, 1), // THUMPictureSlot6
-	DataObject(0x4F, 1), // THUMPictureSlot7
-	DataObject(0x64, 32), // THUMNameString
-	DataObject(0x86, 1), // THUMSystemSaveFlag
-	DataObject(0x87, 1), // THUMNGPlusFlag
-	DataObject(0xE0, 38048), // THUMSaveImage
-
-	// FLAG
-	DataObject(0xA0B2, 2), // FLAGScenarioID
-
-	// GAME
-	DataObject(0xB260, 4), // GAMEMapNum
-	DataObject(0xB264, 4), // GAMEMapNumString
-	DataObject(0xD1FE, 2), // GAMEPlayer1
-	DataObject(0xD202, 2), // GAMEPlayer2
-	DataObject(0xD206, 2), // GAMEPlayer3
-	DataObject(0xD20A, 2), // GAMEPlayer4
-	DataObject(0xD20E, 2), // GAMEPlayer5
-	DataObject(0xD212, 2), // GAMEPlayer6
-	DataObject(0xD216, 2), // GAMEPlayer7
-	DataObject(0xF8D0, 4), // GAMEShulkLevel
-	DataObject(0xFBD4, 4), // GAMEReynLevel
-	DataObject(0xFEC8, 4), // GAMEFioraLevel
-	DataObject(0x101DC, 4), // GAMEDunbanLevel
-	DataObject(0x104E0, 4), // GAMESharlaLevel
-	DataObject(0x107E4, 4), // GAMERikiLevel
-	DataObject(0x10AE8, 4), // GAMEMeliaLevel
-	DataObject(0x10DEC, 4), // GAMESevenLevel
-	DataObject(0x110F0, 4), // GAMEDicksonLevel
-	DataObject(0x113F4, 4), // GAMEMumkharLevel
-	DataObject(0x116F8, 4), // GAMEAlvisLevel
-	DataObject(0x119FC, 4), // GAMEPrologueDunbanLevel
-
-	// TIME
-	DataObject(0x11EB0, 4), // TIMEPlayTime
-	DataObject(0x11EB8, 4), // TIMEDayCount
-	DataObject(0x11EB4, 4), // TIMEDayTime
-	DataObject(0x11EBA, 2), // TIMEYearCount
-
-	// PCPM
-	DataObject(0x11EE0, 4), // PCPMPlayer1X
-	DataObject(0x11EE4, 4), // PCPMPlayer1Y
-	DataObject(0x11EE8, 4), // PCPMPlayer1Z
-	DataObject(0x11EEC, 4), // PCPMPlayer1Angle
-	DataObject(0x11EF0, 4), // PCPMPlayer2X
-	DataObject(0x11EF4, 4), // PCPMPlayer2Y
-	DataObject(0x11EF8, 4), // PCPMPlayer2Z
-	DataObject(0x11EFC, 4), // PCPMPlayer2Angle
-	DataObject(0x11F00, 4), // PCPMPlayer3X
-	DataObject(0x11F04, 4), // PCPMPlayer3Y
-	DataObject(0x11F08, 4), // PCPMPlayer3Z
-	DataObject(0x11F0C, 4), // PCPMPlayer3Angle
-
-	// CAMD
-	DataObject(0x11F30, 4), // CAMDVerticalPosition
-	DataObject(0x11F34, 4), // CAMDHorizontalPosition
-	DataObject(0x11F3C, 4), // CAMDDistance
-
-	// ITEM
-	DataObject(0x24048, 4), // ITEMMoney
-	DataObject(0x1C4EC, 7800), // ITEMWeaponArray
-	DataObject(0x206D8, 4800), // ITEMGemArray
-
-	// WTHR
-	DataObject(0x24090, 4), // WTHRReroll
-	DataObject(0x24098, 4), // WTHRMap
-	DataObject(0x24095, 1), // WTHRForegreoundWeather
-	DataObject(0x24096, 2), // WTHRUnk1
-	DataObject(0x2409D, 1), // WTHRBackgroundWeather
-	DataObject(0x2409F, 1), // WTHRUnk2
-
-	// SNDS
-
-	// MINE
-	DataObject(0x240F0, 900), // MINEArray
-
-	// TBOX
-	DataObject(0x244A3, 1), // TBOXBoxCount
-	DataObject(0x244A4, 592), // TBOXArray
-
-	// OPTD
-	DataObject(0x248B0, 1), // OPTDNonInvertedYAxis
-	DataObject(0x248B1, 1), // OPTDNonInvertedXAxis
-	DataObject(0x248B2, 1), // OPTDYAxisSpeed
-	DataObject(0x248B3, 1), // OPTDXAxisSpeed
-	DataObject(0x248B4, 1), // OPTDZoomSpeed
-	DataObject(0x248B5, 1), // OPTDPointOfView
-	DataObject(0x248B6, 1), // OPTDAngleCorrection
-	DataObject(0x248B7, 1), // OPTDBattleCamera
-	DataObject(0x248BF, 1), // OPTDGamma
-	DataObject(0x248C0, 1), // OPTDMinimapOn
-	DataObject(0x248C1, 1), // OPTDMinimapRotate
-	DataObject(0x248CC, 1), // OPTDJapaneseVoice
-	DataObject(0x248D0, 1), // OPTDShowControls
-	DataObject(0x248D1, 1), // OPTDShowArtDescriptions
-	DataObject(0x248D2, 1), // OPTDShowBuffDebuffInfoEveryTime
-	DataObject(0x248D3, 1), // OPTDShowEnemyIcons
-	DataObject(0x248D4, 1), // OPTDShowBuffDefbuffIndicator
-	DataObject(0x248D5, 1), // OPTDShowDestinationMarker
-	DataObject(0x248E0, 1), // OPTDAutoEventScrolling
-	DataObject(0x248E1, 1), // OPTDFastDialogueText
-	DataObject(0x248E2, 1) // OPTDShowSubtitles
-};
+#define NUM_SECTIONS 12
 
 const int sectionRanges[NUM_SECTIONS][2] =
 {
@@ -143,6 +20,129 @@ const int sectionRanges[NUM_SECTIONS][2] =
 
 const int checksumLocations[NUM_SECTIONS] = { 0x1E, 0xA02E, 0xB25E, 0x11EAE, 0x11EDE, 0x11F2E, 0x11F5E, 0x2408E, 0x240BE, 0x240EE, 0x2449E, 0x248AE };
 const char* sectionNames[NUM_SECTIONS] = { "THUM", "FLAG", "GAME", "TIME", "PCPM", "CAMD", "ITEM", "WTHR", "SNDS", "MINE", "TBOX", "OPTD" };
+
+// dataMap stores all DataObjects in the save file
+// Make sure there is a SaveFieldID enum for each DataObject here, in order
+const DataObject dataMap[] =
+{
+	// THUM
+	DataObject(0x84, 2, UINT16_T), // THUMLevel
+	DataObject(0x2A, 2, UINT16_T), // THUMPlayTimeHours
+	DataObject(0x2C, 2, UINT16_T), // THUMPlayTimeMinutes
+	DataObject(0x23, 1, UINT8_T), // THUMPlayTimeSeconds
+	DataObject(0x29, 2, UINT16_T), // THUMSaveTimeDay
+	DataObject(0x26, 2, UINT16_T), // THUMSaveTimeMonth
+	DataObject(0x24, 2, UINT16_T), // THUMSaveTimeYear
+	DataObject(0x28, 1, UINT8_T), // THUMSaveTimeHour
+	DataObject(0x22, 1, UINT8_T), // THUMSaveTimeMinute
+	DataObject(0x37, 1, UINT8_T), // THUMPictureSlot1
+	DataObject(0x3B, 1, UINT8_T), // THUMPictureSlot2
+	DataObject(0x3F, 1, UINT8_T), // THUMPictureSlot3
+	DataObject(0x43, 1, UINT8_T), // THUMPicutreSlot4
+	DataObject(0x47, 1, UINT8_T), // THUMPictureSlot5
+	DataObject(0x4B, 1, UINT8_T), // THUMPictureSlot6
+	DataObject(0x4F, 1, UINT8_T), // THUMPictureSlot7
+	DataObject(0x64, 32, STRING), // THUMNameString
+	DataObject(0x86, 1, UINT8_T), // THUMSystemSaveFlag
+	DataObject(0x87, 1, UINT8_T), // THUMNGPlusFlag
+	DataObject(0xE0, 38048, TPL), // THUMSaveImage
+
+	// FLAG
+	DataObject(0xA0B2, 2, UINT16_T), // FLAGScenarioID
+
+	// GAME
+	DataObject(0xB260, 4, UINT32_T), // GAMEMapNum
+	DataObject(0xB264, 4, STRING), // GAMEMapNumString
+	DataObject(0xD1FE, 2, UINT16_T), // GAMEPlayer1
+	DataObject(0xD202, 2, UINT16_T), // GAMEPlayer2
+	DataObject(0xD206, 2, UINT16_T), // GAMEPlayer3
+	DataObject(0xD20A, 2, UINT16_T), // GAMEPlayer4
+	DataObject(0xD20E, 2, UINT16_T), // GAMEPlayer5
+	DataObject(0xD212, 2, UINT16_T), // GAMEPlayer6
+	DataObject(0xD216, 2, UINT16_T), // GAMEPlayer7
+	DataObject(0xF8D0, 4, UINT32_T), // GAMEShulkLevel
+	DataObject(0xFBD4, 4, UINT32_T), // GAMEReynLevel
+	DataObject(0xFEC8, 4, UINT32_T), // GAMEFioraLevel
+	DataObject(0x101DC, 4, UINT32_T), // GAMEDunbanLevel
+	DataObject(0x104E0, 4, UINT32_T), // GAMESharlaLevel
+	DataObject(0x107E4, 4, UINT32_T), // GAMERikiLevel
+	DataObject(0x10AE8, 4, UINT32_T), // GAMEMeliaLevel
+	DataObject(0x10DEC, 4, UINT32_T), // GAMESevenLevel
+	DataObject(0x110F0, 4, UINT32_T), // GAMEDicksonLevel
+	DataObject(0x113F4, 4, UINT32_T), // GAMEMumkharLevel
+	DataObject(0x116F8, 4, UINT32_T), // GAMEAlvisLevel
+	DataObject(0x119FC, 4, UINT32_T), // GAMEPrologueDunbanLevel
+
+	// TIME
+	DataObject(0x11EB0, 4, UINT32_T), // TIMEPlayTime
+	DataObject(0x11EB8, 4, UINT32_T), // TIMEDayCount
+	DataObject(0x11EB4, 4, UINT32_T), // TIMEDayTime
+	DataObject(0x11EBA, 2, UINT16_T), // TIMEYearCount
+
+	// PCPM
+	DataObject(0x11EE0, 4, FLOAT), // PCPMPlayer1X
+	DataObject(0x11EE4, 4, FLOAT), // PCPMPlayer1Y
+	DataObject(0x11EE8, 4, FLOAT), // PCPMPlayer1Z
+	DataObject(0x11EEC, 4, FLOAT), // PCPMPlayer1Angle
+	DataObject(0x11EF0, 4, FLOAT), // PCPMPlayer2X
+	DataObject(0x11EF4, 4, FLOAT), // PCPMPlayer2Y
+	DataObject(0x11EF8, 4, FLOAT), // PCPMPlayer2Z
+	DataObject(0x11EFC, 4, FLOAT), // PCPMPlayer2Angle
+	DataObject(0x11F00, 4, FLOAT), // PCPMPlayer3X
+	DataObject(0x11F04, 4, FLOAT), // PCPMPlayer3Y
+	DataObject(0x11F08, 4, FLOAT), // PCPMPlayer3Z
+	DataObject(0x11F0C, 4, FLOAT), // PCPMPlayer3Angle
+
+	// CAMD
+	DataObject(0x11F30, 4, FLOAT), // CAMDVerticalPosition
+	DataObject(0x11F34, 4, FLOAT), // CAMDHorizontalPosition
+	DataObject(0x11F3C, 4, FLOAT), // CAMDDistance
+
+	// ITEM
+	DataObject(0x24048, 4, INT32_T), // ITEMMoney
+	DataObject(0x1C4EC, 7800, ARRAY), // ITEMWeaponArray
+	DataObject(0x206D8, 4800, ARRAY), // ITEMGemArray
+
+	// WTHR
+	DataObject(0x24090, 4, UINT32_T), // WTHRReroll
+	DataObject(0x24098, 4, UINT32_T), // WTHRMap
+	DataObject(0x24095, 1, UINT8_T), // WTHRForegreoundWeather
+	DataObject(0x24096, 2, UINT16_T), // WTHRUnk1
+	DataObject(0x2409D, 1, UINT8_T), // WTHRBackgroundWeather
+	DataObject(0x2409F, 1, UINT8_T), // WTHRUnk2
+
+	// SNDS
+
+	// MINE
+	DataObject(0x240F0, 900, ARRAY), // MINEArray
+
+	// TBOX
+	DataObject(0x244A3, 1, UINT8_T), // TBOXBoxCount
+	DataObject(0x244A4, 592, ARRAY), // TBOXArray
+
+	// OPTD
+	DataObject(0x248B0, 1, BOOL), // OPTDNonInvertedYAxis
+	DataObject(0x248B1, 1, BOOL), // OPTDNonInvertedXAxis
+	DataObject(0x248B2, 1, UINT8_T), // OPTDYAxisSpeed
+	DataObject(0x248B3, 1, UINT8_T), // OPTDXAxisSpeed
+	DataObject(0x248B4, 1, UINT8_T), // OPTDZoomSpeed
+	DataObject(0x248B5, 1, UINT8_T), // OPTDPointOfView
+	DataObject(0x248B6, 1, BOOL), // OPTDAngleCorrection
+	DataObject(0x248B7, 1, BOOL), // OPTDBattleCamera
+	DataObject(0x248BF, 1, UINT8_T), // OPTDGamma
+	DataObject(0x248C0, 1, BOOL), // OPTDMinimapOn
+	DataObject(0x248C1, 1, BOOL), // OPTDMinimapRotate
+	DataObject(0x248CC, 1, BOOL), // OPTDJapaneseVoice
+	DataObject(0x248D0, 1, BOOL), // OPTDShowControls
+	DataObject(0x248D1, 1, BOOL), // OPTDShowArtDescriptions
+	DataObject(0x248D2, 1, BOOL), // OPTDShowBuffDebuffInfoEveryTime
+	DataObject(0x248D3, 1, BOOL), // OPTDShowEnemyIcons
+	DataObject(0x248D4, 1, BOOL), // OPTDShowBuffDefbuffIndicator
+	DataObject(0x248D5, 1, BOOL), // OPTDShowDestinationMarker
+	DataObject(0x248E0, 1, BOOL), // OPTDAutoEventScrolling
+	DataObject(0x248E1, 1, BOOL), // OPTDFastDialogueText
+	DataObject(0x248E2, 1, BOOL) // OPTDShowSubtitles
+};
 
 static void fixChecksums(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES]);
 
@@ -211,6 +211,23 @@ void SaveFile::setRawBytes(SaveFieldID sfID, uint64_t value)
 void SaveFile::setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value)
 {
 	((DataObject) dataMap[sfID]).setRawBytes(this->saveFile, value);
+}
+
+template<typename T>
+inline void SaveFile::setValue(SaveFieldID sfID, T value)
+{
+	setRawBytes(sfID, value);
+}
+
+// setValue with string argument
+// Need this specialized template function to convert const char* to vector to use setRawBytes
+template <> void SaveFile::setValue<const char*>(SaveFieldID sfID, const char* value)
+{
+	// Convert const char* to vector to pass to setRawBytes
+	std::vector<uint8_t> v;
+	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t) *ptr);
+
+	this->setRawBytes(sfID, v);
 }
 
 // CRC16 Polynomial: 1 + x^2 + x^15 + x^16 -> 0x8005 (1000 0000 0000 0101)
