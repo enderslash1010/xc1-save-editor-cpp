@@ -1,7 +1,5 @@
 #include "SaveFile.h"
 
-#define NUM_SECTIONS 12
-
 const int sectionRanges[NUM_SECTIONS][2] =
 {
 	{0x20, 0x9CA0},      // THUM 0
@@ -21,133 +19,158 @@ const int sectionRanges[NUM_SECTIONS][2] =
 const int checksumLocations[NUM_SECTIONS] = { 0x1E, 0xA02E, 0xB25E, 0x11EAE, 0x11EDE, 0x11F2E, 0x11F5E, 0x2408E, 0x240BE, 0x240EE, 0x2449E, 0x248AE };
 const char* sectionNames[NUM_SECTIONS] = { "THUM", "FLAG", "GAME", "TIME", "PCPM", "CAMD", "ITEM", "WTHR", "SNDS", "MINE", "TBOX", "OPTD" };
 
+// Elements for ArrayObjects
+const std::vector<DataObject> TBOXElement = {
+	DataObject(0x244A4, 4, UINT32_T), // TBOXZeroObject
+	DataObject(0x244A8, 4, FLOAT), // TBOXPositionX
+	DataObject(0x244AC, 4, FLOAT), // TBOXPositionY
+	DataObject(0x244B0, 4, FLOAT), // TBOXPositionZ
+	DataObject(0x244B4, 4, FLOAT), // TBOXAngle
+	DataObject(0x244B8, 4, UINT32_T), // TBOXRank
+	DataObject(0x244BC, 2, UINT16_T), // TBOXDropTable (?)
+	DataObject(0x244BE, 2, UINT16_T) // TBOXMapID
+};
+
+unsigned int getElementSize(std::vector<DataObject> arr)
+{
+	unsigned int size = 0;
+	for (DataObject d : arr) size += d.getLengthInBytes();
+	return size;
+}
+
 // dataMap stores all DataObjects in the save file
 // Make sure there is a SaveFieldID enum for each DataObject here, in order
-const DataObject dataMap[] =
+const DataObject* SaveFile::dataMap[] =
 {
 	// THUM
-	DataObject(0x84, 2, UINT16_T), // THUMLevel
-	DataObject(0x2A, 2, UINT16_T), // THUMPlayTimeHours
-	DataObject(0x2C, 2, UINT16_T), // THUMPlayTimeMinutes
-	DataObject(0x23, 1, UINT8_T), // THUMPlayTimeSeconds
-	DataObject(0x29, 2, UINT16_T), // THUMSaveTimeDay
-	DataObject(0x26, 2, UINT16_T), // THUMSaveTimeMonth
-	DataObject(0x24, 2, UINT16_T), // THUMSaveTimeYear
-	DataObject(0x28, 1, UINT8_T), // THUMSaveTimeHour
-	DataObject(0x22, 1, UINT8_T), // THUMSaveTimeMinute
-	DataObject(0x37, 1, UINT8_T), // THUMPictureSlot1
-	DataObject(0x3B, 1, UINT8_T), // THUMPictureSlot2
-	DataObject(0x3F, 1, UINT8_T), // THUMPictureSlot3
-	DataObject(0x43, 1, UINT8_T), // THUMPicutreSlot4
-	DataObject(0x47, 1, UINT8_T), // THUMPictureSlot5
-	DataObject(0x4B, 1, UINT8_T), // THUMPictureSlot6
-	DataObject(0x4F, 1, UINT8_T), // THUMPictureSlot7
-	DataObject(0x64, 32, STRING), // THUMNameString
-	DataObject(0x86, 1, UINT8_T), // THUMSystemSaveFlag
-	DataObject(0x87, 1, UINT8_T), // THUMNGPlusFlag
-	DataObject(0xE0, 38048, TPL), // THUMSaveImage
+	new DataObject(0x84, 2, UINT16_T), // THUMLevel
+	new DataObject(0x2A, 2, UINT16_T), // THUMPlayTimeHours
+	new DataObject(0x2C, 2, UINT16_T), // THUMPlayTimeMinutes
+	new DataObject(0x23, 1, UINT8_T), // THUMPlayTimeSeconds
+	new DataObject(0x29, 2, UINT16_T), // THUMSaveTimeDay
+	new DataObject(0x26, 2, UINT16_T), // THUMSaveTimeMonth
+	new DataObject(0x24, 2, UINT16_T), // THUMSaveTimeYear
+	new DataObject(0x28, 1, UINT8_T), // THUMSaveTimeHour
+	new DataObject(0x22, 1, UINT8_T), // THUMSaveTimeMinute
+	new DataObject(0x37, 1, UINT8_T), // THUMPictureSlot1
+	new DataObject(0x3B, 1, UINT8_T), // THUMPictureSlot2
+	new DataObject(0x3F, 1, UINT8_T), // THUMPictureSlot3
+	new DataObject(0x43, 1, UINT8_T), // THUMPicutreSlot4
+	new DataObject(0x47, 1, UINT8_T), // THUMPictureSlot5
+	new DataObject(0x4B, 1, UINT8_T), // THUMPictureSlot6
+	new DataObject(0x4F, 1, UINT8_T), // THUMPictureSlot7
+	new DataObject(0x64, 32, STRING), // THUMNameString
+	new DataObject(0x86, 1, UINT8_T), // THUMSystemSaveFlag
+	new DataObject(0x87, 1, UINT8_T), // THUMNGPlusFlag
+	new DataObject(0xE0, 38048, TPL), // THUMSaveImage
 
 	// FLAG
-	DataObject(0xA0B2, 2, UINT16_T), // FLAGScenarioID
+	new DataObject(0xA0B2, 2, UINT16_T), // FLAGScenarioID
 
 	// GAME
-	DataObject(0xB260, 4, UINT32_T), // GAMEMapNum
-	DataObject(0xB264, 4, STRING), // GAMEMapNumString
-	DataObject(0xD1FE, 2, UINT16_T), // GAMEPlayer1
-	DataObject(0xD202, 2, UINT16_T), // GAMEPlayer2
-	DataObject(0xD206, 2, UINT16_T), // GAMEPlayer3
-	DataObject(0xD20A, 2, UINT16_T), // GAMEPlayer4
-	DataObject(0xD20E, 2, UINT16_T), // GAMEPlayer5
-	DataObject(0xD212, 2, UINT16_T), // GAMEPlayer6
-	DataObject(0xD216, 2, UINT16_T), // GAMEPlayer7
-	DataObject(0xF8D0, 4, UINT32_T), // GAMEShulkLevel
-	DataObject(0xFBD4, 4, UINT32_T), // GAMEReynLevel
-	DataObject(0xFEC8, 4, UINT32_T), // GAMEFioraLevel
-	DataObject(0x101DC, 4, UINT32_T), // GAMEDunbanLevel
-	DataObject(0x104E0, 4, UINT32_T), // GAMESharlaLevel
-	DataObject(0x107E4, 4, UINT32_T), // GAMERikiLevel
-	DataObject(0x10AE8, 4, UINT32_T), // GAMEMeliaLevel
-	DataObject(0x10DEC, 4, UINT32_T), // GAMESevenLevel
-	DataObject(0x110F0, 4, UINT32_T), // GAMEDicksonLevel
-	DataObject(0x113F4, 4, UINT32_T), // GAMEMumkharLevel
-	DataObject(0x116F8, 4, UINT32_T), // GAMEAlvisLevel
-	DataObject(0x119FC, 4, UINT32_T), // GAMEPrologueDunbanLevel
+	new DataObject(0xB260, 4, UINT32_T), // GAMEMapNum
+	new DataObject(0xB264, 4, STRING), // GAMEMapNumString
+	new DataObject(0xD1FE, 2, UINT16_T), // GAMEPlayer1
+	new DataObject(0xD202, 2, UINT16_T), // GAMEPlayer2
+	new DataObject(0xD206, 2, UINT16_T), // GAMEPlayer3
+	new DataObject(0xD20A, 2, UINT16_T), // GAMEPlayer4
+	new DataObject(0xD20E, 2, UINT16_T), // GAMEPlayer5
+	new DataObject(0xD212, 2, UINT16_T), // GAMEPlayer6
+	new DataObject(0xD216, 2, UINT16_T), // GAMEPlayer7
+	new DataObject(0xF8D0, 4, UINT32_T), // GAMEShulkLevel
+	new DataObject(0xFBD4, 4, UINT32_T), // GAMEReynLevel
+	new DataObject(0xFEC8, 4, UINT32_T), // GAMEFioraLevel
+	new DataObject(0x101DC, 4, UINT32_T), // GAMEDunbanLevel
+	new DataObject(0x104E0, 4, UINT32_T), // GAMESharlaLevel
+	new DataObject(0x107E4, 4, UINT32_T), // GAMERikiLevel
+	new DataObject(0x10AE8, 4, UINT32_T), // GAMEMeliaLevel
+	new DataObject(0x10DEC, 4, UINT32_T), // GAMESevenLevel
+	new DataObject(0x110F0, 4, UINT32_T), // GAMEDicksonLevel
+	new DataObject(0x113F4, 4, UINT32_T), // GAMEMumkharLevel
+	new DataObject(0x116F8, 4, UINT32_T), // GAMEAlvisLevel
+	new DataObject(0x119FC, 4, UINT32_T), // GAMEPrologueDunbanLevel
 
 	// TIME
-	DataObject(0x11EB0, 4, UINT32_T), // TIMEPlayTime
-	DataObject(0x11EB8, 4, UINT32_T), // TIMEDayCount
-	DataObject(0x11EB4, 4, UINT32_T), // TIMEDayTime
-	DataObject(0x11EBA, 2, UINT16_T), // TIMEYearCount
+	new DataObject(0x11EB0, 4, UINT32_T), // TIMEPlayTime
+	new DataObject(0x11EB8, 4, UINT32_T), // TIMEDayCount
+	new DataObject(0x11EB4, 4, UINT32_T), // TIMEDayTime
+	new DataObject(0x11EBA, 2, UINT16_T), // TIMEYearCount
 
 	// PCPM
-	DataObject(0x11EE0, 4, FLOAT), // PCPMPlayer1X
-	DataObject(0x11EE4, 4, FLOAT), // PCPMPlayer1Y
-	DataObject(0x11EE8, 4, FLOAT), // PCPMPlayer1Z
-	DataObject(0x11EEC, 4, FLOAT), // PCPMPlayer1Angle
-	DataObject(0x11EF0, 4, FLOAT), // PCPMPlayer2X
-	DataObject(0x11EF4, 4, FLOAT), // PCPMPlayer2Y
-	DataObject(0x11EF8, 4, FLOAT), // PCPMPlayer2Z
-	DataObject(0x11EFC, 4, FLOAT), // PCPMPlayer2Angle
-	DataObject(0x11F00, 4, FLOAT), // PCPMPlayer3X
-	DataObject(0x11F04, 4, FLOAT), // PCPMPlayer3Y
-	DataObject(0x11F08, 4, FLOAT), // PCPMPlayer3Z
-	DataObject(0x11F0C, 4, FLOAT), // PCPMPlayer3Angle
+	new DataObject(0x11EE0, 4, FLOAT), // PCPMPlayer1X
+	new DataObject(0x11EE4, 4, FLOAT), // PCPMPlayer1Y
+	new DataObject(0x11EE8, 4, FLOAT), // PCPMPlayer1Z
+	new DataObject(0x11EEC, 4, FLOAT), // PCPMPlayer1Angle
+	new DataObject(0x11EF0, 4, FLOAT), // PCPMPlayer2X
+	new DataObject(0x11EF4, 4, FLOAT), // PCPMPlayer2Y
+	new DataObject(0x11EF8, 4, FLOAT), // PCPMPlayer2Z
+	new DataObject(0x11EFC, 4, FLOAT), // PCPMPlayer2Angle
+	new DataObject(0x11F00, 4, FLOAT), // PCPMPlayer3X
+	new DataObject(0x11F04, 4, FLOAT), // PCPMPlayer3Y
+	new DataObject(0x11F08, 4, FLOAT), // PCPMPlayer3Z
+	new DataObject(0x11F0C, 4, FLOAT), // PCPMPlayer3Angle
 
 	// CAMD
-	DataObject(0x11F30, 4, FLOAT), // CAMDVerticalPosition
-	DataObject(0x11F34, 4, FLOAT), // CAMDHorizontalPosition
-	DataObject(0x11F3C, 4, FLOAT), // CAMDDistance
+	new DataObject(0x11F30, 4, FLOAT), // CAMDVerticalPosition
+	new DataObject(0x11F34, 4, FLOAT), // CAMDHorizontalPosition
+	new DataObject(0x11F3C, 4, FLOAT), // CAMDDistance
 
 	// ITEM
-	DataObject(0x24048, 4, INT32_T), // ITEMMoney
-	DataObject(0x1C4EC, 7800, ARRAY), // ITEMWeaponArray
-	DataObject(0x206D8, 4800, ARRAY), // ITEMGemArray
+	new DataObject(0x24048, 4, INT32_T), // ITEMMoney
+	new DataObject(0x1C4EC, 7800, ARRAY), // ITEMWeaponArray
+	new DataObject(0x206D8, 4800, ARRAY), // ITEMGemArray
 
 	// WTHR
-	DataObject(0x24090, 4, UINT32_T), // WTHRReroll
-	DataObject(0x24098, 4, UINT32_T), // WTHRMap
-	DataObject(0x24095, 1, UINT8_T), // WTHRForegreoundWeather
-	DataObject(0x24096, 2, UINT16_T), // WTHRUnk1
-	DataObject(0x2409D, 1, UINT8_T), // WTHRBackgroundWeather
-	DataObject(0x2409F, 1, UINT8_T), // WTHRUnk2
+	new DataObject(0x24090, 4, UINT32_T), // WTHRReroll
+	new DataObject(0x24098, 4, UINT32_T), // WTHRMap
+	new DataObject(0x24095, 1, UINT8_T), // WTHRForegreoundWeather
+	new DataObject(0x24096, 2, UINT16_T), // WTHRUnk1
+	new DataObject(0x2409D, 1, UINT8_T), // WTHRBackgroundWeather
+	new DataObject(0x2409F, 1, UINT8_T), // WTHRUnk2
 
 	// SNDS
 
 	// MINE
-	DataObject(0x240F0, 900, ARRAY), // MINEArray
+	new DataObject(0x240F0, 900, ARRAY), // MINEArray
 
 	// TBOX
-	DataObject(0x244A3, 1, UINT8_T), // TBOXBoxCount
-	DataObject(0x244A4, 592, ARRAY), // TBOXArray
+	new DataObject(0x244A3, 1, UINT8_T), // TBOXBoxCount
+	new ArrayObject(TBOXElement, getElementSize(TBOXElement), 21), // TBOXArray
 
 	// OPTD
-	DataObject(0x248B0, 1, BOOL), // OPTDNonInvertedYAxis
-	DataObject(0x248B1, 1, BOOL), // OPTDNonInvertedXAxis
-	DataObject(0x248B2, 1, UINT8_T), // OPTDYAxisSpeed
-	DataObject(0x248B3, 1, UINT8_T), // OPTDXAxisSpeed
-	DataObject(0x248B4, 1, UINT8_T), // OPTDZoomSpeed
-	DataObject(0x248B5, 1, UINT8_T), // OPTDPointOfView
-	DataObject(0x248B6, 1, BOOL), // OPTDAngleCorrection
-	DataObject(0x248B7, 1, BOOL), // OPTDBattleCamera
-	DataObject(0x248BF, 1, UINT8_T), // OPTDGamma
-	DataObject(0x248C0, 1, BOOL), // OPTDMinimapOn
-	DataObject(0x248C1, 1, BOOL), // OPTDMinimapRotate
-	DataObject(0x248CC, 1, BOOL), // OPTDJapaneseVoice
-	DataObject(0x248D0, 1, BOOL), // OPTDShowControls
-	DataObject(0x248D1, 1, BOOL), // OPTDShowArtDescriptions
-	DataObject(0x248D2, 1, BOOL), // OPTDShowBuffDebuffInfoEveryTime
-	DataObject(0x248D3, 1, BOOL), // OPTDShowEnemyIcons
-	DataObject(0x248D4, 1, BOOL), // OPTDShowBuffDefbuffIndicator
-	DataObject(0x248D5, 1, BOOL), // OPTDShowDestinationMarker
-	DataObject(0x248E0, 1, BOOL), // OPTDAutoEventScrolling
-	DataObject(0x248E1, 1, BOOL), // OPTDFastDialogueText
-	DataObject(0x248E2, 1, BOOL) // OPTDShowSubtitles
+	new DataObject(0x248B0, 1, BOOL), // OPTDNonInvertedYAxis
+	new DataObject(0x248B1, 1, BOOL), // OPTDNonInvertedXAxis
+	new DataObject(0x248B2, 1, UINT8_T), // OPTDYAxisSpeed
+	new DataObject(0x248B3, 1, UINT8_T), // OPTDXAxisSpeed
+	new DataObject(0x248B4, 1, UINT8_T), // OPTDZoomSpeed
+	new DataObject(0x248B5, 1, UINT8_T), // OPTDPointOfView
+	new DataObject(0x248B6, 1, BOOL), // OPTDAngleCorrection
+	new DataObject(0x248B7, 1, BOOL), // OPTDBattleCamera
+	new DataObject(0x248BF, 1, UINT8_T), // OPTDGamma
+	new DataObject(0x248C0, 1, BOOL), // OPTDMinimapOn
+	new DataObject(0x248C1, 1, BOOL), // OPTDMinimapRotate
+	new DataObject(0x248CC, 1, BOOL), // OPTDJapaneseVoice
+	new DataObject(0x248D0, 1, BOOL), // OPTDShowControls
+	new DataObject(0x248D1, 1, BOOL), // OPTDShowArtDescriptions
+	new DataObject(0x248D2, 1, BOOL), // OPTDShowBuffDebuffInfoEveryTime
+	new DataObject(0x248D3, 1, BOOL), // OPTDShowEnemyIcons
+	new DataObject(0x248D4, 1, BOOL), // OPTDShowBuffDefbuffIndicator
+	new DataObject(0x248D5, 1, BOOL), // OPTDShowDestinationMarker
+	new DataObject(0x248E0, 1, BOOL), // OPTDAutoEventScrolling
+	new DataObject(0x248E1, 1, BOOL), // OPTDFastDialogueText
+	new DataObject(0x248E2, 1, BOOL) // OPTDShowSubtitles
 };
 
 static void fixChecksums(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES]);
 
 SaveFile::SaveFile(std::string fileLocation)
 {
+	unsigned int x = 0x12345678;
+	char* c = (char*)&x;
+	if (c[0] == 0x12) this->isLittleEndian = false;
+	else if (c[0] == 0x78) this->isLittleEndian = true;
+	else throw std::runtime_error("Unsupported architecture");
+
 	std::cout << "Opening " << fileLocation << "...\n";
 
 	this->fileLocation = fileLocation;
@@ -174,6 +197,7 @@ void SaveFile::saveToFile()
 {
 	fixChecksums(saveFile);
 
+	std::cout << "Saving to " << fileLocation << "...\n";
 	std::ofstream outputFile(fileLocation, std::ios::binary);
 	if (!outputFile)
 	{
@@ -182,6 +206,8 @@ void SaveFile::saveToFile()
 	}
 	outputFile.write((char *) saveFile, SAVEFILE_LENGTH_BYTES);
 	outputFile.close();
+
+	std::cout << "Successfully saved to " << fileLocation << '\n';
 }
 
 inline uint8_t SaveFile::getByteAt(unsigned int x)
@@ -196,32 +222,97 @@ inline void SaveFile::setByteAt(unsigned int x, uint8_t b)
 
 std::vector<uint8_t> SaveFile::getRawBytes(SaveFieldID sfID)
 {
-	DataObject dataObj = dataMap[sfID];
+	DataObject dataObj = *dataMap[sfID];
 	std::vector<uint8_t> result = dataObj.getRawBytes(this->saveFile);
 	return result;
 }
 
 // For up to 8 bytes
-void SaveFile::setRawBytes(SaveFieldID sfID, uint64_t value)
+void SaveFile::setRawBytes(SaveFieldID sfID, unsigned int value)
 {
-	((DataObject) dataMap[sfID]).setRawBytes(this->saveFile, value);
+	(*dataMap[sfID]).setRawBytes(saveFile, value);
 }
 
 // For more than 8 bytes
 void SaveFile::setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value)
 {
-	((DataObject) dataMap[sfID]).setRawBytes(this->saveFile, value);
+	(*dataMap[sfID]).setRawBytes(saveFile, value);
 }
 
-template<typename T>
-inline void SaveFile::setValue(SaveFieldID sfID, T value)
+union floatUnion
 {
-	setRawBytes(sfID, value);
+	float f;
+	uint8_t fBytes[sizeof(float)];
+};
+
+void SaveFile::setRawBytes(SaveFieldID sfID, float value)
+{
+	// Convert float to vector to pass to setRawBytes
+	floatUnion f;
+	f.f = value;
+	std::vector<uint8_t> v;
+
+	if (this->isLittleEndian) for (int i = 4; i >= 0; i--) v.push_back(f.fBytes[i]);
+	else for (int i = 0; i < 4; i++) v.push_back(f.fBytes[i]);
+
+	this->setRawBytes(sfID, v);
 }
 
+// For strings
+void SaveFile::setRawBytes(SaveFieldID sfID, const char* value)
+{
+	// Convert const char* to vector to pass to setRawBytes
+	std::vector<uint8_t> v;
+	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t)*ptr);
+
+	this->setRawBytes(sfID, v);
+}
+
+// For arrays
+void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, unsigned int value)
+{
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj != NULL) (*dataObj).setRawBytes(this->saveFile, value);
+	else throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+}
+
+// For arrays to set more than 8 bytes
+void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, std::vector<uint8_t> value)
+{
+	// TODO: this isn't calling the overridden function for ArrayObject
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj != NULL) (*dataObj).setRawBytes(this->saveFile, value);
+	else throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+}
+
+void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, float value)
+{
+	// Convert float to vector to pass to setRawBytes
+	floatUnion f;
+	f.f = value;
+	std::vector<uint8_t> v;
+
+	if (this->isLittleEndian) for (int i = 4; i >= 0; i--) v.push_back(f.fBytes[i]);
+	else for (int i = 0; i < 4; i++) v.push_back(f.fBytes[i]);
+
+	this->setArrayRawBytes(aID, index, elementName, v);
+}
+
+// For strings
+void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, const char* value)
+{
+	// Convert const char* to vector to pass to setRawBytes
+	std::vector<uint8_t> v;
+	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t)*ptr);
+
+	this->setArrayRawBytes(aID, index, elementName, v);
+}
+
+/*
 // setValue with string argument
 // Need this specialized template function to convert const char* to vector to use setRawBytes
-template <> void SaveFile::setValue<const char*>(SaveFieldID sfID, const char* value)
+template <>
+inline void SaveFile::setValue<const char*>(SaveFieldID sfID, const char* value)
 {
 	// Convert const char* to vector to pass to setRawBytes
 	std::vector<uint8_t> v;
@@ -229,6 +320,17 @@ template <> void SaveFile::setValue<const char*>(SaveFieldID sfID, const char* v
 
 	this->setRawBytes(sfID, v);
 }
+
+template <>
+inline void SaveFile::setArrayValue<const char*>(SaveFieldID aID, unsigned int index, unsigned int elementName, const char* value)
+{
+	// Convert const char* to vector to pass to setArrayRawBytes
+	std::vector<uint8_t> v;
+	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t)*ptr);
+
+	this->setArrayRawBytes(aID, index, elementName, v);
+}
+*/
 
 // CRC16 Polynomial: 1 + x^2 + x^15 + x^16 -> 0x8005 (1000 0000 0000 0101)
 const int lookupTable[] =
