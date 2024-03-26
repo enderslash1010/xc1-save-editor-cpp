@@ -13,7 +13,8 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/SaveFile.cpp
     src/DataObject.cpp
-  )
+    src/ArrayObject.cpp
+)
 
 # Add the include directories (= our header files) to our target
 target_include_directories(${PROJECT_NAME} PRIVATE include)
