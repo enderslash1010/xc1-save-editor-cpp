@@ -165,12 +165,6 @@ static void fixChecksums(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES]);
 
 SaveFile::SaveFile(std::string fileLocation)
 {
-	unsigned int x = 0x12345678;
-	char* c = (char*)&x;
-	if (c[0] == 0x12) this->isLittleEndian = false;
-	else if (c[0] == 0x78) this->isLittleEndian = true;
-	else throw std::runtime_error("Unsupported architecture");
-
 	std::cout << "Opening " << fileLocation << "...\n";
 
 	this->fileLocation = fileLocation;
@@ -227,110 +221,75 @@ std::vector<uint8_t> SaveFile::getRawBytes(SaveFieldID sfID)
 	return result;
 }
 
-// For up to 8 bytes
-void SaveFile::setRawBytes(SaveFieldID sfID, unsigned int value)
+std::vector<uint8_t> SaveFile::getRawArrayBytes(SaveFieldID afID, unsigned int index, unsigned int elementName)
 {
-	(*dataMap[sfID]).setRawBytes(saveFile, value);
+	ArrayObject arrObj = *(ArrayObject*) dataMap[afID];
+	std::vector<uint8_t> result = arrObj.at(index, elementName)->getRawBytes(this->saveFile);
+	return result;
 }
 
-// For more than 8 bytes
+Type SaveFile::getType(SaveFieldID sfID)
+{
+	return ((DataObject) *dataMap[sfID]).getType();
+}
+
+template <>
+int SaveFile::getValue<int>(SaveFieldID sfID, bool typeCheck)
+{
+	Type thisType = this->getType(sfID);
+	if (typeCheck && (thisType != INT8_T) && (thisType != INT16_T) && (thisType != INT32_T)) throw std::runtime_error(((DataObject)*dataMap[sfID]).getTypeStr() + " is not a signed int");
+
+	return Types::toSInt(this->getRawBytes(sfID));
+}
+
+template <>
+unsigned int SaveFile::getValue<unsigned int>(SaveFieldID sfID, bool typeCheck)
+{
+	Type thisType = this->getType(sfID);
+	if (typeCheck && (thisType != UINT8_T) && (thisType != UINT16_T) && (thisType != UINT32_T)) throw std::runtime_error(((DataObject)*dataMap[sfID]).getTypeStr() + " is not an unsigned int");
+
+	return Types::toUInt(this->getRawBytes(sfID));
+}
+
+template <>
+float SaveFile::getValue<float>(SaveFieldID sfID, bool typeCheck)
+{
+	Type thisType = this->getType(sfID);
+	if (typeCheck && (thisType != FLOAT)) throw std::runtime_error(((DataObject)*dataMap[sfID]).getTypeStr() + " is not a float");
+
+	return Types::toFloat(this->getRawBytes(sfID));
+}
+
+template <>
+bool SaveFile::getValue<bool>(SaveFieldID sfID, bool typeCheck)
+{
+	Type thisType = this->getType(sfID);
+	if (typeCheck && (thisType != BOOL)) throw std::runtime_error(((DataObject)*dataMap[sfID]).getTypeStr() + " is not a bool");
+
+	return Types::toBool(this->getRawBytes(sfID));
+}
+
+template <>
+std::string SaveFile::getValue<std::string>(SaveFieldID sfID, bool typeCheck)
+{
+	Type thisType = this->getType(sfID);
+	if (typeCheck && (thisType != STRING)) throw std::runtime_error(((DataObject)*dataMap[sfID]).getTypeStr() + " is not a string");
+
+	return Types::toString(this->getRawBytes(sfID));
+}
+
 void SaveFile::setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value)
 {
 	(*dataMap[sfID]).setRawBytes(saveFile, value);
 }
 
-union floatUnion
-{
-	float f;
-	uint8_t fBytes[sizeof(float)];
-};
-
-void SaveFile::setRawBytes(SaveFieldID sfID, float value)
-{
-	// Convert float to vector to pass to setRawBytes
-	floatUnion f;
-	f.f = value;
-	std::vector<uint8_t> v;
-
-	if (this->isLittleEndian) for (int i = 4; i >= 0; i--) v.push_back(f.fBytes[i]);
-	else for (int i = 0; i < 4; i++) v.push_back(f.fBytes[i]);
-
-	this->setRawBytes(sfID, v);
-}
-
-// For strings
-void SaveFile::setRawBytes(SaveFieldID sfID, const char* value)
-{
-	// Convert const char* to vector to pass to setRawBytes
-	std::vector<uint8_t> v;
-	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t)*ptr);
-
-	this->setRawBytes(sfID, v);
-}
-
-// For arrays
-void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, unsigned int value)
-{
-	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
-	if (dataObj != NULL) (*dataObj).setRawBytes(this->saveFile, value);
-	else throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
-}
-
 // For arrays to set more than 8 bytes
 void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, std::vector<uint8_t> value)
 {
-	// TODO: this isn't calling the overridden function for ArrayObject
 	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
 	if (dataObj != NULL) (*dataObj).setRawBytes(this->saveFile, value);
 	else throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
 }
-
-void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, float value)
-{
-	// Convert float to vector to pass to setRawBytes
-	floatUnion f;
-	f.f = value;
-	std::vector<uint8_t> v;
-
-	if (this->isLittleEndian) for (int i = 4; i >= 0; i--) v.push_back(f.fBytes[i]);
-	else for (int i = 0; i < 4; i++) v.push_back(f.fBytes[i]);
-
-	this->setArrayRawBytes(aID, index, elementName, v);
-}
-
-// For strings
-void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, const char* value)
-{
-	// Convert const char* to vector to pass to setRawBytes
-	std::vector<uint8_t> v;
-	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t)*ptr);
-
-	this->setArrayRawBytes(aID, index, elementName, v);
-}
-
-/*
-// setValue with string argument
-// Need this specialized template function to convert const char* to vector to use setRawBytes
-template <>
-inline void SaveFile::setValue<const char*>(SaveFieldID sfID, const char* value)
-{
-	// Convert const char* to vector to pass to setRawBytes
-	std::vector<uint8_t> v;
-	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t) *ptr);
-
-	this->setRawBytes(sfID, v);
-}
-
-template <>
-inline void SaveFile::setArrayValue<const char*>(SaveFieldID aID, unsigned int index, unsigned int elementName, const char* value)
-{
-	// Convert const char* to vector to pass to setArrayRawBytes
-	std::vector<uint8_t> v;
-	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t)*ptr);
-
-	this->setArrayRawBytes(aID, index, elementName, v);
-}
-*/
 
 // CRC16 Polynomial: 1 + x^2 + x^15 + x^16 -> 0x8005 (1000 0000 0000 0101)
 const int lookupTable[] =

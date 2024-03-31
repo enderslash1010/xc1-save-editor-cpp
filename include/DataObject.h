@@ -3,19 +3,7 @@
 #include <vector>
 #include <stdint.h>
 #include <iostream>
-
-enum Type
-{
-	UINT8_T,
-	UINT16_T,
-	INT32_T,
-	UINT32_T,
-	BOOL,
-	FLOAT, 
-	STRING,
-	TPL,
-	ARRAY
-};
+#include "Types.h"
 
 class DataObject
 {
