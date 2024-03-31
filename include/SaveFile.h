@@ -21,6 +21,8 @@ class SaveFile
     uint8_t getByteAt(unsigned int x);
     void setByteAt(unsigned int x, uint8_t b);
 
+    std::vector<uint8_t> getRawBytes(DataObject data);
+
     static const DataObject* dataMap[];
 
 public:
@@ -38,6 +40,9 @@ public:
     
     template<typename T>
     T getValue(SaveFieldID sfID, bool typeCheck = true);
+
+    template<typename T>
+    T getArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck = true);
 
     template<typename T>
     void setValue(SaveFieldID sfID, T value)

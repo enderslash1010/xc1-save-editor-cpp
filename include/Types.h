@@ -34,4 +34,6 @@ public:
 	static std::vector<uint8_t> toRaw(unsigned int x); // this function will also handle bool
 	static std::vector<uint8_t> toRaw(int x);
 	static std::vector<uint8_t> toRaw(std::string x);
+
+	static std::string toString(Type t);
 };

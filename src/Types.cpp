@@ -97,3 +97,42 @@ std::vector<uint8_t> Types::toRaw(std::string x)
 	for (int i = 0; i < x.size(); i++) v.push_back(x.at(i));
 	return v;
 }
+
+std::string Types::toString(Type t)
+{
+	std::string result;
+	switch (t)
+	{
+	case UINT8_T:
+		result = "UINT8_T";
+		break;
+	case UINT16_T:
+		result = "UINT16_T";
+		break;
+	case UINT32_T:
+		result = "UINT32_T";
+		break;
+	case INT32_T:
+		result = "INT32_T";
+		break;
+	case BOOL:
+		result = "BOOL";
+		break;
+	case FLOAT:
+		result = "FLOAT";
+		break;
+	case STRING:
+		result = "STRING";
+		break;
+	case TPL:
+		result = "TPL";
+		break;
+	case ARRAY:
+		result = "ARRAY";
+		break;
+	default:
+		result = "UNDEFINED";
+		break;
+	}
+	return result;
+}

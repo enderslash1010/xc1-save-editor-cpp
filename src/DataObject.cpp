@@ -42,58 +42,19 @@ void DataObject::setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::vec
 	for (int saveFileIdx = this->startByte + this->size - 1, valueIdx = value.size() - 1; saveFileIdx >= this->startByte; saveFileIdx--, valueIdx--) saveFile[saveFileIdx] = valueIdx < 0 ? 0x0 : value.at(valueIdx);
 }
 
-unsigned int DataObject::getLengthInBytes()
+unsigned int DataObject::getLengthInBytes() const
 {
 	return this->size;
 }
 
-Type DataObject::getType()
+Type DataObject::getType() const
 {
 	return this->type;
 }
 
-unsigned int DataObject::getStartByte()
+unsigned int DataObject::getStartByte() const
 {
 	return this->startByte;
-}
-
-std::string DataObject::getTypeStr()
-{
-	std::string result;
-	switch (this->type)
-	{
-	case UINT8_T:
-		result = "UINT8_T";
-		break;
-	case UINT16_T:
-		result = "UINT16_T";
-		break;
-	case UINT32_T:
-		result = "UINT32_T";
-		break;
-	case INT32_T:
-		result = "INT32_T";
-		break;
-	case BOOL:
-		result = "BOOL";
-		break;
-	case FLOAT:
-		result = "FLOAT";
-		break;
-	case STRING:
-		result = "STRING";
-		break;
-	case TPL:
-		result = "TPL";
-		break;
-	case ARRAY:
-		result = "ARRAY";
-		break;
-	default:
-		result = "UNDEFINED";
-		break;
-	}
-	return result;
 }
 
 void DataObject::print()
@@ -101,5 +62,5 @@ void DataObject::print()
 	std::cout << "DataObject(" <<
 		"startByte = 0x" << std::hex << this->startByte << ", " <<
 		"lengthInBytes = " << std::dec << this->size << ", " <<
-		"type = " << this->getTypeStr() << ");\n";
+		"type = " << Types::toString(this->type) << ");\n";
 }

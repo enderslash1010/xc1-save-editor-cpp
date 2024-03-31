@@ -17,10 +17,9 @@ protected:
 public:
 	DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type);
 
-	unsigned int getLengthInBytes();
-	Type getType();
-	std::string getTypeStr();
-	unsigned int getStartByte();
+	unsigned int getLengthInBytes() const;
+	Type getType() const;
+	unsigned int getStartByte() const;
 
 	std::vector<uint8_t> getRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES]) const;
 	void setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], uint64_t value) const;

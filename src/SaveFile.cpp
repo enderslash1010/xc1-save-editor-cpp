@@ -214,17 +214,22 @@ inline void SaveFile::setByteAt(unsigned int x, uint8_t b)
 	this->saveFile[x] = b;
 }
 
+std::vector<uint8_t> SaveFile::getRawBytes(const DataObject data)
+{
+	return data.getRawBytes(this->saveFile);
+}
+
 std::vector<uint8_t> SaveFile::getRawBytes(SaveFieldID sfID)
 {
 	DataObject dataObj = *dataMap[sfID];
-	std::vector<uint8_t> result = dataObj.getRawBytes(this->saveFile);
+	std::vector<uint8_t> result = getRawBytes(dataObj);
 	return result;
 }
 
 std::vector<uint8_t> SaveFile::getRawArrayBytes(SaveFieldID afID, unsigned int index, unsigned int elementName)
 {
 	ArrayObject arrObj = *(ArrayObject*) dataMap[afID];
-	std::vector<uint8_t> result = arrObj.at(index, elementName)->getRawBytes(this->saveFile);
+	std::vector<uint8_t> result = getRawBytes(*arrObj.at(index, elementName));
 	return result;
 }
 
@@ -237,7 +242,7 @@ template <>
 int SaveFile::getValue<int>(SaveFieldID sfID, bool typeCheck)
 {
 	Type thisType = this->getType(sfID);
-	if (typeCheck && (thisType != INT8_T) && (thisType != INT16_T) && (thisType != INT32_T)) throw std::runtime_error(((DataObject)*dataMap[sfID]).getTypeStr() + " is not a signed int");
+	if (typeCheck && (thisType != INT8_T) && (thisType != INT16_T) && (thisType != INT32_T)) throw std::runtime_error("Expecting signed int, got " + Types::toString(thisType));
 
 	return Types::toSInt(this->getRawBytes(sfID));
 }
@@ -246,7 +251,7 @@ template <>
 unsigned int SaveFile::getValue<unsigned int>(SaveFieldID sfID, bool typeCheck)
 {
 	Type thisType = this->getType(sfID);
-	if (typeCheck && (thisType != UINT8_T) && (thisType != UINT16_T) && (thisType != UINT32_T)) throw std::runtime_error(((DataObject)*dataMap[sfID]).getTypeStr() + " is not an unsigned int");
+	if (typeCheck && (thisType != UINT8_T) && (thisType != UINT16_T) && (thisType != UINT32_T)) throw std::runtime_error("Expecting unsigned int, got " + Types::toString(thisType));
 
 	return Types::toUInt(this->getRawBytes(sfID));
 }
@@ -255,7 +260,7 @@ template <>
 float SaveFile::getValue<float>(SaveFieldID sfID, bool typeCheck)
 {
 	Type thisType = this->getType(sfID);
-	if (typeCheck && (thisType != FLOAT)) throw std::runtime_error(((DataObject)*dataMap[sfID]).getTypeStr() + " is not a float");
+	if (typeCheck && (thisType != FLOAT)) throw std::runtime_error("Expecting float, got " + Types::toString(thisType));
 
 	return Types::toFloat(this->getRawBytes(sfID));
 }
@@ -264,7 +269,7 @@ template <>
 bool SaveFile::getValue<bool>(SaveFieldID sfID, bool typeCheck)
 {
 	Type thisType = this->getType(sfID);
-	if (typeCheck && (thisType != BOOL)) throw std::runtime_error(((DataObject)*dataMap[sfID]).getTypeStr() + " is not a bool");
+	if (typeCheck && (thisType != BOOL)) throw std::runtime_error("Expecting bool, got " + Types::toString(thisType));
 
 	return Types::toBool(this->getRawBytes(sfID));
 }
@@ -273,9 +278,79 @@ template <>
 std::string SaveFile::getValue<std::string>(SaveFieldID sfID, bool typeCheck)
 {
 	Type thisType = this->getType(sfID);
-	if (typeCheck && (thisType != STRING)) throw std::runtime_error(((DataObject)*dataMap[sfID]).getTypeStr() + " is not a string");
+	if (typeCheck && (thisType != STRING)) throw std::runtime_error("Expecting string, got " + Types::toString(thisType));
 
 	return Types::toString(this->getRawBytes(sfID));
+}
+
+template <>
+int SaveFile::getArrayValue<int>(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck)
+{
+	if (typeCheck && this->getType(aID) != ARRAY) throw std::runtime_error("Cannot get array value of non-array SaveField");
+
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+	Type thisType = dataObj->getType();
+	if (typeCheck && (thisType != INT8_T) && (thisType != INT16_T) && (thisType != INT32_T)) throw std::runtime_error("Expecting signed int, got " + Types::toString(thisType));
+
+	return Types::toSInt(this->getRawBytes(*dataObj));
+}
+
+template <>
+unsigned int SaveFile::getArrayValue<unsigned int>(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck)
+{
+	if (typeCheck && this->getType(aID) != ARRAY) throw std::runtime_error("Cannot get array value of non-array SaveField");
+
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+	Type thisType = dataObj->getType();
+	if (typeCheck && (thisType != UINT8_T) && (thisType != UINT16_T) && (thisType != UINT32_T)) throw std::runtime_error("Expecting unsigned int, got " + Types::toString(thisType));
+
+	return Types::toUInt(this->getRawBytes(*dataObj));
+}
+
+template <>
+float SaveFile::getArrayValue<float>(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck)
+{
+	if (typeCheck && this->getType(aID) != ARRAY) throw std::runtime_error("Cannot get array value of non-array SaveField");
+
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+	Type thisType = dataObj->getType();
+	if (typeCheck && (thisType != FLOAT)) throw std::runtime_error("Expecting float, got " + Types::toString(thisType));
+
+	return Types::toFloat(this->getRawBytes(*dataObj));
+}
+
+template <>
+bool SaveFile::getArrayValue<bool>(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck)
+{
+	if (typeCheck && this->getType(aID) != ARRAY) throw std::runtime_error("Cannot get array value of non-array SaveField");
+
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+	Type thisType = dataObj->getType();
+	if (typeCheck && (thisType != BOOL)) throw std::runtime_error("Expecting boolean, got " + Types::toString(thisType));
+
+	return Types::toBool(this->getRawBytes(*dataObj));
+}
+
+template <>
+std::string SaveFile::getArrayValue<std::string>(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck)
+{
+	if (typeCheck && this->getType(aID) != ARRAY) throw std::runtime_error("Cannot get array value of non-array SaveField");
+
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+	Type thisType = dataObj->getType();
+	if (typeCheck && (thisType != STRING)) throw std::runtime_error("Expecting string, got " + Types::toString(thisType));
+
+	return Types::toString(this->getRawBytes(*dataObj));
 }
 
 void SaveFile::setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value)

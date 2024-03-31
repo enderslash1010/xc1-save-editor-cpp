@@ -6,9 +6,9 @@ int main()
 	{
 		SaveFile* saveFile = new SaveFile("testSave");
 
-		saveFile->setValue(TIMEPlayTime, -222);
+		saveFile->setArrayValue(TBOXArray, 1, TBOXZeroObject, "abcd");
 
-		int value = saveFile->getValue<int>(TIMEPlayTime, false);
+		std::string value = saveFile->getArrayValue<std::string>(TBOXArray, 1, TBOXZeroObject, false);
 		std::cout << "Output: " << std::dec << value << '\n';
 
 		saveFile->saveToFile();
