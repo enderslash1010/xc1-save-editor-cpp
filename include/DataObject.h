@@ -9,19 +9,24 @@ class DataObject
 {
 protected:
 	unsigned int startByte;
-	unsigned int size;
+	unsigned int endByte;
+	unsigned int startBit;
+	unsigned int endBit;
+	unsigned int bitLength;
 	Type type;
 
 	unsigned int numRows, numColumns;
 
 public:
+	DataObject(unsigned int startByte, unsigned int startBit, unsigned int lengthInBits, Type type);
 	DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type);
 
-	unsigned int getLengthInBytes() const;
+	unsigned int getLengthInBits() const;
 	Type getType() const;
 	unsigned int getStartByte() const;
 
 	std::vector<uint8_t> getRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES]) const;
+
 	void setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], uint64_t value) const;
 	void setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::vector<uint8_t> value) const;
 

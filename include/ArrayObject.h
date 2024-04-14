@@ -11,6 +11,6 @@ class ArrayObject : public DataObject
 	unsigned int numRows, numColumns;
 
 public:
-	ArrayObject(const std::vector<DataObject> dataObj, unsigned int elementSize, unsigned int arraySize);
+	ArrayObject(const std::vector<DataObject> dataObj, unsigned int elementSizeBytes, unsigned int arraySize);
 	virtual const DataObject* at(unsigned int row, unsigned int column) const;
 };
