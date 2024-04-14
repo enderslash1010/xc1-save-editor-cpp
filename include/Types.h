@@ -7,6 +7,7 @@ enum Type
 	UINT8_T,
 	UINT16_T,
 	UINT32_T,
+	UINT64_T,
 	INT8_T,
 	INT16_T,
 	INT32_T,

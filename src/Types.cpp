@@ -112,6 +112,9 @@ std::string Types::toString(Type t)
 	case UINT32_T:
 		result = "UINT32_T";
 		break;
+	case UINT64_T:
+		result = "UINT64_T";
+		break;
 	case INT32_T:
 		result = "INT32_T";
 		break;
