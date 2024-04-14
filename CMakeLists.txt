@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME}
     src/SaveFile.cpp
     src/DataObject.cpp
     src/ArrayObject.cpp
+    src/Types.cpp
 )
 
 # Add the include directories (= our header files) to our target

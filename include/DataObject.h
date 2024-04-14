@@ -3,38 +3,30 @@
 #include <vector>
 #include <stdint.h>
 #include <iostream>
-
-enum Type
-{
-	UINT8_T,
-	UINT16_T,
-	INT32_T,
-	UINT32_T,
-	BOOL,
-	FLOAT, 
-	STRING,
-	TPL,
-	ARRAY
-};
+#include "Types.h"
 
 class DataObject
 {
 protected:
 	unsigned int startByte;
-	unsigned int size;
+	unsigned int endByte;
+	unsigned int startBit;
+	unsigned int endBit;
+	unsigned int bitLength;
 	Type type;
 
 	unsigned int numRows, numColumns;
 
 public:
+	DataObject(unsigned int startByte, unsigned int startBit, unsigned int lengthInBits, Type type);
 	DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type);
 
-	unsigned int getLengthInBytes();
-	Type getType();
-	std::string getTypeStr();
-	unsigned int getStartByte();
+	unsigned int getLengthInBits() const;
+	Type getType() const;
+	unsigned int getStartByte() const;
 
 	std::vector<uint8_t> getRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES]) const;
+
 	void setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], uint64_t value) const;
 	void setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::vector<uint8_t> value) const;
 

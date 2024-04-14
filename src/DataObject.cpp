@@ -2,21 +2,61 @@
 
 DataObject::DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type)
 {
+	if (lengthInBytes == 0) throw std::runtime_error("Cannot instantiate DataObject with 0 length");
+
 	this->startByte = startByte;
-	this->size = lengthInBytes;
+	this->startBit = 7;
+	this->bitLength = lengthInBytes * 8;
 	this->type = type;
 
 	this->numRows = 1;
 	this->numColumns = 1;
+
+	this->endBit = 0;
+	this->endByte = startByte + lengthInBytes - 1;
+}
+
+DataObject::DataObject(unsigned int startByte, unsigned int startBit, unsigned int lengthInBits, Type type)
+{
+	if (lengthInBits == 0) throw std::runtime_error("Cannot instantiate DataObject with 0 length");
+	
+	this->startByte = startByte;
+	this->startBit = startBit;
+	this->bitLength = lengthInBits;
+	this->type = type;
+
+	this->numRows = 1;
+	this->numColumns = 1;
+
+	this->endBit = 7 - (((7 - startBit) + lengthInBits - 1) % 8);
+	this->endByte = ((startByte * 8) + (7 - startBit) + lengthInBits - 1) / 8;
 }
 
 std::vector<uint8_t> DataObject::getRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH_BYTES]) const
 {
 	std::vector<uint8_t> result;
-	for (int i = 0; i < this->size; i++)
+
+	uint8_t constructedByte = 0;
+
+	unsigned int currByte = this->endByte;
+	unsigned int currBufferBit = this->endBit;
+	for (int i = 0; i < this->bitLength; i++)
 	{
-		result.push_back(saveFile[this->startByte + i]);
+		if ((saveFile[currByte] >> currBufferBit) & 0x1) constructedByte |= (1 << (i % 8));
+
+		currBufferBit++;
+		currBufferBit = currBufferBit % 8;
+
+		if (currBufferBit == 0) currByte--;
+		if (currBufferBit == this->endBit)
+		{
+			result.insert(result.begin(), constructedByte);
+			constructedByte = 0;
+		}
 	}
+	if (constructedByte != 0) result.insert(result.begin(), constructedByte); // add MSB if it's not zero
+	else if (result.size() == 0) result.push_back(0); // if constructed byte and result size is zero, then the raw bytes are 0
+
 	return result;
 }
 
@@ -26,12 +66,10 @@ std::vector<uint8_t> DataObject::getRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH
 * 
 *	In the case when bytes.size() > this.size(), the additional MSB in bytes are ignored (bytes = 0xABCD -> DataObject = 0xCD for this.size() = 1)
 *	In the case when bytes.size() < this.size(), the additional MSB associated with the DataObject are cleared (bytes = 0xFF -> DataObject = 0x00FF for this.size() = 2)
-* 
-*	This has got to be my favorite function I've created, a wild one-liner
 */
 void DataObject::setRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH_BYTES], uint64_t value) const
 {
-	for (int saveFileIdx = this->startByte + this->size - 1; saveFileIdx >= this->startByte; saveFileIdx--, value >>= 8) saveFile[saveFileIdx] = value < 0 ? 0x0 : (value & 0xFF);
+	this->setRawBytes(saveFile, Types::toRaw((unsigned int) value));
 }
 
 /*
@@ -39,67 +77,29 @@ void DataObject::setRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH_BYTES], uint64_
 */
 void DataObject::setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::vector<uint8_t> value) const
 {
-	for (int saveFileIdx = this->startByte + this->size - 1, valueIdx = value.size() - 1; saveFileIdx >= this->startByte; saveFileIdx--, valueIdx--) saveFile[saveFileIdx] = valueIdx < 0 ? 0x0 : value.at(valueIdx);
+	for (int i = 0, currBit = this->endBit, currByte = this->endByte, currValueByte = value.size() - 1; i < this->bitLength; i++, (++currBit) %= 8, currByte = ((currBit == 0) ? currByte - 1 : currByte), currValueByte = ((currBit == this->endBit) ? currValueByte - 1 : currValueByte)) saveFile[currByte] = ((currValueByte >= 0) && ((value.at(currValueByte) >> (i % 8)) & 0x1)) ? (saveFile[currByte] | (1 << currBit)) : (saveFile[currByte] & ~(1 << currBit));
 }
 
-unsigned int DataObject::getLengthInBytes()
+unsigned int DataObject::getLengthInBits() const
 {
-	return this->size;
+	return this->bitLength;
 }
 
-Type DataObject::getType()
+Type DataObject::getType() const
 {
 	return this->type;
 }
 
-unsigned int DataObject::getStartByte()
+unsigned int DataObject::getStartByte() const
 {
 	return this->startByte;
-}
-
-std::string DataObject::getTypeStr()
-{
-	std::string result;
-	switch (this->type)
-	{
-	case UINT8_T:
-		result = "UINT8_T";
-		break;
-	case UINT16_T:
-		result = "UINT16_T";
-		break;
-	case UINT32_T:
-		result = "UINT32_T";
-		break;
-	case INT32_T:
-		result = "INT32_T";
-		break;
-	case BOOL:
-		result = "BOOL";
-		break;
-	case FLOAT:
-		result = "FLOAT";
-		break;
-	case STRING:
-		result = "STRING";
-		break;
-	case TPL:
-		result = "TPL";
-		break;
-	case ARRAY:
-		result = "ARRAY";
-		break;
-	default:
-		result = "UNDEFINED";
-		break;
-	}
-	return result;
 }
 
 void DataObject::print()
 {
 	std::cout << "DataObject(" <<
 		"startByte = 0x" << std::hex << this->startByte << ", " <<
-		"lengthInBytes = " << std::dec << this->size << ", " <<
-		"type = " << this->getTypeStr() << ");\n";
+		"startBit = " << this->startBit << ", " <<
+		"lengthInBits = " << std::dec << this->bitLength << ", " <<
+		"type = " << Types::toString(this->type) << ");\n";
 }

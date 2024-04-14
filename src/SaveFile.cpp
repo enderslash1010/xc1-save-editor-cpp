@@ -20,6 +20,52 @@ const int checksumLocations[NUM_SECTIONS] = { 0x1E, 0xA02E, 0xB25E, 0x11EAE, 0x1
 const char* sectionNames[NUM_SECTIONS] = { "THUM", "FLAG", "GAME", "TIME", "PCPM", "CAMD", "ITEM", "WTHR", "SNDS", "MINE", "TBOX", "OPTD" };
 
 // Elements for ArrayObjects
+const std::vector<DataObject> ITEMWeaponArrayElement = {
+	DataObject(0x1C4EC, 7, 12, UINT16_T), // ITEMWeaponID1
+	DataObject(0x1C4ED, 3, 4, UINT8_T), // ITEMWeaponStatic1 (2)
+	DataObject(0x1C4EE, 7, 11, UINT16_T), // ITEMWeaponID2
+	DataObject(0x1C4EF, 4, 5, UINT8_T), // ITEMWeaponStatic2 (0)
+	DataObject(0x1C4F0, 1, UINT8_T), // ITEMWeaponStatic3 (0)
+	DataObject(0x1C4F1, 1, UINT8_T), // ITEMWeaponInventorySlot
+	DataObject(0x1C4F2, 1, UINT8_T), // ITEMWeaponStatic4 (1)
+	DataObject(0x1C4F3, 1, UINT8_T), // ITEMWeaponStatic5 (0)
+	DataObject(0x1C4F4, 8, UINT64_T), // ITEMWeaponGem1ID
+	DataObject(0x1C4FC, 8, UINT64_T), // ITEMWeaponGem2ID
+	DataObject(0x1C504, 8, UINT64_T), // ITEMWeaponGem3ID
+	DataObject(0x1C50C, 8, UINT64_T), // ITEMWeaponGem4ID
+	DataObject(0x1C514, 2, UINT16_T), // ITEMWeaponGem1Index
+	DataObject(0x1C516, 2, UINT16_T), // ITEMWeaponGem2Index
+	DataObject(0x1C518, 2, UINT16_T), // ITEMWeaponGem3Index
+	DataObject(0x1C51A, 2, UINT16_T), // ITEMWeaponGem4Index
+	DataObject(0x1C51C, 1, UINT8_T), // ITEMWeaponNumGemSlots
+	DataObject(0x1C51D, 1, UINT8_T), // ITEMWeaponStatic6 (6)
+	DataObject(0x1C51E, 2, UINT16_T), // ITEMWeaponStatic7 (0)
+};
+
+const std::vector<DataObject> ITEMGemArrayElement = {
+	DataObject(0x206D8, 2, UINT16_T), // ITEMGemStatic1 (0xEA33); Item ID from ITM_itemlist that doesn't affect gem attributes (just needs to be a gem type item)
+	DataObject(0x206DA, 7, 11, UINT16_T), // ITEMGemID1
+	DataObject(0x206DB, 4, 5, UINT8_T), // ITEMGemUnk1
+	DataObject(0x206DC, 1, UINT8_T), // ITEMGemStatic2 (0)
+	DataObject(0x206DD, 1, UINT8_T), // ITEMGemInventorySlot
+	DataObject(0x206DE, 1, UINT8_T), // ITEMGemStatic3 (1)
+	DataObject(0x206DF, 1, UINT8_T), // ITEMGemStatic4 (0/3)
+	DataObject(0x206E0, 7, 11, UINT16_T), // ITEMGemUnk2
+	DataObject(0x206E1, 4, 11, UINT8_T), // ITEMGemValue
+	DataObject(0x206E2, 1, 3, UINT8_T), // ITEMGemRank
+	DataObject(0x206E3, 6, 7, UINT8_T), // ITEMGemUnk3
+	DataObject(0x206E4, 7, 12, UINT16_T), // ITEMGemID2
+	DataObject(0x206E5, 3, 4, UINT8_T), // ITEMGemStatic5 (2)
+	DataObject(0x206E6, 2, UINT16_T), // ITEMGemStatic6 (0)
+};
+
+const std::vector<DataObject> MINEArrayElement = {
+	DataObject(0x240F0, 2, UINT16_T), // MINECooldown
+	DataObject(0x240F2, 1, UINT8_T), // MINENumHarvests
+	DataObject(0x240F3, 1, UINT8_T), // MINEMineID
+	DataObject(0x240F4, 2, UINT16_T), // MINEMapID
+};
+
 const std::vector<DataObject> TBOXElement = {
 	DataObject(0x244A4, 4, UINT32_T), // TBOXZeroObject
 	DataObject(0x244A8, 4, FLOAT), // TBOXPositionX
@@ -30,13 +76,6 @@ const std::vector<DataObject> TBOXElement = {
 	DataObject(0x244BC, 2, UINT16_T), // TBOXDropTable (?)
 	DataObject(0x244BE, 2, UINT16_T) // TBOXMapID
 };
-
-unsigned int getElementSize(std::vector<DataObject> arr)
-{
-	unsigned int size = 0;
-	for (DataObject d : arr) size += d.getLengthInBytes();
-	return size;
-}
 
 // dataMap stores all DataObjects in the save file
 // Make sure there is a SaveFieldID enum for each DataObject here, in order
@@ -117,8 +156,8 @@ const DataObject* SaveFile::dataMap[] =
 
 	// ITEM
 	new DataObject(0x24048, 4, INT32_T), // ITEMMoney
-	new DataObject(0x1C4EC, 7800, ARRAY), // ITEMWeaponArray
-	new DataObject(0x206D8, 4800, ARRAY), // ITEMGemArray
+	new ArrayObject(ITEMWeaponArrayElement, 52, 150), // ITEMWeaponArray
+	new ArrayObject(ITEMGemArrayElement, 16, 300), // ITEMGemArray
 
 	// WTHR
 	new DataObject(0x24090, 4, UINT32_T), // WTHRReroll
@@ -131,11 +170,11 @@ const DataObject* SaveFile::dataMap[] =
 	// SNDS
 
 	// MINE
-	new DataObject(0x240F0, 900, ARRAY), // MINEArray
+	new ArrayObject(MINEArrayElement, 6, 150), // MINEArray
 
 	// TBOX
 	new DataObject(0x244A3, 1, UINT8_T), // TBOXBoxCount
-	new ArrayObject(TBOXElement, getElementSize(TBOXElement), 21), // TBOXArray
+	new ArrayObject(TBOXElement, 28, 21), // TBOXArray
 
 	// OPTD
 	new DataObject(0x248B0, 1, BOOL), // OPTDNonInvertedYAxis
@@ -165,12 +204,6 @@ static void fixChecksums(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES]);
 
 SaveFile::SaveFile(std::string fileLocation)
 {
-	unsigned int x = 0x12345678;
-	char* c = (char*)&x;
-	if (c[0] == 0x12) this->isLittleEndian = false;
-	else if (c[0] == 0x78) this->isLittleEndian = true;
-	else throw std::runtime_error("Unsupported architecture");
-
 	std::cout << "Opening " << fileLocation << "...\n";
 
 	this->fileLocation = fileLocation;
@@ -220,117 +253,157 @@ inline void SaveFile::setByteAt(unsigned int x, uint8_t b)
 	this->saveFile[x] = b;
 }
 
+std::vector<uint8_t> SaveFile::getRawBytes(const DataObject data)
+{
+	return data.getRawBytes(this->saveFile);
+}
+
 std::vector<uint8_t> SaveFile::getRawBytes(SaveFieldID sfID)
 {
 	DataObject dataObj = *dataMap[sfID];
-	std::vector<uint8_t> result = dataObj.getRawBytes(this->saveFile);
+	std::vector<uint8_t> result = getRawBytes(dataObj);
 	return result;
 }
 
-// For up to 8 bytes
-void SaveFile::setRawBytes(SaveFieldID sfID, unsigned int value)
+std::vector<uint8_t> SaveFile::getRawArrayBytes(SaveFieldID afID, unsigned int index, unsigned int elementName)
 {
-	(*dataMap[sfID]).setRawBytes(saveFile, value);
+	ArrayObject arrObj = *(ArrayObject*) dataMap[afID];
+	std::vector<uint8_t> result = getRawBytes(*arrObj.at(index, elementName));
+	return result;
 }
 
-// For more than 8 bytes
+Type SaveFile::getType(SaveFieldID sfID)
+{
+	return ((DataObject) *dataMap[sfID]).getType();
+}
+
+template <>
+int SaveFile::getValue<int>(SaveFieldID sfID, bool typeCheck)
+{
+	Type thisType = this->getType(sfID);
+	if (typeCheck && (thisType != INT8_T) && (thisType != INT16_T) && (thisType != INT32_T)) throw std::runtime_error("Expecting signed int, got " + Types::toString(thisType));
+
+	return Types::toSInt(this->getRawBytes(sfID));
+}
+
+template <>
+unsigned int SaveFile::getValue<unsigned int>(SaveFieldID sfID, bool typeCheck)
+{
+	Type thisType = this->getType(sfID);
+	if (typeCheck && (thisType != UINT8_T) && (thisType != UINT16_T) && (thisType != UINT32_T) && (thisType != UINT64_T)) throw std::runtime_error("Expecting unsigned int, got " + Types::toString(thisType));
+
+	return Types::toUInt(this->getRawBytes(sfID));
+}
+
+template <>
+float SaveFile::getValue<float>(SaveFieldID sfID, bool typeCheck)
+{
+	Type thisType = this->getType(sfID);
+	if (typeCheck && (thisType != FLOAT)) throw std::runtime_error("Expecting float, got " + Types::toString(thisType));
+
+	return Types::toFloat(this->getRawBytes(sfID));
+}
+
+template <>
+bool SaveFile::getValue<bool>(SaveFieldID sfID, bool typeCheck)
+{
+	Type thisType = this->getType(sfID);
+	if (typeCheck && (thisType != BOOL)) throw std::runtime_error("Expecting bool, got " + Types::toString(thisType));
+
+	return Types::toBool(this->getRawBytes(sfID));
+}
+
+template <>
+std::string SaveFile::getValue<std::string>(SaveFieldID sfID, bool typeCheck)
+{
+	Type thisType = this->getType(sfID);
+	if (typeCheck && (thisType != STRING)) throw std::runtime_error("Expecting string, got " + Types::toString(thisType));
+
+	return Types::toString(this->getRawBytes(sfID));
+}
+
+template <>
+int SaveFile::getArrayValue<int>(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck)
+{
+	if (typeCheck && this->getType(aID) != ARRAY) throw std::runtime_error("Cannot get array value of non-array SaveField");
+
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+	Type thisType = dataObj->getType();
+	if (typeCheck && (thisType != INT8_T) && (thisType != INT16_T) && (thisType != INT32_T)) throw std::runtime_error("Expecting signed int, got " + Types::toString(thisType));
+
+	return Types::toSInt(this->getRawBytes(*dataObj));
+}
+
+template <>
+unsigned int SaveFile::getArrayValue<unsigned int>(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck)
+{
+	if (typeCheck && this->getType(aID) != ARRAY) throw std::runtime_error("Cannot get array value of non-array SaveField");
+
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+	Type thisType = dataObj->getType();
+	if (typeCheck && (thisType != UINT8_T) && (thisType != UINT16_T) && (thisType != UINT32_T) && (thisType != UINT64_T)) throw std::runtime_error("Expecting unsigned int, got " + Types::toString(thisType));
+
+	return Types::toUInt(this->getRawBytes(*dataObj));
+}
+
+template <>
+float SaveFile::getArrayValue<float>(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck)
+{
+	if (typeCheck && this->getType(aID) != ARRAY) throw std::runtime_error("Cannot get array value of non-array SaveField");
+
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+	Type thisType = dataObj->getType();
+	if (typeCheck && (thisType != FLOAT)) throw std::runtime_error("Expecting float, got " + Types::toString(thisType));
+
+	return Types::toFloat(this->getRawBytes(*dataObj));
+}
+
+template <>
+bool SaveFile::getArrayValue<bool>(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck)
+{
+	if (typeCheck && this->getType(aID) != ARRAY) throw std::runtime_error("Cannot get array value of non-array SaveField");
+
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+	Type thisType = dataObj->getType();
+	if (typeCheck && (thisType != BOOL)) throw std::runtime_error("Expecting boolean, got " + Types::toString(thisType));
+
+	return Types::toBool(this->getRawBytes(*dataObj));
+}
+
+template <>
+std::string SaveFile::getArrayValue<std::string>(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck)
+{
+	if (typeCheck && this->getType(aID) != ARRAY) throw std::runtime_error("Cannot get array value of non-array SaveField");
+
+	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+	if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+	Type thisType = dataObj->getType();
+	if (typeCheck && (thisType != STRING)) throw std::runtime_error("Expecting string, got " + Types::toString(thisType));
+
+	return Types::toString(this->getRawBytes(*dataObj));
+}
+
 void SaveFile::setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value)
 {
 	(*dataMap[sfID]).setRawBytes(saveFile, value);
 }
 
-union floatUnion
-{
-	float f;
-	uint8_t fBytes[sizeof(float)];
-};
-
-void SaveFile::setRawBytes(SaveFieldID sfID, float value)
-{
-	// Convert float to vector to pass to setRawBytes
-	floatUnion f;
-	f.f = value;
-	std::vector<uint8_t> v;
-
-	if (this->isLittleEndian) for (int i = 4; i >= 0; i--) v.push_back(f.fBytes[i]);
-	else for (int i = 0; i < 4; i++) v.push_back(f.fBytes[i]);
-
-	this->setRawBytes(sfID, v);
-}
-
-// For strings
-void SaveFile::setRawBytes(SaveFieldID sfID, const char* value)
-{
-	// Convert const char* to vector to pass to setRawBytes
-	std::vector<uint8_t> v;
-	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t)*ptr);
-
-	this->setRawBytes(sfID, v);
-}
-
-// For arrays
-void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, unsigned int value)
-{
-	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
-	if (dataObj != NULL) (*dataObj).setRawBytes(this->saveFile, value);
-	else throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
-}
-
 // For arrays to set more than 8 bytes
 void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, std::vector<uint8_t> value)
 {
-	// TODO: this isn't calling the overridden function for ArrayObject
 	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
 	if (dataObj != NULL) (*dataObj).setRawBytes(this->saveFile, value);
 	else throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
 }
-
-void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, float value)
-{
-	// Convert float to vector to pass to setRawBytes
-	floatUnion f;
-	f.f = value;
-	std::vector<uint8_t> v;
-
-	if (this->isLittleEndian) for (int i = 4; i >= 0; i--) v.push_back(f.fBytes[i]);
-	else for (int i = 0; i < 4; i++) v.push_back(f.fBytes[i]);
-
-	this->setArrayRawBytes(aID, index, elementName, v);
-}
-
-// For strings
-void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, const char* value)
-{
-	// Convert const char* to vector to pass to setRawBytes
-	std::vector<uint8_t> v;
-	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t)*ptr);
-
-	this->setArrayRawBytes(aID, index, elementName, v);
-}
-
-/*
-// setValue with string argument
-// Need this specialized template function to convert const char* to vector to use setRawBytes
-template <>
-inline void SaveFile::setValue<const char*>(SaveFieldID sfID, const char* value)
-{
-	// Convert const char* to vector to pass to setRawBytes
-	std::vector<uint8_t> v;
-	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t) *ptr);
-
-	this->setRawBytes(sfID, v);
-}
-
-template <>
-inline void SaveFile::setArrayValue<const char*>(SaveFieldID aID, unsigned int index, unsigned int elementName, const char* value)
-{
-	// Convert const char* to vector to pass to setArrayRawBytes
-	std::vector<uint8_t> v;
-	for (const char* ptr = value; *ptr != '\0'; ptr++) v.push_back((uint8_t)*ptr);
-
-	this->setArrayRawBytes(aID, index, elementName, v);
-}
-*/
 
 // CRC16 Polynomial: 1 + x^2 + x^15 + x^16 -> 0x8005 (1000 0000 0000 0101)
 const int lookupTable[] =
