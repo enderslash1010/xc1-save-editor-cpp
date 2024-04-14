@@ -6,10 +6,10 @@ int main()
 	{
 		SaveFile* saveFile = new SaveFile("testSave");
 
-		saveFile->setArrayValue(TBOXArray, 1, TBOXZeroObject, "abcd");
+		saveFile->setArrayValue(MINEArray, 4, MINENumHarvests, 0xCD);
 
-		std::string value = saveFile->getArrayValue<std::string>(TBOXArray, 1, TBOXZeroObject, false);
-		std::cout << "Output: " << std::dec << value << '\n';
+		unsigned int value = saveFile->getArrayValue<unsigned int>(MINEArray, 4, MINENumHarvests);
+		std::cout << "Output: " << std::hex << value << '\n';
 
 		saveFile->saveToFile();
 	}
