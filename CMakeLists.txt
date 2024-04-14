@@ -14,7 +14,8 @@ add_executable(${PROJECT_NAME}
     src/SaveFile.cpp
     src/DataObject.cpp
     src/ArrayObject.cpp
- "include/BitfieldObject.h" "src/BitfieldObject.cpp" "include/Types.h" "src/Types.cpp")
+    src/Types.cpp
+)
 
 # Add the include directories (= our header files) to our target
 target_include_directories(${PROJECT_NAME} PRIVATE include)
