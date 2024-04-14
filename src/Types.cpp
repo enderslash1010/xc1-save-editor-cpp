@@ -103,20 +103,11 @@ std::string Types::toString(Type t)
 	std::string result;
 	switch (t)
 	{
-	case UINT8_T:
-		result = "UINT8_T";
+	case UINT:
+		result = "UINT";
 		break;
-	case UINT16_T:
-		result = "UINT16_T";
-		break;
-	case UINT32_T:
-		result = "UINT32_T";
-		break;
-	case UINT64_T:
-		result = "UINT64_T";
-		break;
-	case INT32_T:
-		result = "INT32_T";
+	case INT:
+		result = "INT";
 		break;
 	case BOOL:
 		result = "BOOL";
