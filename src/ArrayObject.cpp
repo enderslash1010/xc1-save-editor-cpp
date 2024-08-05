@@ -1,7 +1,7 @@
 #include "ArrayObject.h"
 
 ArrayObject::ArrayObject(const std::vector<DataObject> dataObj, unsigned int elementSizeBytes, unsigned int arraySize) : 
-	DataObject(dataObj.at(0).getStartByte(), (elementSizeBytes * arraySize), ARRAY)
+	DataObject(dataObj.at(0).getStartByte(), (elementSizeBytes * arraySize), ARRAY_T)
 {
 	if (dataObj.size() == 0 || elementSizeBytes == 0) throw std::runtime_error("Cannot instantiate ArrayObject: Empty element");
 

@@ -62,18 +62,9 @@ std::vector<uint8_t> DataObject::getRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH
 
 /*
 *	Sets the saveFile bytes associated with this DataObject to the bytes in value
-*	Can set up to 8 bytes, if need to set more use other function with array parameter
-* 
+*
 *	In the case when bytes.size() > this.size(), the additional MSB in bytes are ignored (bytes = 0xABCD -> DataObject = 0xCD for this.size() = 1)
 *	In the case when bytes.size() < this.size(), the additional MSB associated with the DataObject are cleared (bytes = 0xFF -> DataObject = 0x00FF for this.size() = 2)
-*/
-void DataObject::setRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH_BYTES], uint64_t value) const
-{
-	this->setRawBytes(saveFile, Types::toRaw((unsigned int) value));
-}
-
-/*
-*	Does the same as function above, but can set more than 8 bytes
 */
 void DataObject::setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::vector<uint8_t> value) const
 {

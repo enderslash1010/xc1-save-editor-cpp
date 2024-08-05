@@ -1,88 +1,62 @@
 #include "Types.h"
 #include <stdexcept>
 
-/* Assume all vectors are big endian
-*  Raw types (int, float, etc) depend on the underlying architecture
-*/
-
-union floatUnion
+template <>
+float Types::toValue<float>(std::vector<uint8_t> rawBytes)
 {
 	float f;
-	uint8_t fBytes[sizeof(float)];
-};
 
-float Types::toFloat(std::vector<uint8_t> rawBytes)
-{
-	if (rawBytes.size() != 4) throw std::runtime_error("Expected 4 byte float");
-
-	floatUnion f;
-	if (ENDIANNESS == LITTLE) for (int i = 0; i < 4; i++) f.fBytes[i] = rawBytes.at(3 - i);
-	else for (int i = 0; i < 4; i++) f.fBytes[i] = rawBytes.at(i);
-
-	return f.f;
-}
-
-unsigned int Types::toUInt(std::vector<uint8_t> rawBytes)
-{
-	if (rawBytes.size() > 8) throw std::runtime_error("Maximum 8 byte integer allowed");
-
-	unsigned int result = 0;
-	for (int i = 0; i < rawBytes.size(); i++)
+	int floatInIntRep = 0;
+	for (uint8_t byte : rawBytes)
 	{
-		result <<= 8;
-		result |= rawBytes.at(i);
+		floatInIntRep <<= 8;
+		floatInIntRep |= byte;
 	}
+	memcpy(&f, &floatInIntRep, 4);
 
-	return result;
+	return f;
 }
 
-int Types::toSInt(std::vector<uint8_t> rawBytes)
+template <>
+std::string Types::toValue<std::string>(std::vector<uint8_t> rawBytes)
 {
-	if (rawBytes.size() > 8) throw std::runtime_error("Maximum 8 byte integer allowed");
-
-	int result = 0;
-	for (int i = 0; i < rawBytes.size(); i++)
+	std::string string = "";
+	for (uint8_t rawByte : rawBytes)
 	{
-		result <<= 8;
-		result |= rawBytes.at(i);
+		string += rawByte;
 	}
-
-	return result;
+	return string;
 }
 
-std::string Types::toString(std::vector<uint8_t> rawBytes)
+template <>
+bool Types::toValue<bool>(std::vector<uint8_t> rawBytes)
 {
-	std::string result;
-	for (int i = 0; i < rawBytes.size(); i++) result += rawBytes.at(i);
-	return result;
-}
-
-bool Types::toBool(std::vector<uint8_t> rawBytes)
-{
-	if (rawBytes.size() == 0) return false;
-	return rawBytes.at(rawBytes.size() - 1);
+	int rawBool = toValue<int>(rawBytes);
+	return rawBool == 0 ? false : true;
 }
 
 std::vector<uint8_t> Types::toRaw(float x)
 {
-	floatUnion f;
-	f.f = x;
 	std::vector<uint8_t> v;
 
-	if (ENDIANNESS == LITTLE) for (int i = 3; i >= 0; i--) v.push_back(f.fBytes[i]);
-	else for (int i = 0; i < 4; i++) v.push_back(f.fBytes[i]);
+	uint8_t floatBytes[sizeof(float)];
+	memcpy(floatBytes, &x, sizeof(x));
 
-	return v;
-}
-
-std::vector<uint8_t> Types::toRaw(unsigned int x)
-{
-	std::vector<uint8_t> v;
-	do // When x==0, loop is run once to put 0 into v
+	int floatInIntRep = 0;
+	for (uint8_t byte : floatBytes)
 	{
-		v.insert(v.begin(), x & 0xFF);
-		x >>= 8;
-	} while (x != 0);
+		floatInIntRep <<= 8;
+		floatInIntRep |= byte;
+	}
+
+	uint32_t bigEndianFloat = htonl(floatInIntRep);
+
+	for (int i = 0; bigEndianFloat != 0 && i < 4; i++)
+	{
+		v.insert(v.begin(), bigEndianFloat & 0xFF);
+		bigEndianFloat >>= 8;
+	}
+
 	return v;
 }
 
@@ -98,30 +72,32 @@ std::vector<uint8_t> Types::toRaw(std::string x)
 	return v;
 }
 
+std::vector<uint8_t> Types::toRaw(bool x) { return x ? toRaw(1) : toRaw(0);}
+
 std::string Types::toString(Type t)
 {
 	std::string result;
 	switch (t)
 	{
-	case UINT:
+	case UINT_T:
 		result = "UINT";
 		break;
-	case INT:
+	case INT_T:
 		result = "INT";
 		break;
-	case BOOL:
+	case BOOL_T:
 		result = "BOOL";
 		break;
-	case FLOAT:
+	case FLOAT_T:
 		result = "FLOAT";
 		break;
-	case STRING:
+	case STRING_T:
 		result = "STRING";
 		break;
-	case TPL:
+	case TPL_T:
 		result = "TPL";
 		break;
-	case ARRAY:
+	case ARRAY_T:
 		result = "ARRAY";
 		break;
 	default:
