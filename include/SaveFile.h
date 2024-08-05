@@ -39,20 +39,27 @@ public:
     Type getType(SaveFieldID sfID);
     
     template<typename T>
-    T getValue(SaveFieldID sfID, bool typeCheck = true);
-
-    template<typename T>
-    T getArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, bool typeCheck = true);
-
-    template<typename T>
-    void setValue(SaveFieldID sfID, T value)
+    T getValue(SaveFieldID sfID)
     {
-        this->setRawBytes(sfID, Types::toRaw(value));
+        return Types::toValue<T>(this->getRawBytes(sfID));
     }
 
     template<typename T>
-    void setArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, T value)
+    T getArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName)
     {
-        this->setArrayRawBytes(aID, index, elementName, Types::toRaw(value));
+        const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
+        if (dataObj == NULL) throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+
+        return Types::toValue<T>(this->getRawBytes(*dataObj));
     }
+
+    template<typename T> void setValue(SaveFieldID sfID, T value) { this->setRawBytes(sfID, Types::toRaw(value)); }
+    template<typename T> void setArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, T value) { this->setArrayRawBytes(aID, index, elementName, Types::toRaw(value)); }
+
 };
+
+template <> 
+void SaveFile::setValue(SaveFieldID sfID, const char* value);
+
+template <> 
+void SaveFile::setArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, const char* value);

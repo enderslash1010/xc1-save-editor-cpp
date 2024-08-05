@@ -27,8 +27,13 @@ public:
 
 	std::vector<uint8_t> getRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES]) const;
 
-	void setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], uint64_t value) const;
 	void setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::vector<uint8_t> value) const;
+
+	template <typename T>
+	void setValue(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], T value) const
+	{
+		this->setRawBytes(saveFile, Types::toRaw(value));
+	}
 
 	virtual const DataObject* at(unsigned int row, unsigned int column) const
 	{

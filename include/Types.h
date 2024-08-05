@@ -2,40 +2,71 @@
 #include <vector>
 #include <string>
 #include <stdint.h>
+#include <cstring>
+
+#ifdef _WIN32
+#include <winsock2.h>
+#pragma comment(lib, "Ws2_32.lib")
+#else
+#include <arpa/inet.h>
+#endif
 
 enum Type
 {
-	UINT8_T,
-	UINT16_T,
-	UINT32_T,
-	UINT64_T,
-	INT8_T,
-	INT16_T,
-	INT32_T,
-	BOOL,
-	FLOAT,
-	STRING,
-	TPL,
-	ARRAY
+	UINT_T,
+	INT_T,
+	BOOL_T,
+	FLOAT_T,
+	STRING_T,
+	TPL_T,
+	ARRAY_T
 };
-
-static uint32_t endianness = 0x12345678;
-enum endian { BIG, LITTLE };
-#define ENDIANNESS (*(const char*)&endianness == 0x78 ? LITTLE : BIG)
 
 class Types
 {
+private:
 public:
-	static float toFloat(std::vector<uint8_t> rawBytes);
-	static unsigned int toUInt(std::vector<uint8_t> rawBytes);
-	static int toSInt(std::vector<uint8_t> rawBytes);
-	static std::string toString(std::vector<uint8_t> rawBytes);
-	static bool toBool(std::vector<uint8_t> rawBytes);
+
+	template <typename T>
+	static T toValue(std::vector<uint8_t> rawBytes)
+	{
+		T result = 0;
+
+		for (uint8_t byte : rawBytes)
+		{
+			result <<= 8;
+			result |= byte;
+		}
+
+		return result;
+	}
+
+	// Returns the big-endian representation of x
+	template <typename T>
+	static std::vector<uint8_t> toRaw(T x)
+	{
+		std::vector<uint8_t> v;
+		do // When x==0, loop is run once to put 0 into v
+		{
+			v.insert(v.begin(), x & (T) 0xFF);
+			x >>= (T)8;
+		} while (x != 0);
+		return v;
+	}
 
 	static std::vector<uint8_t> toRaw(float x);
-	static std::vector<uint8_t> toRaw(unsigned int x); // this function will also handle bool
+	static std::vector<uint8_t> toRaw(bool x);
 	static std::vector<uint8_t> toRaw(int x);
 	static std::vector<uint8_t> toRaw(std::string x);
 
 	static std::string toString(Type t);
 };
+
+template <>
+float Types::toValue(std::vector<uint8_t> rawBytes);
+
+template <>
+std::string Types::toValue(std::vector<uint8_t> rawBytes);
+
+template <>
+bool Types::toValue(std::vector<uint8_t> rawBytes);
