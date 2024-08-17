@@ -19,187 +19,6 @@ const int sectionRanges[NUM_SECTIONS][2] =
 const int checksumLocations[NUM_SECTIONS] = { 0x1E, 0xA02E, 0xB25E, 0x11EAE, 0x11EDE, 0x11F2E, 0x11F5E, 0x2408E, 0x240BE, 0x240EE, 0x2449E, 0x248AE };
 const char* sectionNames[NUM_SECTIONS] = { "THUM", "FLAG", "GAME", "TIME", "PCPM", "CAMD", "ITEM", "WTHR", "SNDS", "MINE", "TBOX", "OPTD" };
 
-// Elements for ArrayObjects
-const std::vector<DataObject> ITEMWeaponArrayElement = {
-	DataObject(0x1C4EC, 7, 12, UINT_T), // ITEMWeaponID1
-	DataObject(0x1C4ED, 3, 4, UINT_T), // ITEMWeaponStatic1 (2)
-	DataObject(0x1C4EE, 7, 11, UINT_T), // ITEMWeaponID2
-	DataObject(0x1C4EF, 4, 5, UINT_T), // ITEMWeaponStatic2 (0)
-	DataObject(0x1C4F0, 1, UINT_T), // ITEMWeaponStatic3 (0)
-	DataObject(0x1C4F1, 1, UINT_T), // ITEMWeaponInventorySlot
-	DataObject(0x1C4F2, 1, UINT_T), // ITEMWeaponStatic4 (1)
-	DataObject(0x1C4F3, 1, UINT_T), // ITEMWeaponStatic5 (0)
-	DataObject(0x1C4F4, 8, UINT_T), // ITEMWeaponGem1ID
-	DataObject(0x1C4FC, 8, UINT_T), // ITEMWeaponGem2ID
-	DataObject(0x1C504, 8, UINT_T), // ITEMWeaponGem3ID
-	DataObject(0x1C50C, 8, UINT_T), // ITEMWeaponGem4ID
-	DataObject(0x1C514, 2, UINT_T), // ITEMWeaponGem1Index
-	DataObject(0x1C516, 2, UINT_T), // ITEMWeaponGem2Index
-	DataObject(0x1C518, 2, UINT_T), // ITEMWeaponGem3Index
-	DataObject(0x1C51A, 2, UINT_T), // ITEMWeaponGem4Index
-	DataObject(0x1C51C, 1, UINT_T), // ITEMWeaponNumGemSlots
-	DataObject(0x1C51D, 1, UINT_T), // ITEMWeaponStatic6 (6)
-	DataObject(0x1C51E, 2, UINT_T), // ITEMWeaponStatic7 (0)
-};
-
-const std::vector<DataObject> ITEMGemArrayElement = {
-	DataObject(0x206D8, 2, UINT_T), // ITEMGemStatic1 (0xEA33); Item ID from ITM_itemlist that doesn't affect gem attributes (just needs to be a gem type item)
-	DataObject(0x206DA, 7, 11, UINT_T), // ITEMGemID1
-	DataObject(0x206DB, 4, 5, UINT_T), // ITEMGemUnk1
-	DataObject(0x206DC, 1, UINT_T), // ITEMGemStatic2 (0)
-	DataObject(0x206DD, 1, UINT_T), // ITEMGemInventorySlot
-	DataObject(0x206DE, 1, UINT_T), // ITEMGemStatic3 (1)
-	DataObject(0x206DF, 1, UINT_T), // ITEMGemStatic4 (0/3)
-	DataObject(0x206E0, 7, 11, UINT_T), // ITEMGemUnk2
-	DataObject(0x206E1, 4, 11, UINT_T), // ITEMGemValue
-	DataObject(0x206E2, 1, 3, UINT_T), // ITEMGemRank
-	DataObject(0x206E3, 6, 7, UINT_T), // ITEMGemUnk3
-	DataObject(0x206E4, 7, 12, UINT_T), // ITEMGemID2
-	DataObject(0x206E5, 3, 4, UINT_T), // ITEMGemStatic5 (2)
-	DataObject(0x206E6, 2, UINT_T), // ITEMGemStatic6 (0)
-};
-
-const std::vector<DataObject> MINEArrayElement = {
-	DataObject(0x240F0, 2, UINT_T), // MINECooldown
-	DataObject(0x240F2, 1, UINT_T), // MINENumHarvests
-	DataObject(0x240F3, 1, UINT_T), // MINEMineID
-	DataObject(0x240F4, 2, UINT_T), // MINEMapID
-};
-
-const std::vector<DataObject> TBOXElement = {
-	DataObject(0x244A4, 4, UINT_T), // TBOXZeroObject
-	DataObject(0x244A8, 4, FLOAT_T), // TBOXPositionX
-	DataObject(0x244AC, 4, FLOAT_T), // TBOXPositionY
-	DataObject(0x244B0, 4, FLOAT_T), // TBOXPositionZ
-	DataObject(0x244B4, 4, FLOAT_T), // TBOXAngle
-	DataObject(0x244B8, 4, UINT_T), // TBOXRank
-	DataObject(0x244BC, 2, UINT_T), // TBOXDropTable (?)
-	DataObject(0x244BE, 2, UINT_T) // TBOXMapID
-};
-
-// dataMap stores all DataObjects in the save file
-// Make sure there is a SaveFieldID enum for each DataObject here, in order
-const DataObject* SaveFile::dataMap[] =
-{
-	// THUM
-	new DataObject(0x84, 2, UINT_T), // THUMLevel
-	new DataObject(0x2A, 2, UINT_T), // THUMPlayTimeHours
-	new DataObject(0x2C, 2, UINT_T), // THUMPlayTimeMinutes
-	new DataObject(0x23, 1, UINT_T), // THUMPlayTimeSeconds
-	new DataObject(0x29, 2, UINT_T), // THUMSaveTimeDay
-	new DataObject(0x26, 2, UINT_T), // THUMSaveTimeMonth
-	new DataObject(0x24, 2, UINT_T), // THUMSaveTimeYear
-	new DataObject(0x28, 1, UINT_T), // THUMSaveTimeHour
-	new DataObject(0x22, 1, UINT_T), // THUMSaveTimeMinute
-	new DataObject(0x37, 1, UINT_T), // THUMPictureSlot1
-	new DataObject(0x3B, 1, UINT_T), // THUMPictureSlot2
-	new DataObject(0x3F, 1, UINT_T), // THUMPictureSlot3
-	new DataObject(0x43, 1, UINT_T), // THUMPicutreSlot4
-	new DataObject(0x47, 1, UINT_T), // THUMPictureSlot5
-	new DataObject(0x4B, 1, UINT_T), // THUMPictureSlot6
-	new DataObject(0x4F, 1, UINT_T), // THUMPictureSlot7
-	new DataObject(0x64, 32, STRING_T), // THUMNameString
-	new DataObject(0x86, 1, UINT_T), // THUMSystemSaveFlag
-	new DataObject(0x87, 1, UINT_T), // THUMNGPlusFlag
-	new DataObject(0xE0, 38048, TPL_T), // THUMSaveImage
-
-	// FLAG
-	new DataObject(0xA0B2, 2, UINT_T), // FLAGScenarioID
-
-	// GAME
-	new DataObject(0xB260, 4, UINT_T), // GAMEMapNum
-	new DataObject(0xB264, 4, STRING_T), // GAMEMapNumString
-	new DataObject(0xD1FE, 2, UINT_T), // GAMEPlayer1
-	new DataObject(0xD202, 2, UINT_T), // GAMEPlayer2
-	new DataObject(0xD206, 2, UINT_T), // GAMEPlayer3
-	new DataObject(0xD20A, 2, UINT_T), // GAMEPlayer4
-	new DataObject(0xD20E, 2, UINT_T), // GAMEPlayer5
-	new DataObject(0xD212, 2, UINT_T), // GAMEPlayer6
-	new DataObject(0xD216, 2, UINT_T), // GAMEPlayer7
-	new DataObject(0xF8D0, 4, UINT_T), // GAMEShulkLevel
-	new DataObject(0xFBD4, 4, UINT_T), // GAMEReynLevel
-	new DataObject(0xFEC8, 4, UINT_T), // GAMEFioraLevel
-	new DataObject(0x101DC, 4, UINT_T), // GAMEDunbanLevel
-	new DataObject(0x104E0, 4, UINT_T), // GAMESharlaLevel
-	new DataObject(0x107E4, 4, UINT_T), // GAMERikiLevel
-	new DataObject(0x10AE8, 4, UINT_T), // GAMEMeliaLevel
-	new DataObject(0x10DEC, 4, UINT_T), // GAMESevenLevel
-	new DataObject(0x110F0, 4, UINT_T), // GAMEDicksonLevel
-	new DataObject(0x113F4, 4, UINT_T), // GAMEMumkharLevel
-	new DataObject(0x116F8, 4, UINT_T), // GAMEAlvisLevel
-	new DataObject(0x119FC, 4, UINT_T), // GAMEPrologueDunbanLevel
-
-	// TIME
-	new DataObject(0x11EB0, 4, UINT_T), // TIMEPlayTime
-	new DataObject(0x11EB8, 4, UINT_T), // TIMEDayCount
-	new DataObject(0x11EB4, 4, UINT_T), // TIMEDayTime
-	new DataObject(0x11EBA, 2, UINT_T), // TIMEYearCount
-
-	// PCPM
-	new DataObject(0x11EE0, 4, FLOAT_T), // PCPMPlayer1X
-	new DataObject(0x11EE4, 4, FLOAT_T), // PCPMPlayer1Y
-	new DataObject(0x11EE8, 4, FLOAT_T), // PCPMPlayer1Z
-	new DataObject(0x11EEC, 4, FLOAT_T), // PCPMPlayer1Angle
-	new DataObject(0x11EF0, 4, FLOAT_T), // PCPMPlayer2X
-	new DataObject(0x11EF4, 4, FLOAT_T), // PCPMPlayer2Y
-	new DataObject(0x11EF8, 4, FLOAT_T), // PCPMPlayer2Z
-	new DataObject(0x11EFC, 4, FLOAT_T), // PCPMPlayer2Angle
-	new DataObject(0x11F00, 4, FLOAT_T), // PCPMPlayer3X
-	new DataObject(0x11F04, 4, FLOAT_T), // PCPMPlayer3Y
-	new DataObject(0x11F08, 4, FLOAT_T), // PCPMPlayer3Z
-	new DataObject(0x11F0C, 4, FLOAT_T), // PCPMPlayer3Angle
-
-	// CAMD
-	new DataObject(0x11F30, 4, FLOAT_T), // CAMDVerticalPosition
-	new DataObject(0x11F34, 4, FLOAT_T), // CAMDHorizontalPosition
-	new DataObject(0x11F3C, 4, FLOAT_T), // CAMDDistance
-
-	// ITEM
-	new DataObject(0x24048, 4, INT_T), // ITEMMoney
-	new ArrayObject(ITEMWeaponArrayElement, 52, 150), // ITEMWeaponArray
-	new ArrayObject(ITEMGemArrayElement, 16, 300), // ITEMGemArray
-
-	// WTHR
-	new DataObject(0x24090, 4, UINT_T), // WTHRReroll
-	new DataObject(0x24098, 4, UINT_T), // WTHRMap
-	new DataObject(0x24095, 1, UINT_T), // WTHRForegreoundWeather
-	new DataObject(0x24096, 2, UINT_T), // WTHRUnk1
-	new DataObject(0x2409D, 1, UINT_T), // WTHRBackgroundWeather
-	new DataObject(0x2409F, 1, UINT_T), // WTHRUnk2
-
-	// SNDS
-
-	// MINE
-	new ArrayObject(MINEArrayElement, 6, 150), // MINEArray
-
-	// TBOX
-	new DataObject(0x244A3, 1, UINT_T), // TBOXBoxCount
-	new ArrayObject(TBOXElement, 28, 21), // TBOXArray
-
-	// OPTD
-	new DataObject(0x248B0, 1, BOOL_T), // OPTDNonInvertedYAxis
-	new DataObject(0x248B1, 1, BOOL_T), // OPTDNonInvertedXAxis
-	new DataObject(0x248B2, 1, UINT_T), // OPTDYAxisSpeed
-	new DataObject(0x248B3, 1, UINT_T), // OPTDXAxisSpeed
-	new DataObject(0x248B4, 1, UINT_T), // OPTDZoomSpeed
-	new DataObject(0x248B5, 1, UINT_T), // OPTDPointOfView
-	new DataObject(0x248B6, 1, BOOL_T), // OPTDAngleCorrection
-	new DataObject(0x248B7, 1, BOOL_T), // OPTDBattleCamera
-	new DataObject(0x248BF, 1, UINT_T), // OPTDGamma
-	new DataObject(0x248C0, 1, BOOL_T), // OPTDMinimapOn
-	new DataObject(0x248C1, 1, BOOL_T), // OPTDMinimapRotate
-	new DataObject(0x248CC, 1, BOOL_T), // OPTDJapaneseVoice
-	new DataObject(0x248D0, 1, BOOL_T), // OPTDShowControls
-	new DataObject(0x248D1, 1, BOOL_T), // OPTDShowArtDescriptions
-	new DataObject(0x248D2, 1, BOOL_T), // OPTDShowBuffDebuffInfoEveryTime
-	new DataObject(0x248D3, 1, BOOL_T), // OPTDShowEnemyIcons
-	new DataObject(0x248D4, 1, BOOL_T), // OPTDShowBuffDefbuffIndicator
-	new DataObject(0x248D5, 1, BOOL_T), // OPTDShowDestinationMarker
-	new DataObject(0x248E0, 1, BOOL_T), // OPTDAutoEventScrolling
-	new DataObject(0x248E1, 1, BOOL_T), // OPTDFastDialogueText
-	new DataObject(0x248E2, 1, BOOL_T) // OPTDShowSubtitles
-};
-
 static void fixChecksums(uint8_t (&saveFile)[SAVEFILE_LENGTH_BYTES]);
 
 SaveFile::SaveFile(std::string fileLocation)
@@ -245,6 +64,7 @@ void SaveFile::saveToFile()
 
 inline uint8_t SaveFile::getByteAt(unsigned int x)
 {
+	throw std::out_of_range(x + " out of bounds for " + SAVEFILE_LENGTH_BYTES);
 	return this->saveFile[x];
 }
 
@@ -294,7 +114,7 @@ void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned in
 {
 	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
 	if (dataObj != NULL) (*dataObj).setRawBytes(this->saveFile, value);
-	else throw std::runtime_error("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+	else throw std::out_of_range("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
 }
 
 template <>

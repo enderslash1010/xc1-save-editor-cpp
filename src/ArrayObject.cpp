@@ -1,9 +1,9 @@
 #include "ArrayObject.h"
 
-ArrayObject::ArrayObject(const std::vector<DataObject> dataObj, unsigned int elementSizeBytes, unsigned int arraySize) : 
+ArrayObject::ArrayObject(unsigned int elementSizeBytes, unsigned int arraySize, const std::vector<DataObject> dataObj) :
 	DataObject(dataObj.at(0).getStartByte(), (elementSizeBytes * arraySize), ARRAY_T)
 {
-	if (dataObj.size() == 0 || elementSizeBytes == 0) throw std::runtime_error("Cannot instantiate ArrayObject: Empty element");
+	if (dataObj.size() == 0 || elementSizeBytes == 0) throw std::invalid_argument("Cannot instantiate ArrayObject: Empty element");
 
 	this->numRows = arraySize;
 	this->numColumns = dataObj.size();
@@ -14,8 +14,8 @@ ArrayObject::ArrayObject(const std::vector<DataObject> dataObj, unsigned int ele
 	{
 		numBits += dataObj.at(i).getLengthInBits();
 	}
-	if (numBits % 8 != 0) throw std::runtime_error("Cannot instantiate ArrayObject: element not byte aligned");
-	else if ((numBits / 8) != elementSizeBytes) throw std::runtime_error("Cannot instantiate ArrayObject: Mismatched element size");
+	if (numBits % 8 != 0) throw std::invalid_argument("Cannot instantiate ArrayObject: element not byte aligned");
+	else if ((numBits / 8) != elementSizeBytes) throw std::invalid_argument("Cannot instantiate ArrayObject: Mismatched element size");
 
 	// Process dataObj into a 2D array of DataObjects
 	unsigned int currByte = ((DataObject) dataObj.at(0)).getStartByte();

@@ -17,5 +17,23 @@ add_executable(${PROJECT_NAME}
     src/Types.cpp
 )
 
-# Add the include directories (= our header files) to our target
+# Add the include header files to our target
 target_include_directories(${PROJECT_NAME} PRIVATE include)
+
+#include googletest
+enable_testing()
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/ff233bdd4cac0a0bf6e5cd45bda3406814cb2796.zip
+    DOWNLOAD_EXTRACT_TIMESTAMP true
+)
+FetchContent_MakeAvailable(googletest)
+add_executable(tests
+    tests.cc
+)
+target_link_libraries(
+    tests
+    GTest::gtest_main
+)
+add_test(tests test1)

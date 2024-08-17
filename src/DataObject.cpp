@@ -2,7 +2,8 @@
 
 DataObject::DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type)
 {
-	if (lengthInBytes == 0) throw std::runtime_error("Cannot instantiate DataObject with 0 length");
+	if (lengthInBytes == 0) throw std::invalid_argument("Cannot instantiate DataObject with 0 length");
+	if (startByte + lengthInBytes > SAVEFILE_LENGTH_BYTES) throw std::invalid_argument("DataObject exceeds save file length");
 
 	this->startByte = startByte;
 	this->startBit = 7;
@@ -18,7 +19,7 @@ DataObject::DataObject(unsigned int startByte, unsigned int lengthInBytes, Type 
 
 DataObject::DataObject(unsigned int startByte, unsigned int startBit, unsigned int lengthInBits, Type type)
 {
-	if (lengthInBits == 0) throw std::runtime_error("Cannot instantiate DataObject with 0 length");
+	if (lengthInBits == 0) throw std::invalid_argument("Cannot instantiate DataObject with 0 length");
 	
 	this->startByte = startByte;
 	this->startBit = startBit;
@@ -30,6 +31,8 @@ DataObject::DataObject(unsigned int startByte, unsigned int startBit, unsigned i
 
 	this->endBit = 7 - (((7 - startBit) + lengthInBits - 1) % 8);
 	this->endByte = ((startByte * 8) + (7 - startBit) + lengthInBits - 1) / 8;
+
+	if (this->endByte + 1 > SAVEFILE_LENGTH_BYTES) throw std::invalid_argument("DataObject exceeds save file length");
 }
 
 std::vector<uint8_t> DataObject::getRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH_BYTES]) const
