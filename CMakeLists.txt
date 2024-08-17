@@ -30,10 +30,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 add_executable(tests
-    tests.cc
+    src/tests.cc
 )
 target_link_libraries(
     tests
     GTest::gtest_main
 )
-add_test(tests test1)
+add_test(test1 tests)
