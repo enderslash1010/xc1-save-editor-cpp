@@ -4,7 +4,7 @@ int main()
 {
 	try
 	{
-		SaveFile* saveFile = new SaveFile("testSave");
+		SaveFile* saveFile = new SaveFile();
 
 		saveFile->setValue(PCPMPlayer1Z, -5553.44f);
 		float value = saveFile->getValue<float>(PCPMPlayer1Z);
@@ -16,7 +16,7 @@ int main()
 
 		saveFile->setValue(OPTDShowSubtitles, true);
 		bool boolean = saveFile->getValue<bool>(OPTDShowSubtitles);
-		std::cout << "Bool Output: " << boolean << '\n';
+		std::cout << "Bool Output: " << (boolean ? "true" : "false") << '\n';
 
 		saveFile->setValue(THUMNameString, "hello, world!");
 		std::string string = saveFile->getValue<std::string>(THUMNameString);

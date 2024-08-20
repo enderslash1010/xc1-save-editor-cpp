@@ -46,11 +46,13 @@ public:
 	static std::vector<uint8_t> toRaw(T x)
 	{
 		std::vector<uint8_t> v;
+		unsigned int sizeInBytes = sizeof(T);
 		do // When x==0, loop is run once to put 0 into v
 		{
 			v.insert(v.begin(), x & (T) 0xFF);
-			x >>= (T)8;
-		} while (x != 0);
+			x >>= 8;
+			sizeInBytes--;
+		} while (x != 0 && sizeInBytes > 0);
 		return v;
 	}
 

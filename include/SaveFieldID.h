@@ -117,5 +117,7 @@ enum SaveFieldID
 	OPTDShowDestinationMarker,
 	OPTDAutoEventScrolling,
 	OPTDFastDialogueText,
-	OPTDShowSubtitles
+	OPTDShowSubtitles,
+
+	LAST_INDEX
 };
