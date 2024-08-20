@@ -191,6 +191,7 @@ class SaveFile
 	};
 
 public:
+	SaveFile();
     SaveFile(std::string fileLocation);
 
     uint8_t getByteAt(unsigned int x);

@@ -29,11 +29,14 @@ FetchContent_Declare(
     DOWNLOAD_EXTRACT_TIMESTAMP true
 )
 FetchContent_MakeAvailable(googletest)
-add_executable(tests
+
+add_executable(tests 
     src/tests.cc
+    src/SaveFile.cpp
+    src/DataObject.cpp
+    src/ArrayObject.cpp
+    src/Types.cpp
 )
-target_link_libraries(
-    tests
-    GTest::gtest_main
-)
-add_test(test1 tests)
+target_include_directories(tests PRIVATE include)
+target_link_libraries(tests GTest::gtest_main)
+add_test(tests tests)

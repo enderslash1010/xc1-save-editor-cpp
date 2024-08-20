@@ -4,7 +4,7 @@ int main()
 {
 	try
 	{
-		SaveFile* saveFile = new SaveFile("testSave");
+		SaveFile* saveFile = new SaveFile();
 
 		saveFile->setValue(PCPMPlayer1Z, -5553.44f);
 		float value = saveFile->getValue<float>(PCPMPlayer1Z);
