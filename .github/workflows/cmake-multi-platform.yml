@@ -46,7 +46,9 @@ jobs:
     steps:
     - id: Qt
       uses: jurplel/install-qt-action@v4.0.0
-    
+      with:
+        cache: 'true'
+
     - uses: actions/checkout@v4
 
     - name: Set reusable strings
