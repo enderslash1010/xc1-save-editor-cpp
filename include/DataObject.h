@@ -41,5 +41,10 @@ public:
 		else return NULL;
 	}
 
+	virtual const int getStaticValue(unsigned int column) const { return 0; }
+
+	unsigned const int getNumRows() const { return this->numRows; }
+	unsigned const int getNumColumns() const { return this->numColumns; }
+
 	void print();
 };

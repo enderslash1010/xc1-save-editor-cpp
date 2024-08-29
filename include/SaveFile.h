@@ -97,42 +97,42 @@ class SaveFile
 
 		// ITEM
 		new DataObject(0x24048, 4, INT_T), // ITEMMoney
-		new ArrayObject(52, 150, std::vector<DataObject> { // ITEMWeaponArray
-			DataObject(0x1C4EC, 7, 12, UINT_T), // ITEMWeaponID1
-			DataObject(0x1C4ED, 3, 4, UINT_T), // ITEMWeaponStatic1 (2)
-			DataObject(0x1C4EE, 7, 11, UINT_T), // ITEMWeaponID2
-			DataObject(0x1C4EF, 4, 5, UINT_T), // ITEMWeaponStatic2 (0)
-			DataObject(0x1C4F0, 1, UINT_T), // ITEMWeaponStatic3 (0)
-			DataObject(0x1C4F1, 1, UINT_T), // ITEMWeaponInventorySlot
-			DataObject(0x1C4F2, 1, UINT_T), // ITEMWeaponStatic4 (1)
-			DataObject(0x1C4F3, 1, UINT_T), // ITEMWeaponStatic5 (0)
-			DataObject(0x1C4F4, 8, UINT_T), // ITEMWeaponGem1ID
-			DataObject(0x1C4FC, 8, UINT_T), // ITEMWeaponGem2ID
-			DataObject(0x1C504, 8, UINT_T), // ITEMWeaponGem3ID
-			DataObject(0x1C50C, 8, UINT_T), // ITEMWeaponGem4ID
-			DataObject(0x1C514, 2, UINT_T), // ITEMWeaponGem1Index
-			DataObject(0x1C516, 2, UINT_T), // ITEMWeaponGem2Index
-			DataObject(0x1C518, 2, UINT_T), // ITEMWeaponGem3Index
-			DataObject(0x1C51A, 2, UINT_T), // ITEMWeaponGem4Index
-			DataObject(0x1C51C, 1, UINT_T), // ITEMWeaponNumGemSlots
-			DataObject(0x1C51D, 1, UINT_T), // ITEMWeaponStatic6 (6)
-			DataObject(0x1C51E, 2, UINT_T), // ITEMWeaponStatic7 (0)
+		new ArrayObject(52, 150, std::vector<Element> { // ITEMWeaponArray
+			{DataObject(0x1C4EC, 7, 12, UINT_T), 0}, // ITEMWeaponID1
+			{DataObject(0x1C4ED, 3, 4, UINT_T), 2}, // ITEMWeaponStatic1 (2)
+			{DataObject(0x1C4EE, 7, 11, UINT_T), 0}, // ITEMWeaponID2
+			{DataObject(0x1C4EF, 4, 5, UINT_T), 0 }, // ITEMWeaponStatic2 (0)
+			{DataObject(0x1C4F0, 1, UINT_T), 0}, // ITEMWeaponStatic3 (0)
+			{DataObject(0x1C4F1, 1, UINT_T), 0}, // ITEMWeaponInventorySlot
+			{DataObject(0x1C4F2, 1, UINT_T), 1}, // ITEMWeaponStatic4 (1)
+			{DataObject(0x1C4F3, 1, UINT_T), 0}, // ITEMWeaponStatic5 (0)
+			{DataObject(0x1C4F4, 8, UINT_T), 0}, // ITEMWeaponGem1ID
+			{DataObject(0x1C4FC, 8, UINT_T), 0}, // ITEMWeaponGem2ID
+			{DataObject(0x1C504, 8, UINT_T), 0}, // ITEMWeaponGem3ID
+			{DataObject(0x1C50C, 8, UINT_T), 0}, // ITEMWeaponGem4ID
+			{DataObject(0x1C514, 2, UINT_T), 0}, // ITEMWeaponGem1Index
+			{DataObject(0x1C516, 2, UINT_T), 0}, // ITEMWeaponGem2Index
+			{DataObject(0x1C518, 2, UINT_T), 0}, // ITEMWeaponGem3Index
+			{DataObject(0x1C51A, 2, UINT_T), 0}, // ITEMWeaponGem4Index
+			{DataObject(0x1C51C, 1, UINT_T), 0}, // ITEMWeaponNumGemSlots
+			{DataObject(0x1C51D, 1, UINT_T), 0}, // ITEMWeaponStatic6 (6)
+			{DataObject(0x1C51E, 2, UINT_T), 0}  // ITEMWeaponStatic7 (0)
 		}),
-		new ArrayObject(16, 300, std::vector<DataObject> { // ITEMGemArray
-			DataObject(0x206D8, 2, UINT_T), // ITEMGemStatic1 (0xEA33); Item ID from ITM_itemlist that doesn't affect gem attributes (just needs to be a gem type item)
-			DataObject(0x206DA, 7, 11, UINT_T), // ITEMGemID1
-			DataObject(0x206DB, 4, 5, UINT_T), // ITEMGemUnk1
-			DataObject(0x206DC, 1, UINT_T), // ITEMGemStatic2 (0)
-			DataObject(0x206DD, 1, UINT_T), // ITEMGemInventorySlot
-			DataObject(0x206DE, 1, UINT_T), // ITEMGemStatic3 (1)
-			DataObject(0x206DF, 1, UINT_T), // ITEMGemStatic4 (0/3)
-			DataObject(0x206E0, 7, 11, UINT_T), // ITEMGemUnk2
-			DataObject(0x206E1, 4, 11, UINT_T), // ITEMGemValue
-			DataObject(0x206E2, 1, 3, UINT_T), // ITEMGemRank
-			DataObject(0x206E3, 6, 7, UINT_T), // ITEMGemUnk3
-			DataObject(0x206E4, 7, 12, UINT_T), // ITEMGemID2
-			DataObject(0x206E5, 3, 4, UINT_T), // ITEMGemStatic5 (2)
-			DataObject(0x206E6, 2, UINT_T), // ITEMGemStatic6 (0)
+		new ArrayObject(16, 300, std::vector<Element> { // ITEMGemArray
+			{DataObject(0x206D8, 2, UINT_T), 0xEA33}, // ITEMGemStatic1 (0xEA33); Item ID from ITM_itemlist that doesn't affect gem attributes (just needs to be a gem type item)
+			{DataObject(0x206DA, 7, 11, UINT_T), 0}, // ITEMGemID1
+			{DataObject(0x206DB, 4, 5, UINT_T), 0}, // ITEMGemUnk1
+			{DataObject(0x206DC, 1, UINT_T), 0}, // ITEMGemStatic2 (0)
+			{DataObject(0x206DD, 1, UINT_T), 0}, // ITEMGemInventorySlot
+			{DataObject(0x206DE, 1, UINT_T), 1},// ITEMGemStatic3 (1)
+			{DataObject(0x206DF, 1, UINT_T), 0}, // ITEMGemStatic4 (0/3)
+			{DataObject(0x206E0, 7, 11, UINT_T), 0}, // ITEMGemUnk2
+			{DataObject(0x206E1, 4, 11, UINT_T), 0}, // ITEMGemValue
+			{DataObject(0x206E2, 1, 3, UINT_T), 0}, // ITEMGemRank
+			{DataObject(0x206E3, 6, 7, UINT_T), 0}, // ITEMGemUnk3
+			{DataObject(0x206E4, 7, 12, UINT_T), 0},// ITEMGemID2
+			{DataObject(0x206E5, 3, 4, UINT_T), 0}, // ITEMGemStatic5 (2)
+			{DataObject(0x206E6, 2, UINT_T), 0}// ITEMGemStatic6 (0)
 		}),
 
 		// WTHR
@@ -146,25 +146,25 @@ class SaveFile
 		// SNDS
 
 		// MINE
-		new ArrayObject(6, 150, std::vector<DataObject> { // MINEArray
-			DataObject(0x240F0, 2, UINT_T), // MINECooldown
-			DataObject(0x240F2, 1, UINT_T), // MINENumHarvests
-			DataObject(0x240F3, 1, UINT_T), // MINEMineID
-			DataObject(0x240F4, 2, UINT_T), // MINEMapID
+		new ArrayObject(6, 150, std::vector<Element> { // MINEArray
+			{DataObject(0x240F0, 2, UINT_T), 0}, // MINECooldown
+			{DataObject(0x240F2, 1, UINT_T), 0}, // MINENumHarvests
+			{DataObject(0x240F3, 1, UINT_T), 0}, // MINEMineID
+			{DataObject(0x240F4, 2, UINT_T), 0}// MINEMapID
 		}),
 
 		// TBOX
 		new DataObject(0x244A3, 1, UINT_T), // TBOXBoxCount
-		new ArrayObject(28, 21, std::vector<DataObject> {
-			DataObject(0x244A4, 4, UINT_T), // TBOXZeroObject
-			DataObject(0x244A8, 4, FLOAT_T), // TBOXPositionX
-			DataObject(0x244AC, 4, FLOAT_T), // TBOXPositionY
-			DataObject(0x244B0, 4, FLOAT_T), // TBOXPositionZ
-			DataObject(0x244B4, 4, FLOAT_T), // TBOXAngle
-			DataObject(0x244B8, 4, UINT_T), // TBOXRank
-			DataObject(0x244BC, 2, UINT_T), // TBOXDropTable (?)
-			DataObject(0x244BE, 2, UINT_T) // TBOXMapID
-		}), // TBOXArray
+		new ArrayObject(28, 21, std::vector<Element> { // TBOXArray
+			{DataObject(0x244A4, 4, UINT_T), 0}, // TBOXZeroObject
+			{DataObject(0x244A8, 4, FLOAT_T), 0}, // TBOXPositionX
+			{DataObject(0x244AC, 4, FLOAT_T), 0}, // TBOXPositionY
+			{DataObject(0x244B0, 4, FLOAT_T), 0},// TBOXPositionZ
+			{DataObject(0x244B4, 4, FLOAT_T), 0}, // TBOXAngle
+			{DataObject(0x244B8, 4, UINT_T), 0}, // TBOXRank
+			{DataObject(0x244BC, 2, UINT_T), 0},// TBOXDropTable (?)
+			{DataObject(0x244BE, 2, UINT_T), 0} // TBOXMapID
+		}),
 
 		// OPTD
 		new DataObject(0x248B0, 1, BOOL_T), // OPTDNonInvertedYAxis
@@ -226,7 +226,7 @@ public:
 
     template<typename T> void setValue(SaveFieldID sfID, T value) { this->setRawBytes(sfID, Types::toRaw(value)); }
     template<typename T> void setArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, T value) { this->setArrayRawBytes(aID, index, elementName, Types::toRaw(value)); }
-
+	void setArrayIndexNull(bool isNull, SaveFieldID aID, unsigned int index);
 };
 
 template <> 

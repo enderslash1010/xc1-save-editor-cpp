@@ -1,24 +1,25 @@
 #include "ArrayObject.h"
 
-ArrayObject::ArrayObject(unsigned int elementSizeBytes, unsigned int arraySize, const std::vector<DataObject> dataObj) :
-	DataObject(dataObj.at(0).getStartByte(), (elementSizeBytes * arraySize), ARRAY_T)
+ArrayObject::ArrayObject(unsigned int elementSizeBytes, unsigned int arraySize, const std::vector<Element> elements) :
+	DataObject(elements.at(0).dataObject.getStartByte(), (elementSizeBytes * arraySize), ARRAY_T)
 {
-	if (dataObj.size() == 0 || elementSizeBytes == 0) throw std::invalid_argument("Cannot instantiate ArrayObject: Empty element");
+	if (elements.size() == 0 || elementSizeBytes == 0) throw std::invalid_argument("Cannot instantiate ArrayObject: Empty element");
 
 	this->numRows = arraySize;
-	this->numColumns = dataObj.size();
+	this->numColumns = elements.size();
 
-	// Ensure dataObj element has same number of bytes as elementSizeBytes
+	// Ensure elements has same number of bytes as elementSizeBytes
 	int numBits = 0;
-	for (int i = 0; i < dataObj.size(); i++)
+	for (int i = 0; i < elements.size(); i++)
 	{
-		numBits += dataObj.at(i).getLengthInBits();
+		numBits += elements.at(i).dataObject.getLengthInBits();
+		this->staticValues.push_back(elements.at(i).staticValue);
 	}
 	if (numBits % 8 != 0) throw std::invalid_argument("Cannot instantiate ArrayObject: element not byte aligned");
 	else if ((numBits / 8) != elementSizeBytes) throw std::invalid_argument("Cannot instantiate ArrayObject: Mismatched element size");
 
 	// Process dataObj into a 2D array of DataObjects
-	unsigned int currByte = ((DataObject) dataObj.at(0)).getStartByte();
+	unsigned int currByte = elements.at(0).dataObject.getStartByte();
 	int currBit = 7;
 
 	for (int row = 0; row < this->numRows; row++)
@@ -29,8 +30,8 @@ ArrayObject::ArrayObject(unsigned int elementSizeBytes, unsigned int arraySize, 
 		// Populate element with same DataObjects in dataObj, with their own startByte
 		for (int column = 0; column < this->numColumns; column++)
 		{
-			unsigned int sizeInBits = ((DataObject)dataObj.at(column)).getLengthInBits();
-			Type type = ((DataObject)dataObj.at(column)).getType();
+			unsigned int sizeInBits = elements.at(column).dataObject.getLengthInBits();
+			Type type = elements.at(column).dataObject.getType();
 
 			element.push_back(DataObject(currByte, currBit, sizeInBits, type));
 
@@ -55,4 +56,10 @@ const DataObject* ArrayObject::at(unsigned int row, unsigned int column) const
 {
 	if (row < this->numRows && column < this->numColumns) return &(this->dataObjs.at(row).at(column));
 	else return NULL;
+}
+
+const int ArrayObject::getStaticValue(unsigned int column) const
+{
+	if (column >= this->staticValues.size()) throw std::out_of_range("Array element " + std::to_string(column) + " out of bounds");
+	return this->staticValues.at(column);
 }

@@ -112,15 +112,15 @@ std::vector<uint8_t> SaveFile::getRawBytes(const DataObject data)
 
 std::vector<uint8_t> SaveFile::getRawBytes(SaveFieldID sfID)
 {
-	DataObject dataObj = *dataMap[sfID];
-	std::vector<uint8_t> result = getRawBytes(dataObj);
+	const DataObject* dataObj = dataMap[sfID];
+	std::vector<uint8_t> result = getRawBytes(*dataObj);
 	return result;
 }
 
 std::vector<uint8_t> SaveFile::getRawArrayBytes(SaveFieldID afID, unsigned int index, unsigned int elementName)
 {
-	ArrayObject arrObj = *(ArrayObject*) dataMap[afID];
-	std::vector<uint8_t> result = getRawBytes(*arrObj.at(index, elementName));
+	const DataObject* arrObj = dataMap[afID];
+	std::vector<uint8_t> result = getRawBytes(*arrObj->at(index, elementName));
 	return result;
 }
 
@@ -132,7 +132,7 @@ Type SaveFile::getType(SaveFieldID sfID)
 void SaveFile::setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value)
 {
 	// if string, add padding in value vector for the rest of string length
-	const DataObject* dataObj = (*dataMap[sfID]).at(0, 0);
+	const DataObject* dataObj = dataMap[sfID];
 	if (dataObj->getType() == STRING_T)
 	{
 		unsigned int lengthInBytes = dataObj->getLengthInBits() / 8;
@@ -144,8 +144,8 @@ void SaveFile::setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value)
 
 void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, std::vector<uint8_t> value)
 {
-	const DataObject* dataObj = (*dataMap[aID]).at(index, elementName);
-	if (dataObj != NULL) (*dataObj).setRawBytes(this->saveFile, value);
+	const DataObject* arrayObj = (*dataMap[aID]).at(index, elementName);
+	if (arrayObj != NULL) (*arrayObj).setRawBytes(this->saveFile, value);
 	else throw std::out_of_range("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
 }
 
@@ -159,6 +159,15 @@ template <>
 void SaveFile::setArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, const char* value) 
 { 
 	this->setArrayRawBytes(aID, index, elementName, Types::toRaw((std::string)value)); 
+}
+
+void SaveFile::setArrayIndexNull(bool isNull, SaveFieldID aID, unsigned int index)
+{
+	const DataObject* arrayObj = dataMap[aID];
+	for (int i = 0; i < arrayObj->getNumColumns(); i++)
+	{
+		arrayObj->at(index, i)->setValue(this->saveFile, isNull ? 0 : arrayObj->getStaticValue(i));
+	}
 }
 
 // CRC16 Polynomial: 1 + x^2 + x^15 + x^16 -> 0x8005 (1000 0000 0000 0101)

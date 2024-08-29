@@ -1,5 +1,4 @@
 #include "Types.h"
-#include <stdexcept>
 
 template <>
 float Types::toValue<float>(std::vector<uint8_t> rawBytes)
