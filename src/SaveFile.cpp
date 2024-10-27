@@ -181,7 +181,7 @@ void SaveFile::setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value)
 
 void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, std::vector<uint8_t> value)
 {
-    const DataObject* arrayObj = (*dataMap[aID]).at(index, elementName);
+    const DataObject* arrayObj = (dataMap[aID])->at(index, elementName);
 	if (arrayObj != NULL) (*arrayObj).setRawBytes(this->saveFile, value);
 	else throw std::out_of_range("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
 }
