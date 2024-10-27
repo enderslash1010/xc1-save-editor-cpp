@@ -271,7 +271,7 @@ TEST(Save, arrays)
 	SaveFile* saveFile = new SaveFile();
 
     // Set index to not null to load static values
-    // saveFile->setArrayIndexNull(false, ITEMWeaponArray, 6);
+    saveFile->setArrayIndexNull(false, ITEMWeaponArray, 6);
 
     // Set all array values in an element
     saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1, 2);
@@ -287,71 +287,71 @@ TEST(Save, arrays)
     saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Index, 0x24);
     saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_NumGemSlots, 0x14);
 
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1) != 2) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static1) != 2) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID2) != 12) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static2) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static3) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_InventorySlot) != 0xFF) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static4) != 1) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static5) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1ID) != -1) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2ID) != -2) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3ID) != -3) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4ID) != -4) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Index) != 1) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Index) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Index) != 0x22) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Index) != 0x24) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_NumGemSlots) != 0x14) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static6) != 6) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static7) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1) != 2) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static1) != 2) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID2) != 12) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static2) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static3) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_InventorySlot) != 0xFF) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static4) != 1) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static5) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1ID) != -1) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2ID) != -2) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3ID) != -3) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4ID) != -4) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Index) != 1) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Index) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Index) != 0x22) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Index) != 0x24) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_NumGemSlots) != 0x14) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static6) != 6) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static7) != 0) FAIL();
 
     // Set element to null
-    // saveFile->setArrayIndexNull(true, ITEMWeaponArray, 6);
+    saveFile->setArrayIndexNull(true, ITEMWeaponArray, 6);
 
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static1) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID2) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static2) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static3) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_InventorySlot) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static4) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static5) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1ID) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2ID) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3ID) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4ID) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Index) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Index) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Index) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Index) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_NumGemSlots) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static6) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static7) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static1) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID2) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static2) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static3) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_InventorySlot) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static4) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static5) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1ID) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2ID) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3ID) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4ID) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Index) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Index) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Index) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Index) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_NumGemSlots) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static6) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static7) != 0) FAIL();
 
     // Set element to not null
-    // saveFile->setArrayIndexNull(false, ITEMWeaponArray, 6);
+    saveFile->setArrayIndexNull(false, ITEMWeaponArray, 6);
 
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static1) != 2) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID2) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static2) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static3) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_InventorySlot) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static4) != 1) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static5) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1ID) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2ID) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3ID) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4ID) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Index) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Index) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Index) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Index) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_NumGemSlots) != 0) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static6) != 6) FAIL();
-    // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static7) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static1) != 2) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID2) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static2) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static3) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_InventorySlot) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static4) != 1) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static5) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1ID) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2ID) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3ID) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4ID) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Index) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Index) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Index) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Index) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_NumGemSlots) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static6) != 6) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static7) != 0) FAIL();
 
     delete(saveFile);
 }
