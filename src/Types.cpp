@@ -11,7 +11,7 @@ float Types::toValue<float>(std::vector<uint8_t> rawBytes)
 		floatInIntRep <<= 8;
 		floatInIntRep |= byte;
 	}
-	memcpy(&f, &floatInIntRep, 4);
+    memcpy(&f, &floatInIntRep, sizeof(float));
 
 	return f;
 }

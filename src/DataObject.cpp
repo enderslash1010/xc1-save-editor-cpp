@@ -1,4 +1,7 @@
 #include "DataObject.h"
+#include <ios>
+#include <iostream>
+#include <stdexcept>
 
 DataObject::DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type)
 {
@@ -33,6 +36,14 @@ DataObject::DataObject(unsigned int startByte, unsigned int startBit, unsigned i
 	this->endByte = ((startByte * 8) + (7 - startBit) + lengthInBits - 1) / 8;
 
 	if (this->endByte + 1 > SAVEFILE_LENGTH_BYTES) throw std::invalid_argument("DataObject exceeds save file length");
+}
+
+DataObject::DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type, unsigned int numRows, unsigned int numColumns)
+{
+    DataObject(startByte, lengthInBytes, type);
+
+    this->numRows = numRows;
+    this->numColumns = numColumns;
 }
 
 std::vector<uint8_t> DataObject::getRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH_BYTES]) const
