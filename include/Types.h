@@ -2,13 +2,13 @@
 #include <vector>
 #include <string>
 #include <stdint.h>
+#include <cstring>
 
 #ifdef _WIN32
 #include <winsock2.h>
 #pragma comment(lib, "Ws2_32.lib")
 #else
 #include <arpa/inet.h>
-#include <cstring>
 #endif
 
 enum Type
