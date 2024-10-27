@@ -16,6 +16,6 @@ class ArrayObject : public DataObject
 	std::vector<int> staticValues;
 public:
 	ArrayObject(unsigned int elementSizeBytes, unsigned int arraySize, const std::vector<Element> elements);
-	virtual const DataObject* at(unsigned int row, unsigned int column) const;
+    const DataObject* at(unsigned int row, unsigned int column) const;
 	virtual const int getStaticValue(unsigned int column) const;
 };
