@@ -12,7 +12,6 @@ typedef struct
 class ArrayObject : public DataObject
 {
 	std::vector<std::vector<DataObject>> dataObjs = std::vector<std::vector<DataObject>>();
-	unsigned int numRows, numColumns;
 	std::vector<int> staticValues;
 public:
 	ArrayObject(unsigned int elementSizeBytes, unsigned int arraySize, const std::vector<Element> elements);
