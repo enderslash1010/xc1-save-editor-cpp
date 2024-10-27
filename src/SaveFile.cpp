@@ -2,6 +2,10 @@
 #include <iostream>
 #include <fstream>
 
+#ifndef _WIN32
+#include <cstring>
+#endif
+
 const int sectionRanges[NUM_SECTIONS][2] =
 {
 	{0x20, 0x9CA0},      // THUM 0
