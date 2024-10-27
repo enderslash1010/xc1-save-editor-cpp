@@ -7,6 +7,7 @@
 #include "ArrayObject.h"
 #include "Types.h"
 #include "SaveDefines.h"
+#include <stdexcept>
 
 #define NUM_SECTIONS 12
 
