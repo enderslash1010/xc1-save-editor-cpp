@@ -1,4 +1,6 @@
 #include "SaveFile.h"
+#include <iostream>
+#include <fstream>
 
 const int sectionRanges[NUM_SECTIONS][2] =
 {

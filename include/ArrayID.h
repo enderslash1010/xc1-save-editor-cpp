@@ -2,61 +2,61 @@
 
 enum ITEMWeaponArray
 {
-	ITEMWeaponID1,
-	ITEMWeaponStatic1, // 2
-	ITEMWeaponID2,
-	ITEMWeaponStatic2, // 0
-	ITEMWeaponStatic3, // 0
-	ITEMWeaponInventorySlot,
-	ITEMWeaponStatic4, // 1
-	ITEMWeaponStatic5, // 0
-	ITEMWeaponGem1ID,
-	ITEMWeaponGem2ID,
-	ITEMWeaponGem3ID,
-	ITEMWeaponGem4ID,
-	ITEMWeaponGem1Index,
-	ITEMWeaponGem2Index,
-	ITEMWeaponGem3Index,
-	ITEMWeaponGem4Index,
-	ITEMWeaponNumGemSlots,
-	ITEMWeaponStatic6, // 6
-	ITEMWeaponStatic7 // 0
+    ITEMWeapon_ID1,
+    ITEMWeapon_Static1, // 2
+    ITEMWeapon_ID2,
+    ITEMWeapon_Static2, // 0
+    ITEMWeapon_Static3, // 0
+    ITEMWeapon_InventorySlot,
+    ITEMWeapon_Static4, // 1
+    ITEMWeapon_Static5, // 0
+    ITEMWeapon_Gem1ID,
+    ITEMWeapon_Gem2ID,
+    ITEMWeapon_Gem3ID,
+    ITEMWeapon_Gem4ID,
+    ITEMWeapon_Gem1Index,
+    ITEMWeapon_Gem2Index,
+    ITEMWeapon_Gem3Index,
+    ITEMWeapon_Gem4Index,
+    ITEMWeapon_NumGemSlots,
+    ITEMWeapon_Static6, // 6
+    ITEMWeapon_Static7 // 0
 };
 
 enum ITEMGemArray
 {
-	ITEMGemStatic1, // 0xEA33
-	ITEMGemID1,
-	ITEMGemUnk1,
-	ITEMGemStatic2, // 0
-	ITEMGemInventorySlot,
-	ITEMGemStatic3, // 1
-	ITEMGemStatic4, // 0/3
-	ITEMGemUnk2,
-	ITEMGemValue,
-	ITEMGemRank,
-	ITEMGemUnk3,
-	ITEMGemID2,
-	ITEMGemStatic5, // 2
-	ITEMGemStatic6 // 0
+    ITEMGem_Static1, // 0xEA33
+    ITEMGem_ID1,
+    ITEMGem_Unk1,
+    ITEMGem_Static2, // 0
+    ITEMGem_InventorySlot,
+    ITEMGem_Static3, // 1
+    ITEMGem_Static4, // 0/3
+    ITEMGem_Unk2,
+    ITEMGem_Value,
+    ITEMGem_Rank,
+    ITEMGem_Unk3,
+    ITEMGem_ID2,
+    ITEMGem_Static5, // 2
+    ITEMGem_Static6 // 0
 };
 
 enum MINEArray
 {
-	MINECooldown,
-	MINENumHarvests,
-	MINEMineID,
-	MINEMapID,
+    MINE_Cooldown,
+    MINE_NumHarvests,
+    MINE_MineID,
+    MINE_MapID,
 };
 
-enum TBOXElementID
+enum TBOXArray
 {
-	TBOXZeroObject,
-	TBOXPositionX,
-	TBOXPositionY,
-	TBOXPositionZ,
-	TBOXAngle,
-	TBOXRank,
-	TBOXDropTable,
-	TBOXMapID
+    TBOX_ZeroObject,
+    TBOX_PositionX,
+    TBOX_PositionY,
+    TBOX_PositionZ,
+    TBOX_Angle,
+    TBOX_Rank,
+    TBOX_DropTable,
+    TBOX_MapID
 };

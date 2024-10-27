@@ -1,8 +1,6 @@
 #pragma once
 
-#include "SaveDefines.h"
 #include <vector>
-#include <stdint.h>
 #include "DataObject.h"
 
 typedef struct

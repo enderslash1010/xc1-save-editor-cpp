@@ -2,7 +2,6 @@
 #include <vector>
 #include <string>
 #include <stdint.h>
-#include <cstring>
 
 #ifdef _WIN32
 #include <winsock2.h>
