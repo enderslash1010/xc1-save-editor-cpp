@@ -12,8 +12,8 @@ const int sectionRanges[NUM_SECTIONS][2] =
 	{0x24090, 0x240A0},  // WTHR 7
 	{0x240C0, 0x240D0},  // SNDS 8
 	{0x240F0, 0x24474},  // MINE 9
-	{0x244A0, 0x246D4}, // TBOX 10
-	{0x248B0, 0x248F0}  // OPTD 11
+    {0x244A0, 0x246D4}, // TBOX 10
+    {0x248B0, 0x248F0}  // OPTD 11
 };
 
 const uint8_t fileHeader[0x10] = { 'U', 'S', 'R', 'D', 0x0, 0x2, 0x48, 0xF0, 0x0, 0x0, 0x0, 0x10, 0x0, 0x7, 0x0, 0x2 };
@@ -43,10 +43,19 @@ SaveFile::SaveFile()
 	this->fileLocation = "";
 
 	// Initialize savefile
-	memcpy(&saveFile[0], &fileLocation, 0x10);
+    memcpy(&saveFile[0], &fileHeader, 0x10);
 	for (int i = 0; i < NUM_SECTIONS; i++)
 	{
 		memcpy(&saveFile[(sectionRanges[i][0]) - 0x10], &sectionHeaders[i], 0x10);
+
+        if (i + 1 == NUM_SECTIONS)
+        {
+            memset(&saveFile[sectionRanges[i][0]], 0, (SAVEFILE_LENGTH_BYTES - sectionRanges[i][0]));
+        }
+        else
+        {
+            memset(&saveFile[sectionRanges[i][0]], 0, (sectionRanges[i+1][1] - sectionRanges[i][0]));
+        }
 	}
 }
 
@@ -81,7 +90,7 @@ void SaveFile::saveToFile()
 	if (this->fileLocation.size() != 0)
 	{
 		std::cout << "Saving to " << fileLocation << "...\n";
-		std::ofstream outputFile(fileLocation, std::ios::binary);
+        std::ofstream outputFile(fileLocation, std::ios::binary | std::ios::trunc);
 		if (!outputFile)
 		{
 			outputFile.close();
@@ -94,14 +103,40 @@ void SaveFile::saveToFile()
 	}
 }
 
+void SaveFile::saveToFile(std::string file)
+{
+    fixChecksums(saveFile);
+
+    std::cout << "Saving to " << file << "...\n";
+    std::ofstream outputFile(file, std::ios::binary | std::ios::trunc);
+    if (!outputFile)
+    {
+        outputFile.close();
+        throw std::runtime_error("Error writing to file " + fileLocation);
+    }
+    outputFile.write((char*)saveFile, SAVEFILE_LENGTH_BYTES);
+    outputFile.close();
+
+    std::cout << "Successfully saved to " << file << '\n';
+}
+
 inline uint8_t SaveFile::getByteAt(unsigned int x)
 {
-	throw std::out_of_range(x + " out of bounds for " + SAVEFILE_LENGTH_BYTES);
+    if (x >= SAVEFILE_LENGTH_BYTES)
+    {
+        std::string msg = std::to_string(x) + " out of bounds for " + std::to_string(SAVEFILE_LENGTH_BYTES);
+        throw std::out_of_range(msg);
+    }
 	return this->saveFile[x];
 }
 
 inline void SaveFile::setByteAt(unsigned int x, uint8_t b)
 {
+    if (x >= SAVEFILE_LENGTH_BYTES)
+    {
+        std::string msg = std::to_string(x) + " out of bounds for " + std::to_string(SAVEFILE_LENGTH_BYTES);
+        throw std::out_of_range(msg);
+    }
 	this->saveFile[x] = b;
 }
 
@@ -163,8 +198,9 @@ void SaveFile::setArrayValue(SaveFieldID aID, unsigned int index, unsigned int e
 
 void SaveFile::setArrayIndexNull(bool isNull, SaveFieldID aID, unsigned int index)
 {
-	const DataObject* arrayObj = dataMap[aID];
-	for (int i = 0; i < arrayObj->getNumColumns(); i++)
+    const DataObject* arrayObj = dataMap[aID];
+    int size = arrayObj->getNumColumns();
+    for (int i = 0; i < size; i++)
 	{
 		arrayObj->at(index, i)->setValue(this->saveFile, isNull ? 0 : arrayObj->getStaticValue(i));
 	}

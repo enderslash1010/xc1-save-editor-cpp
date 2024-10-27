@@ -2,7 +2,6 @@
 #include "SaveDefines.h"
 #include <vector>
 #include <stdint.h>
-#include <iostream>
 #include "Types.h"
 
 class DataObject
@@ -17,6 +16,7 @@ protected:
 
 	unsigned int numRows, numColumns;
 
+    DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type, unsigned int numRows, unsigned int numColumns);
 public:
 	DataObject(unsigned int startByte, unsigned int startBit, unsigned int lengthInBits, Type type);
 	DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type);
@@ -43,8 +43,8 @@ public:
 
 	virtual const int getStaticValue(unsigned int column) const { return 0; }
 
-	unsigned const int getNumRows() const { return this->numRows; }
-	unsigned const int getNumColumns() const { return this->numColumns; }
+    unsigned const int getNumRows() const { return this->numRows; }
+    unsigned const int getNumColumns() const { return this->numColumns; }
 
 	void print();
 };

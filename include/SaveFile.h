@@ -115,7 +115,7 @@ class SaveFile
 			{DataObject(0x1C518, 2, UINT_T), 0}, // ITEMWeaponGem3Index
 			{DataObject(0x1C51A, 2, UINT_T), 0}, // ITEMWeaponGem4Index
 			{DataObject(0x1C51C, 1, UINT_T), 0}, // ITEMWeaponNumGemSlots
-			{DataObject(0x1C51D, 1, UINT_T), 0}, // ITEMWeaponStatic6 (6)
+            {DataObject(0x1C51D, 1, UINT_T), 6}, // ITEMWeaponStatic6 (6)
 			{DataObject(0x1C51E, 2, UINT_T), 0}  // ITEMWeaponStatic7 (0)
 		}),
 		new ArrayObject(16, 300, std::vector<Element> { // ITEMGemArray
@@ -131,7 +131,7 @@ class SaveFile
 			{DataObject(0x206E2, 1, 3, UINT_T), 0}, // ITEMGemRank
 			{DataObject(0x206E3, 6, 7, UINT_T), 0}, // ITEMGemUnk3
 			{DataObject(0x206E4, 7, 12, UINT_T), 0},// ITEMGemID2
-			{DataObject(0x206E5, 3, 4, UINT_T), 0}, // ITEMGemStatic5 (2)
+            {DataObject(0x206E5, 3, 4, UINT_T), 2}, // ITEMGemStatic5 (2)
 			{DataObject(0x206E6, 2, UINT_T), 0}// ITEMGemStatic6 (0)
 		}),
 
@@ -206,6 +206,7 @@ public:
     void setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, std::vector<uint8_t> value);
 
     void saveToFile();
+    void saveToFile(std::string file);
 
     Type getType(SaveFieldID sfID);
     

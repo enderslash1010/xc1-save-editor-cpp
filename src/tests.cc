@@ -74,6 +74,7 @@ TEST(Save, floats)
 		saveFile->setValue(CAMDVerticalPosition, stringTestValues[i]);
 		EXPECT_EQ(testValue, saveFile->getValue<float>(CAMDVerticalPosition));
 	}
+
 	delete(saveFile);
 }
 
@@ -260,4 +261,50 @@ TEST(Save, strings)
 			if (expectedValues[i][a] != result[b]) FAIL();
 		}
 	}
+
+	delete(saveFile);
+}
+
+TEST(Save, arrays)
+{
+	SaveFile* saveFile = new SaveFile();
+
+    // Set index to not null to load static values
+    saveFile->setArrayIndexNull(false, ITEMWeaponArray, 6);
+
+    // Set all array values in an element
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponID1, 2);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponID2, 12);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponInventorySlot, 0xFF);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem1ID, -1);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem2ID, -2);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem3ID, -3);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem4ID, -4);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem1Index, true);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem2Index, false);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem3Index, 0x22);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem4Index, 0x24);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponNumGemSlots, 0x14);
+
+    saveFile->saveToFile("outSave.hex");
+
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponID1) != 2) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponStatic1) != 2) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponID2) != 12) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponInventorySlot) != 0xFF) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem1ID) != -1) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem2ID) != -2) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem3ID) != -3) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem4ID) != -4) FAIL();
+    if (saveFile->getArrayValue<bool>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem1Index) != true) FAIL();
+    if (saveFile->getArrayValue<bool>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem2Index) != false) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem3Index) != 0x22) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeaponGem4Index) != 0x24) FAIL();
+
+    // TODO: Set element to null
+
+
+    // TODO: Set element to not null
+
+    delete(saveFile);
 }
