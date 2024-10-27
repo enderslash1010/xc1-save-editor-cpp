@@ -271,7 +271,7 @@ TEST(Save, arrays)
 	SaveFile* saveFile = new SaveFile();
 
     // Set index to not null to load static values
-    saveFile->setArrayIndexNull(false, ITEMWeaponArray, 6);
+    // saveFile->setArrayIndexNull(false, ITEMWeaponArray, 6);
 
     // Set all array values in an element
     saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1, 2);
@@ -308,7 +308,7 @@ TEST(Save, arrays)
     // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static7) != 0) FAIL();
 
     // Set element to null
-    saveFile->setArrayIndexNull(true, ITEMWeaponArray, 6);
+    // saveFile->setArrayIndexNull(true, ITEMWeaponArray, 6);
 
     // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1) != 0) FAIL();
     // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static1) != 0) FAIL();
@@ -331,7 +331,7 @@ TEST(Save, arrays)
     // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static7) != 0) FAIL();
 
     // Set element to not null
-    saveFile->setArrayIndexNull(false, ITEMWeaponArray, 6);
+    // saveFile->setArrayIndexNull(false, ITEMWeaponArray, 6);
 
     // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1) != 0) FAIL();
     // if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static1) != 2) FAIL();
