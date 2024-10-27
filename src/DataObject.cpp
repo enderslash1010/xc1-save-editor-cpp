@@ -40,10 +40,10 @@ DataObject::DataObject(unsigned int startByte, unsigned int startBit, unsigned i
 
 DataObject::DataObject(unsigned int startByte, unsigned int lengthInBytes, Type type, unsigned int numRows, unsigned int numColumns)
 {
+    DataObject(startByte, lengthInBytes, type);
+
     this->numRows = numRows;
     this->numColumns = numColumns;
-
-    DataObject(startByte, lengthInBytes, type);
 }
 
 std::vector<uint8_t> DataObject::getRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH_BYTES]) const
