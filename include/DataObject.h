@@ -1,7 +1,5 @@
 #pragma once
 #include "SaveDefines.h"
-#include <iostream>
-#include <ostream>
 #include <vector>
 #include <stdint.h>
 #include "Types.h"
@@ -39,7 +37,6 @@ public:
 
 	virtual const DataObject* at(unsigned int row, unsigned int column) const
 	{
-        std::cout << "DataObject.at" << std::endl;
 		if (row < this->numRows && column < this->numColumns) return this;
 		else return NULL;
 	}

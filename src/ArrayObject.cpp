@@ -1,6 +1,4 @@
 #include "ArrayObject.h"
-#include <iostream>
-#include <ostream>
 #include <stdexcept>
 
 ArrayObject::ArrayObject(unsigned int elementSizeBytes, unsigned int arraySize, const std::vector<Element> elements) :
@@ -54,7 +52,6 @@ ArrayObject::ArrayObject(unsigned int elementSizeBytes, unsigned int arraySize, 
 
 const DataObject* ArrayObject::at(unsigned int row, unsigned int column) const
 {
-    std::cout << "ArrayObject.at, numRows=" << this->numRows << ", numColumns=" << this->numColumns << std::endl;
 	if (row < this->numRows && column < this->numColumns) return &(this->dataObjs.at(row).at(column));
 	else return NULL;
 }
