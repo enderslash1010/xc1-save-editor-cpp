@@ -8,6 +8,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 #else
 #include <arpa/inet.h>
+#include <cstring>
 #endif
 
 enum Type
