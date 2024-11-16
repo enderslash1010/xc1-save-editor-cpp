@@ -17,11 +17,11 @@ set(PROJECT_SOURCES
         gui/mainwindow.cpp
         gui/mainwindow.ui
         gui/mainwindow.h
-        gui/QExtendedWidget.h
         src/SaveFile.cpp
         src/ArrayObject.cpp
         src/DataObject.cpp
         src/Types.cpp
+        include/QExtendedWidget.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
