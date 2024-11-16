@@ -60,6 +60,8 @@ public:
 	static std::vector<uint8_t> toRaw(bool x);
 	static std::vector<uint8_t> toRaw(int x);
 	static std::vector<uint8_t> toRaw(std::string x);
+    static std::vector<uint8_t> toRaw(const char* x) { return toRaw((std::string)x); }
+    static std::vector<uint8_t> toRaw(std::vector<uint8_t> x) { return x; }
 
 	static std::string toString(Type t);
 };

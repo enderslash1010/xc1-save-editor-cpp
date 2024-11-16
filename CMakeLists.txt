@@ -16,6 +16,12 @@ set(PROJECT_SOURCES
         src/main.cpp
         gui/mainwindow.cpp
         gui/mainwindow.ui
+        gui/mainwindow.h
+        gui/QExtendedWidget.h
+        src/SaveFile.cpp
+        src/ArrayObject.cpp
+        src/DataObject.cpp
+        src/Types.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -41,6 +47,7 @@ else()
     endif()
 endif()
 
+target_include_directories(xc1-save-editor PRIVATE include)
 target_link_libraries(xc1-save-editor PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

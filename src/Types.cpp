@@ -21,7 +21,8 @@ std::string Types::toValue<std::string>(std::vector<uint8_t> rawBytes)
 {
 	std::string string = "";
 	for (uint8_t rawByte : rawBytes)
-	{
+    {
+        if (!rawByte) break;
 		string += rawByte;
 	}
 	return string;

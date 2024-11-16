@@ -80,9 +80,11 @@ std::vector<uint8_t> DataObject::getRawBytes(uint8_t (&saveFile)[SAVEFILE_LENGTH
 *	In the case when bytes.size() > this.size(), the additional MSB in bytes are ignored (bytes = 0xABCD -> DataObject = 0xCD for this.size() = 1)
 *	In the case when bytes.size() < this.size(), the additional MSB associated with the DataObject are cleared (bytes = 0xFF -> DataObject = 0x00FF for this.size() = 2)
 */
-void DataObject::setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::vector<uint8_t> value) const
+bool DataObject::setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::vector<uint8_t> value) const
 {
+    //if (value.size() > (this->getLengthInBits() / 8))
 	for (int i = 0, currBit = this->endBit, currByte = this->endByte, currValueByte = value.size() - 1; i < this->bitLength; i++, (++currBit) %= 8, currByte = ((currBit == 0) ? currByte - 1 : currByte), currValueByte = ((currBit == this->endBit) ? currValueByte - 1 : currValueByte)) saveFile[currByte] = ((currValueByte >= 0) && ((value.at(currValueByte) >> (i % 8)) & 0x1)) ? (saveFile[currByte] | (1 << currBit)) : (saveFile[currByte] & ~(1 << currBit));
+    return true;
 }
 
 unsigned int DataObject::getLengthInBits() const

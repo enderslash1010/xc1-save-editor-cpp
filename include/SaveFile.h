@@ -200,13 +200,12 @@ public:
 
     void setByteAt(unsigned int x, uint8_t b);
 
-    void setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value);
-    void setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, std::vector<uint8_t> value);
-
     void saveToFile();
     void saveToFile(std::string file);
 
     Type getType(SaveFieldID sfID);
+
+    std::string getFileName() { return this->fileLocation; }
     
     template<typename T>
     T getValue(SaveFieldID sfID)
@@ -223,13 +222,17 @@ public:
         return Types::toValue<T>(this->getRawBytes(*dataObj));
     }
 
-    template<typename T> void setValue(SaveFieldID sfID, T value) { this->setRawBytes(sfID, Types::toRaw(value)); }
-    template<typename T> void setArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, T value) { this->setArrayRawBytes(aID, index, elementName, Types::toRaw(value)); }
-	void setArrayIndexNull(bool isNull, SaveFieldID aID, unsigned int index);
+    template<typename T> void setValue(SaveFieldID sfID, T value)
+    {
+        (*dataMap[sfID]).setValue(this->saveFile, value);
+    }
+
+    template<typename T> void setArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, T value)
+    {
+        const DataObject* arrayObj = (dataMap[aID])->at(index, elementName);
+        if (arrayObj != NULL) (arrayObj)->setValue(this->saveFile, value);
+        else throw std::out_of_range("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
+    }
+
+    void setArrayIndexNull(bool isNull, SaveFieldID aID, unsigned int index);
 };
-
-template <> 
-void SaveFile::setValue(SaveFieldID sfID, const char* value);
-
-template <> 
-void SaveFile::setArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, const char* value);

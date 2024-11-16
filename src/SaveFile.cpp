@@ -144,7 +144,7 @@ inline void SaveFile::setByteAt(unsigned int x, uint8_t b)
 
 std::vector<uint8_t> SaveFile::getRawBytes(const DataObject data)
 {
-	return data.getRawBytes(this->saveFile);
+    return data.getRawBytes(this->saveFile);
 }
 
 std::vector<uint8_t> SaveFile::getRawBytes(SaveFieldID sfID)
@@ -164,38 +164,6 @@ std::vector<uint8_t> SaveFile::getRawArrayBytes(SaveFieldID afID, unsigned int i
 Type SaveFile::getType(SaveFieldID sfID)
 {
 	return ((DataObject) *dataMap[sfID]).getType();
-}
-
-void SaveFile::setRawBytes(SaveFieldID sfID, std::vector<uint8_t> value)
-{
-	// if string, add padding in value vector for the rest of string length
-	const DataObject* dataObj = dataMap[sfID];
-	if (dataObj->getType() == STRING_T)
-	{
-		unsigned int lengthInBytes = dataObj->getLengthInBits() / 8;
-		for (int i = value.size(); i < lengthInBytes; i++) value.push_back(0);
-	}
-	
-	(*dataMap[sfID]).setRawBytes(saveFile, value);
-}
-
-void SaveFile::setArrayRawBytes(SaveFieldID aID, unsigned int index, unsigned int elementName, std::vector<uint8_t> value)
-{
-    const DataObject* arrayObj = (dataMap[aID])->at(index, elementName);
-    if (arrayObj != NULL) (arrayObj)->setRawBytes(this->saveFile, value);
-	else throw std::out_of_range("Array out of bounds for SaveFieldID " + std::to_string(aID) + " at (row = " + std::to_string(index) + ", column = " + std::to_string(elementName) + ")");
-}
-
-template <>
-void SaveFile::setValue(SaveFieldID sfID, const char* value) 
-{ 
-	this->setRawBytes(sfID, Types::toRaw((std::string)value)); 
-}
-
-template <>
-void SaveFile::setArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, const char* value) 
-{ 
-	this->setArrayRawBytes(aID, index, elementName, Types::toRaw((std::string)value)); 
 }
 
 void SaveFile::setArrayIndexNull(bool isNull, SaveFieldID aID, unsigned int index)
