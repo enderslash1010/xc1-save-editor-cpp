@@ -87,12 +87,6 @@ bool DataObject::setRawBytes(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::vec
     return true;
 }
 
-void DataObject::setValue(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::string value) const
-{
-    for (int i = value.size(); i < (this->bitLength / 8); i++) value += (char)0;
-    this->setRawBytes(saveFile, Types::toRaw(value));
-}
-
 unsigned int DataObject::getLengthInBits() const
 {
 	return this->bitLength;

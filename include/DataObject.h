@@ -39,14 +39,11 @@ public:
         this->setRawBytes(saveFile, rawBytes);
     }
 
-    template<>
     void setValue(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::string value) const
     {
         for (int i = value.size(); i < (this->bitLength / 8); i++) value += (char)0;
         this->setRawBytes(saveFile, Types::toRaw(value));
     }
-
-    void setValue(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::string value) const;
 
 	virtual const DataObject* at(unsigned int row, unsigned int column) const
 	{
