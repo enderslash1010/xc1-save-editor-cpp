@@ -46,6 +46,8 @@ public:
         this->setRawBytes(saveFile, Types::toRaw(value));
     }
 
+    void setValue(uint8_t(&saveFile)[SAVEFILE_LENGTH_BYTES], std::string value) const;
+
 	virtual const DataObject* at(unsigned int row, unsigned int column) const
 	{
 		if (row < this->numRows && column < this->numColumns) return this;
