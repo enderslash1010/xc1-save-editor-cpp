@@ -35,44 +35,47 @@ bool Types::toValue<bool>(std::vector<uint8_t> rawBytes)
 	return rawBool == 0 ? false : true;
 }
 
-std::vector<uint8_t> Types::toRaw(float x)
+std::vector<uint8_t> Types::toRaw(float x, unsigned int maxBits)
 {
 	std::vector<uint8_t> v;
+    if (sizeof(float) <= (maxBits / 8))
+    {
+        uint8_t floatBytes[sizeof(float)];
+        memcpy(floatBytes, &x, sizeof(x));
 
-	uint8_t floatBytes[sizeof(float)];
-	memcpy(floatBytes, &x, sizeof(x));
+        int floatInIntRep = 0;
+        for (uint8_t byte : floatBytes)
+        {
+            floatInIntRep <<= 8;
+            floatInIntRep |= byte;
+        }
 
-	int floatInIntRep = 0;
-	for (uint8_t byte : floatBytes)
-	{
-		floatInIntRep <<= 8;
-		floatInIntRep |= byte;
-	}
+        uint32_t bigEndianFloat = htonl(floatInIntRep);
 
-	uint32_t bigEndianFloat = htonl(floatInIntRep);
-
-	for (int i = 0; bigEndianFloat != 0 && i < 4; i++)
-	{
-		v.insert(v.begin(), bigEndianFloat & 0xFF);
-		bigEndianFloat >>= 8;
-	}
+        for (int i = 0; i < sizeof(float); i++)
+        {
+            v.insert(v.begin(), bigEndianFloat & 0xFF);
+            bigEndianFloat >>= 8;
+        }
+    }
 
 	return v;
 }
 
-std::vector<uint8_t> Types::toRaw(int x)
+std::vector<uint8_t> Types::toRaw(int x, unsigned int maxBits)
 {
-	return toRaw((unsigned int) x);
+    unsigned int mask = maxBits < 32 ? ((1 << maxBits) - 1) : 0xFFFFFFFF;
+    return toRaw(((unsigned int) x) & mask, maxBits);
 }
 
-std::vector<uint8_t> Types::toRaw(std::string x)
+std::vector<uint8_t> Types::toRaw(std::string x, unsigned int maxBits)
 {
 	std::vector<uint8_t> v;
-	for (int i = 0; i < x.size(); i++) v.push_back(x.at(i));
+    if (x.size() <= (maxBits / 8)) for (int i = 0; i < x.size(); i++) v.push_back(x.at(i));
 	return v;
 }
 
-std::vector<uint8_t> Types::toRaw(bool x) { return x ? toRaw(1) : toRaw(0);}
+std::vector<uint8_t> Types::toRaw(bool x, unsigned int maxBits) { return x ? toRaw(1, maxBits) : toRaw(0, maxBits); }
 
 std::string Types::toString(Type t)
 {

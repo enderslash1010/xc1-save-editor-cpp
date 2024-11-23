@@ -29,6 +29,8 @@ private:
     void setField(SaveFieldID sfID);
     QString getField(SaveFieldID sfID);
 
+    void showStatusBarMessage(std::string str);
+
 private slots:
     void actionOpen();
     void actionSave();

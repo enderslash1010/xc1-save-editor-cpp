@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QObject::connect(ui->THUMLevel, &QLineEdit::editingFinished, this, &MainWindow::updateText);
     ui->THUMLevel->setProperty(SAVE_FIELD_PROPERTY, THUMLevel);
-    saveFieldMap.insert({THUMLevel, {ui->THUMLevel, Type::UINT_T}});
+    saveFieldMap.insert({THUMLevel, {ui->THUMLevel, Type::INT_T}});
 
     QObject::connect(ui->THUMNameString, &QLineEdit::editingFinished, this, &MainWindow::updateText);
     ui->THUMNameString->setProperty(SAVE_FIELD_PROPERTY, THUMNameString);
@@ -23,6 +23,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+void MainWindow::showStatusBarMessage(std::string str)
+{
+    ui->statusbar->showMessage(QString::fromStdString(str));
 }
 
 QString MainWindow::getField(SaveFieldID sfID)
@@ -71,9 +76,9 @@ void MainWindow::actionOpen()
 
         for (int i = 0; i < LAST_INDEX; i++) setField((SaveFieldID)i);
 
-        ui->statusbar->showMessage(QString::fromStdString("Successfully opened " + fileName.toStdString()));
+        showStatusBarMessage("Successfully opened " + fileName.toStdString());
     } catch (std::runtime_error e) {
-        ui->statusbar->showMessage(QString::fromStdString(e.what()));
+        showStatusBarMessage(e.what());
     }
 }
 
@@ -82,15 +87,14 @@ void MainWindow::actionSave()
     if (saveFile != NULL)
     {
         saveFile->saveToFile();
-        ui->statusbar->showMessage(QString::fromStdString("Saved to file " + saveFile->getFileName()));
+        showStatusBarMessage("Saved to file " + saveFile->getFileName());
     }
     else
     {
-        ui->statusbar->showMessage(QString::fromStdString("No save file opened"));
+        showStatusBarMessage("No save file opened");
     }
 }
 
-// TODO: use a different signal so this is called on focus lost/enter
 void MainWindow::updateText()
 {
     QObject* obj = sender();
@@ -100,23 +104,24 @@ void MainWindow::updateText()
 
     std::vector<uint8_t> previousBytes = saveFile->getRawBytes(sfID);
 
-    bool ok = true;
+    bool conversionOk = true;
+    bool saved = true;
     switch (type)
     {
     case UINT_T:
-        saveFile->setValue(sfID, newText.toUInt(&ok));
+        saved = saveFile->setValue(sfID, newText.toUInt(&conversionOk));
         break;
     case INT_T:
-        saveFile->setValue(sfID, newText.toInt(&ok));
+        saved = saveFile->setValue(sfID, newText.toInt(&conversionOk));
         break;
     case BOOL_T:
-        saveFile->setValue(sfID, newText.toInt(&ok) == 0 ? false : true);
+        saved = saveFile->setValue(sfID, newText.toInt(&conversionOk) == 0 ? false : true);
         break;
     case FLOAT_T:
-        saveFile->setValue(sfID, newText.toFloat(&ok));
+        saved = saveFile->setValue(sfID, newText.toFloat(&conversionOk));
         break;
     case STRING_T:
-        saveFile->setValue(sfID, newText.toStdString());
+        saved = saveFile->setValue(sfID, newText.toStdString());
         break;
     case TPL_T:
         // TODO
@@ -126,6 +131,11 @@ void MainWindow::updateText()
         break;
     }
 
-    if (!ok) saveFile->setValue(sfID, previousBytes);
+    if (!conversionOk)
+    {
+        saveFile->setValue(sfID, previousBytes);
+        showStatusBarMessage("Invalid input");
+    }
+    if (!saved) showStatusBarMessage("Value out of range");
     this->setField(sfID);
 }

@@ -222,9 +222,9 @@ public:
         return Types::toValue<T>(this->getRawBytes(*dataObj));
     }
 
-    template<typename T> void setValue(SaveFieldID sfID, T value)
+    template<typename T> bool setValue(SaveFieldID sfID, T value)
     {
-        (*dataMap[sfID]).setValue(this->saveFile, value);
+        return (*dataMap[sfID]).setValue(this->saveFile, value);
     }
 
     template<typename T> void setArrayValue(SaveFieldID aID, unsigned int index, unsigned int elementName, T value)
