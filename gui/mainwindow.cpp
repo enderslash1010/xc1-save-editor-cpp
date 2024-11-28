@@ -3,6 +3,37 @@
 
 #define SAVE_FIELD_PROPERTY "SaveField"
 
+std::unordered_map<QObject*, const Mapping*> ComboBoxToMapping;
+
+const Mapping PictureSlotMapping{
+    {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13},
+    {"None", "Shulk", "Reyn", "Fiora", "Dunban", "Sharla", "Riki", "Melia", "Seven", "Dickson", "Mumkhar", "Alvis", "Prologue Dunban", "Other Dunban"}
+};
+
+inline void MainWindow::connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, Type type)
+{
+    QObject::connect(lineEdit, &QLineEdit::editingFinished, this, &MainWindow::updateText);
+    lineEdit->setProperty(SAVE_FIELD_PROPERTY, sfID);
+    saveFieldMap.insert({sfID, {lineEdit, type}});
+}
+
+inline void MainWindow::connect(SaveFieldID sfID, QExtendedCheckBox* checkBox)
+{
+    QObject::connect(checkBox, &QCheckBox::checkStateChanged, this, &MainWindow::updateCheckBox);
+    checkBox->setProperty(SAVE_FIELD_PROPERTY, sfID);
+    saveFieldMap.insert({sfID, {checkBox, Type::BOOL_T}});
+}
+
+inline void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* comboBox, const Mapping* mapping)
+{
+    QObject::connect(comboBox->lineEdit(), &QLineEdit::editingFinished, this, &MainWindow::updateComboBox);
+    comboBox->setProperty(SAVE_FIELD_PROPERTY, sfID);
+    saveFieldMap.insert({sfID, {comboBox, Type::UINT_T}});
+
+    ComboBoxToMapping.insert({comboBox, mapping});
+    comboBox->addItems((*mapping).values);
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -12,13 +43,16 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen);
     QObject::connect(ui->actionSave, &QAction::triggered, this, &MainWindow::actionSave);
 
-    QObject::connect(ui->THUMLevel, &QLineEdit::editingFinished, this, &MainWindow::updateText);
-    ui->THUMLevel->setProperty(SAVE_FIELD_PROPERTY, THUMLevel);
-    saveFieldMap.insert({THUMLevel, {ui->THUMLevel, Type::INT_T}});
-
-    QObject::connect(ui->THUMNameString, &QLineEdit::editingFinished, this, &MainWindow::updateText);
-    ui->THUMNameString->setProperty(SAVE_FIELD_PROPERTY, THUMNameString);
-    saveFieldMap.insert({THUMNameString, {ui->THUMNameString, Type::STRING_T}});
+    connect(THUMLevel, ui->THUMLevel, Type::UINT_T);
+    connect(THUMNameString, ui->THUMNameString, Type::STRING_T);
+    connect(THUMPlayTimeHours, ui->THUMPlayTimeHours, Type::UINT_T);
+    connect(THUMPlayTimeMinutes, ui->THUMPlayTimeMinutes, Type::UINT_T);
+    connect(THUMSaveTimeDay, ui->THUMSaveTimeDay, Type::UINT_T);
+    connect(THUMSaveTimeMonth, ui->THUMSaveTimeMonth, Type::UINT_T);
+    connect(THUMSaveTimeYear, ui->THUMSaveTimeYear, Type::UINT_T);
+    connect(THUMNGPlusFlag, ui->THUMNGPlusFlag);
+    connect(THUMSystemSaveFlag, ui->THUMSystemSaveFlag);
+    connect(THUMPictureSlot1, ui->THUMPictureSlot1, &PictureSlotMapping);
 }
 
 MainWindow::~MainWindow() {
@@ -68,6 +102,8 @@ void MainWindow::setField(SaveFieldID sfID)
     }
 }
 
+// TODO: enable/disable fields
+
 void MainWindow::actionOpen()
 {
     QString fileName = QFileDialog::getOpenFileName();
@@ -109,7 +145,7 @@ void MainWindow::updateText()
     switch (type)
     {
     case UINT_T:
-        saved = saveFile->setValue(sfID, newText.toUInt(&conversionOk));
+        saved = saveFile->setValue<unsigned int>(sfID, newText.toInt(&conversionOk));
         break;
     case INT_T:
         saved = saveFile->setValue(sfID, newText.toInt(&conversionOk));
@@ -138,4 +174,58 @@ void MainWindow::updateText()
     }
     if (!saved) showStatusBarMessage("Value out of range");
     this->setField(sfID);
+}
+
+void MainWindow::updateCheckBox()
+{
+    QObject* obj = sender();
+    SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
+    QString boolStr = this->getField(sfID);
+    saveFile->setValue<boolean>(sfID, QString::compare(boolStr, "0"));
+}
+
+void MainWindow::updateComboBox()
+{
+    QObject* obj = sender();
+    SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
+    QExtendedWidget* comboBox = saveFieldMap.at(sfID).first;
+    QString str = this->getField(sfID);
+
+    const Mapping mapping = *ComboBoxToMapping.at(obj);
+
+    if (saveFile != NULL)
+    {
+        bool ok;
+        QString qstr = mapping.at(str.toInt(&ok));
+        const int* qint = mapping.at(str);
+        if ((QString::compare(qstr, "")))
+        {
+            if (ok)
+            {
+                comboBox->setField(qstr);
+                saveFile->setValue(sfID, str.toInt());
+            }
+            else
+            {
+                if (qint != NULL)
+                {
+                    comboBox->setField(str);
+                    saveFile->setValue(sfID, *qint);
+                }
+                else
+                {
+                    showStatusBarMessage("Invalid Input");
+                }
+            }
+        }
+        else if (!ok)
+        {
+            // comboBox->setField(str);
+            // saveFile->setValue(sfID, *qint);
+        }
+        else
+        {
+            showStatusBarMessage("what");
+        }
+    }
 }

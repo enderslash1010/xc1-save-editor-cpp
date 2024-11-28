@@ -35,6 +35,27 @@ bool Types::toValue<bool>(std::vector<uint8_t> rawBytes)
 	return rawBool == 0 ? false : true;
 }
 
+template<>
+int Types::toValue(std::vector<uint8_t> rawBytes)
+{
+    unsigned int result = 0;
+
+    for (uint8_t byte : rawBytes)
+    {
+        result <<= 8;
+        result |= byte;
+    }
+
+    if ((rawBytes.at(0) & 0x80) == 0x80) // negative
+    {
+        unsigned int mask = 0;
+        for (int b = rawBytes.size(); b < sizeof(unsigned int); b++) mask |= 0xFF << (b*8);
+        result |= mask;
+    }
+
+    return result;
+}
+
 std::vector<uint8_t> Types::toRaw(float x, unsigned int maxBits)
 {
 	std::vector<uint8_t> v;

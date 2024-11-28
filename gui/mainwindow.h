@@ -6,6 +6,30 @@
 #include "ui_mainwindow.h"
 #include "QExtendedWidget.h"
 
+struct Mapping
+{
+    QList<int> keys;
+    QList<QString> values;
+
+    const QString at(int x) const noexcept
+    {
+        for(int i = 0; i < keys.count(); i++) if(keys.at(i) == x) return values.at(i);
+        return "";
+    }
+
+    const int* at(QString x) const noexcept
+    {
+        for(int i = 0; i < values.count(); i++)
+        {
+            if(!QString::compare(values.at(i), x))
+            {
+                return &keys.at(i);
+            }
+        }
+        return NULL;
+    }
+};
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -26,6 +50,10 @@ private:
 
     SaveFile *saveFile = NULL;
 
+    void connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, Type type);
+    void connect(SaveFieldID sfID, QExtendedCheckBox* checkBox);
+    void connect(SaveFieldID sfID, QExtendedComboBox* comboBox, const Mapping* mapping);
+
     void setField(SaveFieldID sfID);
     QString getField(SaveFieldID sfID);
 
@@ -36,5 +64,7 @@ private slots:
     void actionSave();
 
     void updateText();
+    void updateCheckBox();
+    void updateComboBox();
 };
 #endif // MAINWINDOW_H

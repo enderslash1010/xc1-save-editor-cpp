@@ -31,6 +31,7 @@ public:
     static T toValue(std::vector<uint8_t> rawBytes)
     {
         T result = 0;
+        int size = sizeof(T);
 
         for (uint8_t byte : rawBytes)
         {
@@ -48,16 +49,16 @@ public:
         std::vector<uint8_t> v;
         unsigned int mask = maxBits < 32 ? ((1 << maxBits) - 1) : 0xFFFFFFFF;
         T temp = (x & mask);
-        if ((T)(x & mask) == x)
+
+        x = (x & mask);
+        unsigned int sizeInBytes = sizeof(T);
+        do // When x==0, loop is run once to put 0 into v
         {
-            unsigned int sizeInBytes = sizeof(T);
-            do // When x==0, loop is run once to put 0 into v
-            {
-                v.insert(v.begin(), x & (T) 0xFF);
-                x >>= 8;
-                sizeInBytes--;
-            } while (x != 0 && sizeInBytes > 0);
-        }
+            v.insert(v.begin(), x & (T) 0xFF);
+            x >>= 8;
+            sizeInBytes--;
+        } while (x != 0 && sizeInBytes > 0);
+
         return v;
     }
 
@@ -79,3 +80,6 @@ std::string Types::toValue(std::vector<uint8_t> rawBytes);
 
 template <>
 bool Types::toValue(std::vector<uint8_t> rawBytes);
+
+template <>
+int Types::toValue(std::vector<uint8_t> rawBytes);
