@@ -25,7 +25,7 @@ class SaveFile
 		new DataObject(0x2A, 2, UINT_T), // THUMPlayTimeHours
 		new DataObject(0x2C, 2, UINT_T), // THUMPlayTimeMinutes
 		new DataObject(0x23, 1, UINT_T), // THUMPlayTimeSeconds
-		new DataObject(0x29, 2, UINT_T), // THUMSaveTimeDay
+        new DataObject(0x29, 1, UINT_T), // THUMSaveTimeDay
 		new DataObject(0x26, 2, UINT_T), // THUMSaveTimeMonth
 		new DataObject(0x24, 2, UINT_T), // THUMSaveTimeYear
 		new DataObject(0x28, 1, UINT_T), // THUMSaveTimeHour

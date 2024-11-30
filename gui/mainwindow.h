@@ -26,7 +26,7 @@ struct Mapping
                 return &keys.at(i);
             }
         }
-        return NULL;
+        return nullptr;
     }
 };
 
@@ -56,6 +56,7 @@ private:
 
     void setField(SaveFieldID sfID);
     QString getField(SaveFieldID sfID);
+    void setFieldEnabled(SaveFieldID sfID, bool enabled);
 
     void showStatusBarMessage(std::string str);
 

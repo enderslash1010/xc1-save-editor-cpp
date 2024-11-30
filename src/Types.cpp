@@ -92,7 +92,8 @@ std::vector<uint8_t> Types::toRaw(int x, unsigned int maxBits)
 std::vector<uint8_t> Types::toRaw(std::string x, unsigned int maxBits)
 {
 	std::vector<uint8_t> v;
-    if (x.size() <= (maxBits / 8)) for (int i = 0; i < x.size(); i++) v.push_back(x.at(i));
+    if (x.size() == 0) v.push_back(0);
+    else if (x.size() <= (maxBits / 8)) for (int i = 0; i < x.size(); i++) v.push_back(x.at(i));
 	return v;
 }
 
