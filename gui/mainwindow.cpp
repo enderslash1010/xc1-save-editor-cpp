@@ -19,7 +19,7 @@ inline void MainWindow::connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, T
 
 inline void MainWindow::connect(SaveFieldID sfID, QExtendedCheckBox* checkBox)
 {
-    Q_ASSERT(QObject::connect(checkBox, &QCheckBox::checkStateChanged, this, &MainWindow::updateCheckBox));
+    Q_ASSERT(QObject::connect(checkBox, &QCheckBox::stateChanged, this, &MainWindow::updateCheckBox));
     checkBox->setProperty(SAVE_FIELD_PROPERTY, sfID);
     saveFieldMap.insert({sfID, {checkBox, Type::BOOL_T}});
 }
@@ -225,7 +225,7 @@ void MainWindow::updateCheckBox()
     QObject* obj = sender();
     SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
     QString boolStr = this->getField(sfID);
-    saveFile->setValue<boolean>(sfID, QString::compare(boolStr, "0"));
+    saveFile->setValue<bool>(sfID, QString::compare(boolStr, "0"));
 }
 
 void MainWindow::updateComboBox()
