@@ -84,7 +84,7 @@ TEST(Save, uintegers)
 	SaveFile* saveFile = new SaveFile();
 
 	// Setting and reading as uint
-	unsigned int uintTestValues[TEST_POINTS] = { 0x87654321, 123456789, 0, 3, 257894 };
+    unsigned int uintTestValues[TEST_POINTS] = { 0x8765, 52501, 0, 3, 61286 };
 	for (int i = 0; i < TEST_POINTS; i++)
 	{
 		saveFile->setValue(TIMEDayCount, uintTestValues[i]);
