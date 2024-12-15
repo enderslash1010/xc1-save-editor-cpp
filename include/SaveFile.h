@@ -21,7 +21,7 @@ class SaveFile
 	const DataObject* dataMap[LAST_INDEX] =
 	{
 		// THUM
-		new DataObject(0x84, 2, UINT_T), // THUMLevel
+        new DataObject(0x84, 2, UINT_T), // THUMLevel
 		new DataObject(0x2A, 2, UINT_T), // THUMPlayTimeHours
 		new DataObject(0x2C, 2, UINT_T), // THUMPlayTimeMinutes
 		new DataObject(0x23, 1, UINT_T), // THUMPlayTimeSeconds
@@ -46,8 +46,9 @@ class SaveFile
 		new DataObject(0xA0B2, 2, UINT_T), // FLAGScenarioID
 
 		// GAME
+        // TODO: there's a second map num/map num string in save file, why?
 		new DataObject(0xB260, 4, UINT_T), // GAMEMapNum
-		new DataObject(0xB264, 4, STRING_T), // GAMEMapNumString
+        new DataObject(0xB264, 4, STRING_T), // GAMEMapNumString
 		new DataObject(0xD1FE, 2, UINT_T), // GAMEPlayer1
 		new DataObject(0xD202, 2, UINT_T), // GAMEPlayer2
 		new DataObject(0xD206, 2, UINT_T), // GAMEPlayer3
