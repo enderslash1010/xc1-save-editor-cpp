@@ -21,78 +21,79 @@ class SaveFile
 	const DataObject* dataMap[LAST_INDEX] =
 	{
 		// THUM
-        new DataObject(0x84, 2, UINT_T), // THUMLevel
-		new DataObject(0x2A, 2, UINT_T), // THUMPlayTimeHours
-		new DataObject(0x2C, 2, UINT_T), // THUMPlayTimeMinutes
+        new DataObject(0x84, 2, UINT_T), // THUMLevel*
+        new DataObject(0x2A, 2, UINT_T), // THUMPlayTimeHours*
+        new DataObject(0x2C, 2, UINT_T), // THUMPlayTimeMinutes*
 		new DataObject(0x23, 1, UINT_T), // THUMPlayTimeSeconds
-        new DataObject(0x29, 1, UINT_T), // THUMSaveTimeDay
-		new DataObject(0x26, 2, UINT_T), // THUMSaveTimeMonth
-		new DataObject(0x24, 2, UINT_T), // THUMSaveTimeYear
-		new DataObject(0x28, 1, UINT_T), // THUMSaveTimeHour
-		new DataObject(0x22, 1, UINT_T), // THUMSaveTimeMinute
-		new DataObject(0x37, 1, UINT_T), // THUMPictureSlot1
-		new DataObject(0x3B, 1, UINT_T), // THUMPictureSlot2
-		new DataObject(0x3F, 1, UINT_T), // THUMPictureSlot3
-		new DataObject(0x43, 1, UINT_T), // THUMPicutreSlot4
-		new DataObject(0x47, 1, UINT_T), // THUMPictureSlot5
-		new DataObject(0x4B, 1, UINT_T), // THUMPictureSlot6
-		new DataObject(0x4F, 1, UINT_T), // THUMPictureSlot7
-		new DataObject(0x64, 32, STRING_T), // THUMNameString
-		new DataObject(0x86, 1, UINT_T), // THUMSystemSaveFlag
-		new DataObject(0x87, 1, UINT_T), // THUMNGPlusFlag
+        new DataObject(0x29, 1, UINT_T), // THUMSaveTimeDay*
+        new DataObject(0x26, 2, UINT_T), // THUMSaveTimeMonth*
+        new DataObject(0x24, 2, UINT_T), // THUMSaveTimeYear*
+        new DataObject(0x28, 1, UINT_T), // THUMSaveTimeHour*
+        new DataObject(0x22, 1, UINT_T), // THUMSaveTimeMinute*
+        new DataObject(0x37, 1, UINT_T), // THUMPictureSlot1*
+        new DataObject(0x3B, 1, UINT_T), // THUMPictureSlot2*
+        new DataObject(0x3F, 1, UINT_T), // THUMPictureSlot3*
+        new DataObject(0x43, 1, UINT_T), // THUMPicutreSlot4*
+        new DataObject(0x47, 1, UINT_T), // THUMPictureSlot5*
+        new DataObject(0x4B, 1, UINT_T), // THUMPictureSlot6*
+        new DataObject(0x4F, 1, UINT_T), // THUMPictureSlot7*
+        new DataObject(0x64, 32, STRING_T), // THUMNameString*
+        new DataObject(0x86, 1, UINT_T), // THUMSystemSaveFlag*
+        new DataObject(0x87, 1, UINT_T), // THUMNGPlusFlag*
 		new DataObject(0xE0, 38048, TPL_T), // THUMSaveImage
 
 		// FLAG
-		new DataObject(0xA0B2, 2, UINT_T), // FLAGScenarioID
+        new DataObject(0xA0B2, 2, UINT_T), // FLAGScenarioID*
 
 		// GAME
-        // TODO: there's a second map num/map num string in save file, why?
-		new DataObject(0xB260, 4, UINT_T), // GAMEMapNum
-        new DataObject(0xB264, 4, STRING_T), // GAMEMapNumString
-		new DataObject(0xD1FE, 2, UINT_T), // GAMEPlayer1
-		new DataObject(0xD202, 2, UINT_T), // GAMEPlayer2
-		new DataObject(0xD206, 2, UINT_T), // GAMEPlayer3
-		new DataObject(0xD20A, 2, UINT_T), // GAMEPlayer4
-		new DataObject(0xD20E, 2, UINT_T), // GAMEPlayer5
-		new DataObject(0xD212, 2, UINT_T), // GAMEPlayer6
-		new DataObject(0xD216, 2, UINT_T), // GAMEPlayer7
-		new DataObject(0xF8D0, 4, UINT_T), // GAMEShulkLevel
-		new DataObject(0xFBD4, 4, UINT_T), // GAMEReynLevel
-		new DataObject(0xFEC8, 4, UINT_T), // GAMEFioraLevel
-		new DataObject(0x101DC, 4, UINT_T), // GAMEDunbanLevel
-		new DataObject(0x104E0, 4, UINT_T), // GAMESharlaLevel
-		new DataObject(0x107E4, 4, UINT_T), // GAMERikiLevel
-		new DataObject(0x10AE8, 4, UINT_T), // GAMEMeliaLevel
-		new DataObject(0x10DEC, 4, UINT_T), // GAMESevenLevel
-		new DataObject(0x110F0, 4, UINT_T), // GAMEDicksonLevel
-		new DataObject(0x113F4, 4, UINT_T), // GAMEMumkharLevel
-		new DataObject(0x116F8, 4, UINT_T), // GAMEAlvisLevel
-		new DataObject(0x119FC, 4, UINT_T), // GAMEPrologueDunbanLevel
+        new DataObject(0xB260, 4, UINT_T), // GAMEMapNum*
+        new DataObject(0xB264, 4, STRING_T), // GAMEMapNumString*
+        new DataObject(0xB284, 4, UINT_T), // GAMEMapNum2*
+        new DataObject(0xB288, 4, STRING_T), // GAMEMapNumString2*
+        new DataObject(0xD1FE, 2, UINT_T), // GAMEPlayer1*
+        new DataObject(0xD202, 2, UINT_T), // GAMEPlayer2*
+        new DataObject(0xD206, 2, UINT_T), // GAMEPlayer3*
+        new DataObject(0xD20A, 2, UINT_T), // GAMEPlayer4*
+        new DataObject(0xD20E, 2, UINT_T), // GAMEPlayer5*
+        new DataObject(0xD212, 2, UINT_T), // GAMEPlayer6*
+        new DataObject(0xD216, 2, UINT_T), // GAMEPlayer7*
+        new DataObject(0xF8D0, 4, UINT_T), // GAMEShulkLevel*
+        new DataObject(0xFBD4, 4, UINT_T), // GAMEReynLevel*
+        new DataObject(0xFED8, 4, UINT_T), // GAMEFioraLevel*
+        new DataObject(0x101DC, 4, UINT_T), // GAMEDunbanLevel*
+        new DataObject(0x104E0, 4, UINT_T), // GAMESharlaLevel*
+        new DataObject(0x107E4, 4, UINT_T), // GAMERikiLevel*
+        new DataObject(0x10AE8, 4, UINT_T), // GAMEMeliaLevel*
+        new DataObject(0x10DEC, 4, UINT_T), // GAMESevenLevel*
+        new DataObject(0x110F0, 4, UINT_T), // GAMEDicksonLevel*
+        new DataObject(0x113F4, 4, UINT_T), // GAMEMumkharLevel*
+        new DataObject(0x116F8, 4, UINT_T), // GAMEAlvisLevel*
+        new DataObject(0x119FC, 4, UINT_T), // GAMEPrologueDunbanLevel*
 
 		// TIME
-		new DataObject(0x11EB0, 4, UINT_T), // TIMEPlayTime
-		new DataObject(0x11EB8, 4, UINT_T), // TIMEDayCount
-		new DataObject(0x11EB4, 4, UINT_T), // TIMEDayTime
-		new DataObject(0x11EBA, 2, UINT_T), // TIMEYearCount
+        new DataObject(0x11EB0, 4, UINT_T), // TIMEPlayTime*
+        new DataObject(0x11EB8, 2, UINT_T), // TIMEDayCount*
+        new DataObject(0x11EB4, 4, FLOAT_T), // TIMEDayTime*
+        new DataObject(0x11EBA, 2, UINT_T), // TIMEYearCount*
 
 		// PCPM
-		new DataObject(0x11EE0, 4, FLOAT_T), // PCPMPlayer1X
-		new DataObject(0x11EE4, 4, FLOAT_T), // PCPMPlayer1Y
-		new DataObject(0x11EE8, 4, FLOAT_T), // PCPMPlayer1Z
-		new DataObject(0x11EEC, 4, FLOAT_T), // PCPMPlayer1Angle
-		new DataObject(0x11EF0, 4, FLOAT_T), // PCPMPlayer2X
-		new DataObject(0x11EF4, 4, FLOAT_T), // PCPMPlayer2Y
-		new DataObject(0x11EF8, 4, FLOAT_T), // PCPMPlayer2Z
-		new DataObject(0x11EFC, 4, FLOAT_T), // PCPMPlayer2Angle
-		new DataObject(0x11F00, 4, FLOAT_T), // PCPMPlayer3X
-		new DataObject(0x11F04, 4, FLOAT_T), // PCPMPlayer3Y
-		new DataObject(0x11F08, 4, FLOAT_T), // PCPMPlayer3Z
-		new DataObject(0x11F0C, 4, FLOAT_T), // PCPMPlayer3Angle
+        new DataObject(0x11EE0, 4, FLOAT_T), // PCPMPlayer1X*
+        new DataObject(0x11EE4, 4, FLOAT_T), // PCPMPlayer1Y*
+        new DataObject(0x11EE8, 4, FLOAT_T), // PCPMPlayer1Z*
+        new DataObject(0x11EEC, 4, FLOAT_T), // PCPMPlayer1Angle*
+        new DataObject(0x11EF0, 4, FLOAT_T), // PCPMPlayer2X*
+        new DataObject(0x11EF4, 4, FLOAT_T), // PCPMPlayer2Y*
+        new DataObject(0x11EF8, 4, FLOAT_T), // PCPMPlayer2Z*
+        new DataObject(0x11EFC, 4, FLOAT_T), // PCPMPlayer2Angle*
+        new DataObject(0x11F00, 4, FLOAT_T), // PCPMPlayer3X*
+        new DataObject(0x11F04, 4, FLOAT_T), // PCPMPlayer3Y*
+        new DataObject(0x11F08, 4, FLOAT_T), // PCPMPlayer3Z*
+        new DataObject(0x11F0C, 4, FLOAT_T), // PCPMPlayer3Angle*
 
 		// CAMD
-		new DataObject(0x11F30, 4, FLOAT_T), // CAMDVerticalPosition
-		new DataObject(0x11F34, 4, FLOAT_T), // CAMDHorizontalPosition
-		new DataObject(0x11F3C, 4, FLOAT_T), // CAMDDistance
+        new DataObject(0x11F30, 4, FLOAT_T), // CAMDVerticalPosition*
+        new DataObject(0x11F34, 4, FLOAT_T), // CAMDHorizontalPosition*
+        new DataObject(0x11F3C, 4, FLOAT_T), // CAMDDistance*
 
 		// ITEM
 		new DataObject(0x24048, 4, INT_T), // ITEMMoney
@@ -135,12 +136,12 @@ class SaveFile
 		}),
 
 		// WTHR
-		new DataObject(0x24090, 4, UINT_T), // WTHRReroll
-		new DataObject(0x24098, 4, UINT_T), // WTHRMap
-		new DataObject(0x24095, 1, UINT_T), // WTHRForegreoundWeather
-		new DataObject(0x24096, 2, UINT_T), // WTHRUnk1
+        new DataObject(0x24090, 4, FLOAT_T), // WTHRReroll*
+        new DataObject(0x24098, 4, UINT_T), // WTHRMap*
+        new DataObject(0x24095, 1, UINT_T), // WTHRForegroundWeather*
+        new DataObject(0x24096, 2, UINT_T), // WTHRUnk1*
 		new DataObject(0x2409D, 1, UINT_T), // WTHRBackgroundWeather
-		new DataObject(0x2409F, 1, UINT_T), // WTHRUnk2
+        new DataObject(0x2409F, 1, UINT_T), // WTHRUnk2*
 
 		// SNDS
 

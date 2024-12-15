@@ -31,6 +31,8 @@ enum SaveFieldID
 	// GAME
 	GAMEMapNum,
 	GAMEMapNumString,
+    GAMEMapNum2,
+    GAMEMapNumString2,
 	GAMEPlayer1,
 	GAMEPlayer2,
 	GAMEPlayer3,
@@ -56,6 +58,8 @@ enum SaveFieldID
 	TIMEDayCount,
 	TIMEDayTime,
 	TIMEYearCount,
+
+    // PCPM - Player Character Position Metadata
 	PCPMPlayer1X,
 	PCPMPlayer1Y,
 	PCPMPlayer1Z,
@@ -82,7 +86,7 @@ enum SaveFieldID
 	// WTHR
 	WTHRReroll,
 	WTHRMap,
-	WTHRForegreoundWeather,
+    WTHRForegroundWeather,
 	WTHRUnk1,
 	WTHRBackgroundWeather,
 	WTHRUnk2,
