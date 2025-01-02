@@ -5,6 +5,7 @@
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qlineedit.h>
+#include <qradiobutton.h>
 
 struct Mapping
 {
@@ -114,5 +115,40 @@ public:
         this->currMapping = (i > 0) ? i : mappings.size() - 1;
 
         loadItems();
+    }
+};
+
+class QExtendedRadioButtons : public QFrame, public QExtendedWidget
+{
+    Q_OBJECT
+    std::unordered_map<QString, QRadioButton*> valueToButtonMapping;
+public:
+    QExtendedRadioButtons(QWidget* parent = nullptr) : QFrame(parent) { }
+
+    void addButton(QRadioButton* rb, QString val)
+    {
+        valueToButtonMapping.insert({val, rb});
+    }
+
+    void setField(QString value)
+    {
+        auto it = valueToButtonMapping.find(value);
+        if (it != valueToButtonMapping.end())
+        {
+            it->second->setChecked(true);
+        }
+        // All buttons unchecked if value isn't an option
+        else for (auto i = valueToButtonMapping.begin(); i != valueToButtonMapping.end(); ++i) i->second->setChecked(false);
+    }
+
+    QString getField()
+    {
+        for (auto i = valueToButtonMapping.begin(); i != valueToButtonMapping.end(); ++i) if (i->second->isChecked()) return i->first;
+        return "";
+    }
+
+    void setFieldEnabled(bool enabled)
+    {
+        for (auto i = valueToButtonMapping.begin(); i != valueToButtonMapping.end(); ++i) i->second->setEnabled(enabled);
     }
 };

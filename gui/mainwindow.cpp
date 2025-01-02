@@ -153,6 +153,7 @@ std::vector<const Mapping*> MapNumToBackgroundWeather =
     &RainBackgroundWeatherMapping // Default
 };
 
+// QLineEdit
 inline void MainWindow::connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, Type type)
 {
     Q_ASSERT(QObject::connect(lineEdit, &QLineEdit::editingFinished, this, &MainWindow::updateText));
@@ -164,6 +165,7 @@ inline void MainWindow::connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, T
     saveFieldMap.insert({sfID, {lineEdit, type}});
 }
 
+// QCheckBox
 inline void MainWindow::connect(SaveFieldID sfID, QExtendedCheckBox* checkBox)
 {
     Q_ASSERT(QObject::connect(checkBox, &QCheckBox::stateChanged, this, &MainWindow::updateCheckBox));
@@ -175,6 +177,7 @@ inline void MainWindow::connect(SaveFieldID sfID, QExtendedCheckBox* checkBox)
     saveFieldMap.insert({sfID, {checkBox, Type::BOOL_T}});
 }
 
+// QComboBox
 inline void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* comboBox, const Mapping* mapping)
 {
     if (comboBox->lineEdit() != nullptr)
@@ -193,7 +196,8 @@ inline void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* comboBox, c
     comboBox->setMapping(mapping);
 }
 
-void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExtendedComboBox* sourceComboBox, std::vector<const Mapping*> dynamicMapping)
+// QComboBox with dynamic mapping
+void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExtendedComboBox* sourceComboBox, std::vector<const Mapping*>& dynamicMapping)
 {
     if (thisComboBox->lineEdit() != nullptr)
     {
@@ -212,6 +216,22 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExt
 
     QObject::connect(sourceComboBox->lineEdit(), &QLineEdit::editingFinished, this, &MainWindow::updateChildMapping);
     sourceComboBox->addChild(thisComboBox);
+}
+
+// QRadioButton
+void MainWindow::connect(SaveFieldID sfID, QExtendedRadioButtons* radioButtonFrame, std::unordered_map<QString, QRadioButton*>& rbs)
+{
+    radioButtonFrame->setSaveFieldID(sfID);
+
+    for (auto i = rbs.begin(); i != rbs.end(); ++i)
+    {
+        QObject::connect(i->second, &QRadioButton::clicked, this, &MainWindow::updateRadioButton);
+        i->second->setProperty(SAVE_FIELD_PROPERTY, sfID);
+
+        radioButtonFrame->addButton(i->second, i->first);
+    }
+
+    saveFieldMap.insert({sfID, {radioButtonFrame, Type::UINT_T}});
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -311,6 +331,8 @@ MainWindow::MainWindow(QWidget *parent)
     // TBOX
 
     // OPTD
+    std::unordered_map<QString, QRadioButton*> OPTDJapaneseVoiceMap = {{"0", ui->OPTDJapaneseVoice0}, {"1", ui->OPTDJapaneseVoice1}};
+    connect(OPTDJapaneseVoice, ui->OPTDJapaneseVoice, OPTDJapaneseVoiceMap);
 
     for (int i = 0; i < LAST_INDEX; i++) setFieldEnabled((SaveFieldID)i, false);
 }
@@ -505,6 +527,16 @@ void MainWindow::updateComboBox()
         }
         this->setField(sfID);
     }
+}
+
+void MainWindow::updateRadioButton(int isChecked)
+{
+    QObject* obj = sender();
+    SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
+    QExtendedWidget* rb = saveFieldMap.at(sfID).first;
+
+    saveFile->setValue(sfID, rb->getField().toUInt());
+    this->setField(sfID);
 }
 
 void MainWindow::updateChildMapping()
