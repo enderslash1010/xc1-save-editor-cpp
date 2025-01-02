@@ -1,6 +1,7 @@
 #pragma once
 
 #include "QWidget"
+#include "SaveFieldID.h"
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qlineedit.h>
@@ -27,15 +28,31 @@ struct Mapping
         for(int i = 0; i < keys.count(); i++) if(keys.at(i) == x) return i;
         return -1;
     }
+
+    const int indexAt(QString x) const noexcept
+    {
+        for(int i = 0; i < values.count(); i++) if(!QString::compare(values.at(i), x)) return i;
+        return -1;
+    }
 };
 
 class QExtendedWidget
 {
+    std::vector<QExtendedWidget*> children;
+    SaveFieldID sfID;
 public:
     virtual void setField(QString value) = 0;
     virtual QString getField() = 0;
     virtual void setFieldEnabled(bool enabled) = 0;
-    virtual const Mapping* getMapping() = 0;
+
+    virtual const Mapping* getMapping() { return nullptr; }
+    virtual void setMappingIndex(int i) { return; }
+
+    virtual std::vector<QExtendedWidget*> getChildren() { return this->children; }
+    virtual void addChild(QExtendedWidget* widget) { children.push_back(widget); }
+
+    virtual SaveFieldID getSaveFieldID() { return this->sfID; }
+    virtual void setSaveFieldID(SaveFieldID sfID) { this->sfID = sfID; }
 };
 
 class QExtendedLineEdit : public QLineEdit, public QExtendedWidget
@@ -46,7 +63,6 @@ public:
     void setField(QString value) { this->setText(value); }
     QString getField() { return this->text(); }
     void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
-    const Mapping* getMapping() { return nullptr; }
 };
 
 class QExtendedCheckBox : public QCheckBox, public QExtendedWidget
@@ -57,13 +73,19 @@ public:
     void setField(QString value) { this->setChecked(QString::compare(value, "0")); }
     QString getField() { return this->isChecked() ? "1" : "0"; }
     void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
-    const Mapping* getMapping() { return nullptr; }
 };
 
 class QExtendedComboBox : public QComboBox, public QExtendedWidget
 {
     Q_OBJECT
-    const Mapping* mapping = nullptr;
+    unsigned int currMapping = 0;
+    std::vector<const Mapping*> mappings;
+
+    void loadItems()
+    {
+        this->clear();
+        this->addItems(mappings.at(currMapping)->values);
+    }
 public:
     QExtendedComboBox(QWidget* parent = nullptr) : QComboBox(parent) { }
     void setField(QString value) { this->setCurrentText(value); }
@@ -72,9 +94,25 @@ public:
 
     void setMapping(const Mapping* mapping)
     {
-        this->mapping = mapping;
-        this->clear();
-        this->addItems((*mapping).values);
+        this->mappings.clear();
+        this->mappings.push_back(mapping);
+
+        loadItems();
     }
-    const Mapping* getMapping() { return mapping; }
+    void setMapping(const std::vector<const Mapping*> mappings)
+    {
+        this->mappings = mappings;
+        this->currMapping = 0;
+
+        loadItems();
+    }
+
+    const Mapping* getMapping() { return (this->mappings.size() > currMapping) ? mappings.at(currMapping) : nullptr; }
+    void setMappingIndex(int i)
+    {
+        if (mappings.size() < i) return;
+        this->currMapping = (i > 0) ? i : mappings.size() - 1;
+
+        loadItems();
+    }
 };

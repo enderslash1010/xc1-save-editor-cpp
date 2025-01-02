@@ -44,5 +44,7 @@ private slots:
     void updateText();
     void updateCheckBox();
     void updateComboBox();
+
+    void updateChildMapping();
 };
 #endif // MAINWINDOW_H

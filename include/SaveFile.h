@@ -140,7 +140,7 @@ class SaveFile
         new DataObject(0x24098, 4, UINT_T), // WTHRMap*
         new DataObject(0x24095, 1, UINT_T), // WTHRForegroundWeather*
         new DataObject(0x24096, 2, UINT_T), // WTHRUnk1*
-		new DataObject(0x2409D, 1, UINT_T), // WTHRBackgroundWeather
+        new DataObject(0x2409D, 1, UINT_T), // WTHRBackgroundWeather*
         new DataObject(0x2409F, 1, UINT_T), // WTHRUnk2*
 
 		// SNDS

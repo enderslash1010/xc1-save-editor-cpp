@@ -150,19 +150,28 @@ std::vector<const Mapping*> MapNumToBackgroundWeather =
     &RebirthBackgroundWeatherMapping, // Mechonis Core (ma2301)
     &NoBackgroundWeatherMapping, // Junks (ma2401)
     &NoBackgroundWeatherMapping, // Post-Game Colony 9 (ma0102) TODO: does post-game colony 9 have weather?
+    &RainBackgroundWeatherMapping // Default
 };
 
 inline void MainWindow::connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, Type type)
 {
     Q_ASSERT(QObject::connect(lineEdit, &QLineEdit::editingFinished, this, &MainWindow::updateText));
+
+    // TODO: could use just one?
     lineEdit->setProperty(SAVE_FIELD_PROPERTY, sfID);
+    lineEdit->setSaveFieldID(sfID);
+
     saveFieldMap.insert({sfID, {lineEdit, type}});
 }
 
 inline void MainWindow::connect(SaveFieldID sfID, QExtendedCheckBox* checkBox)
 {
     Q_ASSERT(QObject::connect(checkBox, &QCheckBox::stateChanged, this, &MainWindow::updateCheckBox));
+
+    // TODO: could use just one?
     checkBox->setProperty(SAVE_FIELD_PROPERTY, sfID);
+    checkBox->setSaveFieldID(sfID);
+
     saveFieldMap.insert({sfID, {checkBox, Type::BOOL_T}});
 }
 
@@ -178,6 +187,7 @@ inline void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* comboBox, c
         QObject::connect(comboBox, &QComboBox::currentTextChanged, this, &MainWindow::updateComboBox);
         comboBox->setProperty(SAVE_FIELD_PROPERTY, sfID);
     }
+    comboBox->setSaveFieldID(sfID);
 
     saveFieldMap.insert({sfID, {comboBox, Type::STRING_T}});
     comboBox->setMapping(mapping);
@@ -188,18 +198,20 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExt
     if (thisComboBox->lineEdit() != nullptr)
     {
         QObject::connect(thisComboBox->lineEdit(), &QLineEdit::editingFinished, this, &MainWindow::updateComboBox);
-        thisComboBox->lineEdit()->setProperty(SAVE_FIELD_PROPERTY, sfID);
+        thisComboBox->lineEdit()->setProperty(SAVE_FIELD_PROPERTY, sfID); // TODO: could use setSaveFieldID instead
     }
     else
     {
         QObject::connect(thisComboBox, &QComboBox::currentTextChanged, this, &MainWindow::updateComboBox);
         thisComboBox->setProperty(SAVE_FIELD_PROPERTY, sfID);
     }
+    thisComboBox->setSaveFieldID(sfID);
 
     saveFieldMap.insert({sfID, {thisComboBox, Type::STRING_T}});
-    thisComboBox->setMapping(dynamicMapping.at(0));
+    thisComboBox->setMapping(dynamicMapping);
 
-    // TODO: find a way to update thisComboBox items when sourceComboBox is updated
+    QObject::connect(sourceComboBox->lineEdit(), &QLineEdit::editingFinished, this, &MainWindow::updateChildMapping);
+    sourceComboBox->addChild(thisComboBox);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -290,7 +302,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(WTHRReroll, ui->WTHRReroll, Type::FLOAT_T);
     connect(WTHRMap, ui->WTHRMap, &MapMapping);
     connect(WTHRForegroundWeather, ui->WTHRForegroundWeather, &ForegroundWeatherMapping);
-
+    connect(WTHRBackgroundWeather, ui->WTHRBackgroundWeather, ui->WTHRMap, MapNumToBackgroundWeather);
     connect(WTHRUnk1, ui->WTHRUnk1, Type::UINT_T);
     connect(WTHRUnk2, ui->WTHRUnk2, Type::UINT_T);
 
@@ -492,5 +504,23 @@ void MainWindow::updateComboBox()
             showStatusBarMessage("Invalid input");
         }
         this->setField(sfID);
+    }
+}
+
+void MainWindow::updateChildMapping()
+{
+    QObject* obj = sender();
+    SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
+
+    QExtendedWidget* widget = saveFieldMap.at(sfID).first;
+    std::vector<QExtendedWidget*> children = widget->getChildren();
+
+    const Mapping* mapping = widget->getMapping();
+    int index = mapping->indexAt(widget->getField());
+
+    for (QExtendedWidget* child : children)
+    {
+        child->setMappingIndex(index);
+        this->setField(child->getSaveFieldID());
     }
 }
