@@ -69,11 +69,19 @@ public:
 class QExtendedCheckBox : public QCheckBox, public QExtendedWidget
 {
     Q_OBJECT
+    bool inverted = false;
 public:
     QExtendedCheckBox(QWidget* parent = nullptr) : QCheckBox(parent) { }
-    void setField(QString value) { this->setChecked(QString::compare(value, "0")); }
-    QString getField() { return this->isChecked() ? "1" : "0"; }
+    void setField(QString value)
+    {
+        inverted ? this->setChecked(!QString::compare(value, "0")) : this->setChecked(QString::compare(value, "0"));
+    }
+    QString getField()
+    {
+        return inverted ? (this->isChecked() ? "1" : "0") : (this->isChecked() ? "1" : "0");
+    }
     void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
+    void setInverted(bool inverted) { this->inverted = inverted; }
 };
 
 class QExtendedComboBox : public QComboBox, public QExtendedWidget
@@ -150,5 +158,43 @@ public:
     void setFieldEnabled(bool enabled)
     {
         for (auto i = valueToButtonMapping.begin(); i != valueToButtonMapping.end(); ++i) i->second->setEnabled(enabled);
+    }
+};
+
+class QExtendedSlider : public QSlider, public QExtendedWidget
+{
+    Q_OBJECT
+    std::vector<int> sliderToRawValue;
+public:
+    QExtendedSlider(QWidget* parent = nullptr) : QSlider(parent) { }
+
+    void setField(QString value)
+    {
+        int rawValue = value.toInt();
+        for (int i = 0; i < sliderToRawValue.size(); i++)
+        {
+            if (sliderToRawValue.at(i) == rawValue)
+            {
+                this->setSliderPosition(i);
+                break;
+            }
+        }
+    }
+
+    QString getField()
+    {
+        return QString::number(sliderToRawValue.at(this->value()));
+    }
+
+    void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
+
+    void setScaling(int start, int spacing, int count)
+    {
+        sliderToRawValue.clear();
+        while (count-- > 0)
+        {
+            sliderToRawValue.push_back(start);
+            start += spacing;
+        }
     }
 };

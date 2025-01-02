@@ -27,10 +27,11 @@ private:
     SaveFile *saveFile = NULL;
 
     void connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, Type type);
-    void connect(SaveFieldID sfID, QExtendedCheckBox* checkBox);
+    void connect(SaveFieldID sfID, QExtendedCheckBox* checkBox, bool invert);
     void connect(SaveFieldID sfID, QExtendedComboBox* comboBox, const Mapping* mapping);
     void connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExtendedComboBox* sourceComboBox, std::vector<const Mapping*>& dynamicMapping);
     void connect(SaveFieldID sfID, QExtendedRadioButtons* radioButtonFrame, std::unordered_map<QString, QRadioButton*>& rbs);
+    void connect(SaveFieldID sfID, QExtendedSlider* slider, int start, int spacing, int count);
 
     void setField(SaveFieldID sfID);
     QString getField(SaveFieldID sfID);
@@ -45,7 +46,8 @@ private slots:
     void updateText();
     void updateCheckBox();
     void updateComboBox();
-    void updateRadioButton(int isChecked);
+    void updateRadioButton();
+    void updateSlider();
 
     void updateChildMapping();
 };

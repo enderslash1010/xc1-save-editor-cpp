@@ -166,7 +166,7 @@ inline void MainWindow::connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, T
 }
 
 // QCheckBox
-inline void MainWindow::connect(SaveFieldID sfID, QExtendedCheckBox* checkBox)
+inline void MainWindow::connect(SaveFieldID sfID, QExtendedCheckBox* checkBox, bool invert = false)
 {
     Q_ASSERT(QObject::connect(checkBox, &QCheckBox::stateChanged, this, &MainWindow::updateCheckBox));
 
@@ -175,6 +175,8 @@ inline void MainWindow::connect(SaveFieldID sfID, QExtendedCheckBox* checkBox)
     checkBox->setSaveFieldID(sfID);
 
     saveFieldMap.insert({sfID, {checkBox, Type::BOOL_T}});
+
+    checkBox->setInverted(invert);
 }
 
 // QComboBox
@@ -232,6 +234,19 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedRadioButtons* radioButtonFra
     }
 
     saveFieldMap.insert({sfID, {radioButtonFrame, Type::UINT_T}});
+}
+
+// QSlider
+void MainWindow::connect(SaveFieldID sfID, QExtendedSlider* slider, int start, int spacing, int count)
+{
+    QObject::connect(slider, &QSlider::valueChanged, this, &MainWindow::updateSlider);
+
+    slider->setProperty(SAVE_FIELD_PROPERTY, sfID);
+    slider->setSaveFieldID(sfID);
+
+    saveFieldMap.insert({sfID, {slider, Type::UINT_T}});
+
+    slider->setScaling(start, spacing, count);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -333,6 +348,35 @@ MainWindow::MainWindow(QWidget *parent)
     // OPTD
     std::unordered_map<QString, QRadioButton*> OPTDJapaneseVoiceMap = {{"0", ui->OPTDJapaneseVoice0}, {"1", ui->OPTDJapaneseVoice1}};
     connect(OPTDJapaneseVoice, ui->OPTDJapaneseVoice, OPTDJapaneseVoiceMap);
+
+    connect(OPTDGamma, ui->OPTDGamma, 8, 2, 5);
+    connect(OPTDShowControls, ui->OPTDShowControls);
+    connect(OPTDShowArtDescriptions, ui->OPTDShowArtDescriptions);
+    connect(OPTDShowEnemyIcons, ui->OPTDShowEnemyIcons);
+    connect(OPTDShowBuffDebuffInfoEveryTime, ui->OPTDShowBuffDebuffInfoEveryTime);
+    connect(OPTDShowBuffDefbuffIndicator, ui->OPTDShowBuffDefbuffIndicator);
+    connect(OPTDShowDestinationMarker, ui->OPTDShowDestinationMarker);
+
+    connect(OPTDXAxisSpeed, ui->OPTDXAxisSpeed, 4, -1, 5);
+    connect(OPTDNonInvertedXAxis, ui->OPTDNonInvertedXAxis, true);
+    connect(OPTDYAxisSpeed, ui->OPTDYAxisSpeed, 4, -1, 5);
+    connect(OPTDNonInvertedYAxis, ui->OPTDNonInvertedYAxis, true);
+    connect(OPTDZoomSpeed, ui->OPTDZoomSpeed, 4, -1, 5);
+    connect(OPTDPointOfView, ui->OPTDPointOfView, 2, -1, 3);
+    connect(OPTDAngleCorrection, ui->OPTDAngleCorrection);
+    connect(OPTDBattleCamera, ui->OPTDBattleCamera);
+
+    connect(OPTDMinimapOn, ui->OPTDMinimapOn);
+    connect(OPTDShowSubtitles, ui->OPTDShowSubtitles);
+
+    std::unordered_map<QString, QRadioButton*> OPTDMinimapRotateMap = {{"0", ui->OPTDMinimapRotate0}, {"1", ui->OPTDMinimapRotate1}};
+    connect(OPTDMinimapRotate, ui->OPTDMinimapRotate, OPTDMinimapRotateMap);
+
+    std::unordered_map<QString, QRadioButton*> OPTDAutoEventScrollingMap = {{"0", ui->OPTDAutoEventScrolling0}, {"1", ui->OPTDAutoEventScrolling1}};
+    connect(OPTDAutoEventScrolling, ui->OPTDAutoEventScrolling, OPTDAutoEventScrollingMap);
+
+    std::unordered_map<QString, QRadioButton*> OPTDFastDialogueTextMap = {{"0", ui->OPTDFastDialogueText0}, {"1", ui->OPTDFastDialogueText1}};
+    connect(OPTDFastDialogueText, ui->OPTDFastDialogueText, OPTDFastDialogueTextMap);
 
     for (int i = 0; i < LAST_INDEX; i++) setFieldEnabled((SaveFieldID)i, false);
 }
@@ -529,13 +573,23 @@ void MainWindow::updateComboBox()
     }
 }
 
-void MainWindow::updateRadioButton(int isChecked)
+void MainWindow::updateRadioButton()
 {
     QObject* obj = sender();
     SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
     QExtendedWidget* rb = saveFieldMap.at(sfID).first;
 
     saveFile->setValue(sfID, rb->getField().toUInt());
+    this->setField(sfID);
+}
+
+void MainWindow::updateSlider()
+{
+    QObject* obj = sender();
+    SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
+    QExtendedWidget* slider = saveFieldMap.at(sfID).first;
+
+    saveFile->setValue(sfID, slider->getField().toUInt());
     this->setField(sfID);
 }
 

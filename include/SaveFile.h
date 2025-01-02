@@ -167,27 +167,27 @@ class SaveFile
 		}),
 
 		// OPTD
-		new DataObject(0x248B0, 1, BOOL_T), // OPTDNonInvertedYAxis
-		new DataObject(0x248B1, 1, BOOL_T), // OPTDNonInvertedXAxis
-		new DataObject(0x248B2, 1, UINT_T), // OPTDYAxisSpeed
-		new DataObject(0x248B3, 1, UINT_T), // OPTDXAxisSpeed
-		new DataObject(0x248B4, 1, UINT_T), // OPTDZoomSpeed
-		new DataObject(0x248B5, 1, UINT_T), // OPTDPointOfView
-		new DataObject(0x248B6, 1, BOOL_T), // OPTDAngleCorrection
-		new DataObject(0x248B7, 1, BOOL_T), // OPTDBattleCamera
-		new DataObject(0x248BF, 1, UINT_T), // OPTDGamma
-		new DataObject(0x248C0, 1, BOOL_T), // OPTDMinimapOn
-		new DataObject(0x248C1, 1, BOOL_T), // OPTDMinimapRotate
-		new DataObject(0x248CC, 1, BOOL_T), // OPTDJapaneseVoice
-		new DataObject(0x248D0, 1, BOOL_T), // OPTDShowControls
-		new DataObject(0x248D1, 1, BOOL_T), // OPTDShowArtDescriptions
-		new DataObject(0x248D2, 1, BOOL_T), // OPTDShowBuffDebuffInfoEveryTime
-		new DataObject(0x248D3, 1, BOOL_T), // OPTDShowEnemyIcons
-		new DataObject(0x248D4, 1, BOOL_T), // OPTDShowBuffDefbuffIndicator
-		new DataObject(0x248D5, 1, BOOL_T), // OPTDShowDestinationMarker
-		new DataObject(0x248E0, 1, BOOL_T), // OPTDAutoEventScrolling
-		new DataObject(0x248E1, 1, BOOL_T), // OPTDFastDialogueText
-		new DataObject(0x248E2, 1, BOOL_T) // OPTDShowSubtitles
+        new DataObject(0x248B0, 1, BOOL_T), // OPTDNonInvertedYAxis*
+        new DataObject(0x248B1, 1, BOOL_T), // OPTDNonInvertedXAxis*
+        new DataObject(0x248B2, 1, UINT_T), // OPTDYAxisSpeed*
+        new DataObject(0x248B3, 1, UINT_T), // OPTDXAxisSpeed*
+        new DataObject(0x248B4, 1, UINT_T), // OPTDZoomSpeed*
+        new DataObject(0x248B5, 1, UINT_T), // OPTDPointOfView*
+        new DataObject(0x248B6, 1, BOOL_T), // OPTDAngleCorrection*
+        new DataObject(0x248B7, 1, BOOL_T), // OPTDBattleCamera*
+        new DataObject(0x248BF, 1, UINT_T), // OPTDGamma*
+        new DataObject(0x248C0, 1, BOOL_T), // OPTDMinimapOn*
+        new DataObject(0x248C1, 1, BOOL_T), // OPTDMinimapRotate*
+        new DataObject(0x248CC, 1, BOOL_T), // OPTDJapaneseVoice*
+        new DataObject(0x248D0, 1, BOOL_T), // OPTDShowControls*
+        new DataObject(0x248D1, 1, BOOL_T), // OPTDShowArtDescriptions*
+        new DataObject(0x248D2, 1, BOOL_T), // OPTDShowBuffDebuffInfoEveryTime*
+        new DataObject(0x248D3, 1, BOOL_T), // OPTDShowEnemyIcons*
+        new DataObject(0x248D4, 1, BOOL_T), // OPTDShowBuffDefbuffIndicator*
+        new DataObject(0x248D5, 1, BOOL_T), // OPTDShowDestinationMarker*
+        new DataObject(0x248E0, 1, BOOL_T), // OPTDAutoEventScrolling*
+        new DataObject(0x248E1, 1, BOOL_T), // OPTDFastDialogueText*
+        new DataObject(0x248E2, 1, BOOL_T)  // OPTDShowSubtitles*
 	};
 
 public:
