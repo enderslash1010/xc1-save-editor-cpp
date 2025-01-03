@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include <QFileDialog>
+#include <iostream>
 
 #define SAVE_FIELD_PROPERTY "SaveField"
 
@@ -11,6 +12,19 @@ const Mapping PlayerMapping
 };
 
 const Mapping MapMapping
+{
+    {0x0, 0x0101, 0x0201, 0x0301, 0x0401, 0x0402, 0x0501, 0x0601, 0x0701, 0x0801, 0x0901, 0x0A01, 0x0B01, 0x0C01, 0x0C02, 0x0D01, 0x0E01, 0x0F01, 0x1001, 0x1002, 0x1101, 0x1301, 0x1401, 0x1501, 0x1601, 0x1701, 0x1801, 0x0102},
+    {
+        "Title Screen (ma0000)", "Colony 9 (ma0101)", "Tephra Cave (ma0201)", "Bionis' Leg (ma0301)", "Colony 6 (ma0401)",
+        "Ether Mine (ma0402)", "Satorl Marsh (ma0501)", "Makna Forest (ma0601)", "Frontier Village (ma0701)", "Bionis' Shoulder (ma0801)",
+        "High Entia Tomb (ma0901)", "Eryth Sea (ma1001)", "Alcamoth (ma1101)", "Prison Island (ma1201)", "Fallen Prison Island (ma1202)",
+        "Valak Mountain (ma1301)", "Sword Valley (ma1401)", "Galahad Fortress (ma1501)", "Fallen Arm (ma1601)", "Beta Fallen Arm (ma1602)",
+        "Mechonis Field (ma1701)", "Agniratha (ma1901)", "Central Factory (ma2001)", "Bionis' Interior (ma2101)", "Memory Space (ma2201)",
+        "Mechonis Core (ma2301)", "Junks (ma2401)", "Post-Game Colony 9 (ma0102)"
+    }
+};
+
+const Mapping MapGapMapping
     {
         {0x0, 0x010001, 0x020001, 0x030001, 0x040001, 0x040002, 0x050001, 0x060001, 0x070001, 0x080001, 0x090001, 0x0A0001, 0x0B0001, 0x0C0001, 0x0C0002, 0x0D0001, 0x0E0001, 0x0F0001, 0x100001, 0x100002, 0x110001, 0x130001, 0x140001, 0x150001, 0x160001, 0x170001, 0x180001, 0x010002},
         {
@@ -23,7 +37,7 @@ const Mapping MapMapping
         }
     };
 
-const Mapping MapReverseMapping
+const Mapping MapReverseGapMapping
 {
     {0x0, 0x010001, 0x010002, 0x010003, 0x010004, 0x020004, 0x010005, 0x010006, 0x010007, 0x010008, 0x010009, 0x010010, 0x010011, 0x010012, 0x020012, 0x010013, 0x010014, 0x010015, 0x010016, 0x020016, 0x010017, 0x010019, 0x010020, 0x010021, 0x010022, 0x010023, 0x010024, 0x020001},
     {
@@ -249,6 +263,38 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedSlider* slider, int start, i
     slider->setScaling(start, spacing, count);
 }
 
+const int MINE_ARRAY_ROW_COUNT = 150;
+const Mapping MINEArrayMapping =
+{
+    {MINE_MapID, MINE_MineID, MINE_NumHarvests, MINE_Cooldown},
+    {"Map ID", "Mine ID", "Number of Harvests", "Cooldown"}
+};
+QList<ExtendedWidgetType> MINEArrayWidgetTypes = {QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T};
+QList<const Mapping*> MINEArrayColumnMapping = {&MapMapping, nullptr, nullptr, nullptr};
+
+// QTableWidget
+void MainWindow::connect(SaveFieldID sfID, QExtendedTableWidget* table, const int rowCount, const Mapping* mapping, QList<ExtendedWidgetType> columnTypes)
+{
+    table->setRowCount(rowCount);
+    table->setColumnCount(std::size(mapping->keys));
+    table->setRows(rowCount);
+    table->setCols(std::size(mapping->keys));
+
+    QHeaderView* header = table->horizontalHeader();
+    header->setSectionResizeMode(QHeaderView::Stretch);
+
+    table->setHorizontalHeaderLabels(mapping->values);
+
+    table->setProperty(SAVE_FIELD_PROPERTY, sfID);
+    table->setSaveFieldID(sfID);
+
+    saveFieldMap.insert({sfID, {table, Type::ARRAY_T}});
+
+    table->setup(rowCount, MINEArrayWidgetTypes, MINEArrayColumnMapping, &MINEArrayMapping);
+
+    QObject::connect(table, &QTableWidget::cellChanged, this, &MainWindow::updateTable);
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -282,9 +328,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(FLAGScenarioID, ui->FLAGScenarioID, Type::UINT_T);
 
     // GAME
-    connect(GAMEMapNum, ui->GAMEMapNum, &MapReverseMapping);
+    connect(GAMEMapNum, ui->GAMEMapNum, &MapReverseGapMapping);
     connect(GAMEMapNumString, ui->GAMEMapNumString, &MapStringMapping);
-    connect(GAMEMapNum2, ui->GAMEMapNum2, &MapReverseMapping);
+    connect(GAMEMapNum2, ui->GAMEMapNum2, &MapReverseGapMapping);
     connect(GAMEMapNumString2, ui->GAMEMapNumString2, &MapStringMapping);
     connect(GAMEPlayer1, ui->GAMEPlayer1, &PlayerMapping);
     connect(GAMEPlayer2, ui->GAMEPlayer2, &PlayerMapping);
@@ -335,13 +381,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     // WTHR
     connect(WTHRReroll, ui->WTHRReroll, Type::FLOAT_T);
-    connect(WTHRMap, ui->WTHRMap, &MapMapping);
+    connect(WTHRMap, ui->WTHRMap, &MapGapMapping);
     connect(WTHRForegroundWeather, ui->WTHRForegroundWeather, &ForegroundWeatherMapping);
     connect(WTHRBackgroundWeather, ui->WTHRBackgroundWeather, ui->WTHRMap, MapNumToBackgroundWeather);
     connect(WTHRUnk1, ui->WTHRUnk1, Type::UINT_T);
     connect(WTHRUnk2, ui->WTHRUnk2, Type::UINT_T);
 
     // MINE
+    connect(MINEArray, ui->MINEArray, MINE_ARRAY_ROW_COUNT, &MINEArrayMapping, MINEArrayWidgetTypes);
 
     // TBOX
 
@@ -390,9 +437,9 @@ void MainWindow::showStatusBarMessage(std::string str)
     ui->statusbar->showMessage(QString::fromStdString(str));
 }
 
-QString MainWindow::getField(SaveFieldID sfID)
+QString MainWindow::getField(SaveFieldID sfID, int row, int col)
 {
-    return this->saveFieldMap.at(sfID).first->getField();
+    return this->saveFieldMap.at(sfID).first->getField(row, col);
 }
 
 void MainWindow::setField(SaveFieldID sfID)
@@ -420,6 +467,7 @@ void MainWindow::setField(SaveFieldID sfID)
             break;
         case STRING_T:
         {
+            // TODO: move to QExtendedWidget
             if (widget->getMapping() != nullptr)
             {
                 const Mapping* mapping = widget->getMapping();
@@ -438,10 +486,28 @@ void MainWindow::setField(SaveFieldID sfID)
             // TODO
             break;
         case ARRAY_T:
-            // TODO
+            for (int row = 0; row < widget->getRows(); row++)
+            {
+                for (int col = 0; col < widget->getCols(); col++)
+                {
+                    setArrayField(sfID, row, col);
+                }
+            }
             break;
         }
     }
+}
+
+void MainWindow::setArrayField(SaveFieldID sfID, int row, int column)
+{
+    if (this->saveFieldMap.find(sfID) == this->saveFieldMap.end()) return;
+
+    QExtendedWidget* widget = this->saveFieldMap.at(sfID).first;
+    const Mapping* mapping = widget->getMapping();
+
+    int saveColumn = mapping != nullptr ? mapping->keys[column] : column;
+
+    widget->setField(QString::number(saveFile->getArrayValue<unsigned int>(sfID, row, saveColumn)), row, column);
 }
 
 void MainWindow::setFieldEnabled(SaveFieldID sfID, bool enabled)
@@ -591,6 +657,14 @@ void MainWindow::updateSlider()
 
     saveFile->setValue(sfID, slider->getField().toUInt());
     this->setField(sfID);
+}
+
+void MainWindow::updateTable(int row, int column)
+{
+    QObject* obj = sender();
+    SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
+    QExtendedWidget* table = saveFieldMap.at(sfID).first;
+
 }
 
 void MainWindow::updateChildMapping()

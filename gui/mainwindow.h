@@ -32,10 +32,14 @@ private:
     void connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExtendedComboBox* sourceComboBox, std::vector<const Mapping*>& dynamicMapping);
     void connect(SaveFieldID sfID, QExtendedRadioButtons* radioButtonFrame, std::unordered_map<QString, QRadioButton*>& rbs);
     void connect(SaveFieldID sfID, QExtendedSlider* slider, int start, int spacing, int count);
+    void connect(SaveFieldID sfID, QExtendedTableWidget* table, const int rowCount, const Mapping* mapping, QList<ExtendedWidgetType> columnTypes);
 
     void setField(SaveFieldID sfID);
-    QString getField(SaveFieldID sfID);
+    QString getField(SaveFieldID sfID, int row = 0, int col = 0);
     void setFieldEnabled(SaveFieldID sfID, bool enabled);
+
+    QString getArrayField(SaveFieldID sfID, int row, int column);
+    void setArrayField(SaveFieldID sfID, int row, int column);
 
     void showStatusBarMessage(std::string str);
 
@@ -48,6 +52,7 @@ private slots:
     void updateComboBox();
     void updateRadioButton();
     void updateSlider();
+    void updateTable(int row, int column);
 
     void updateChildMapping();
 };

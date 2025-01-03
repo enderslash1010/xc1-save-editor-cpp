@@ -6,6 +6,7 @@
 #include <qcombobox.h>
 #include <qlineedit.h>
 #include <qradiobutton.h>
+#include <qtablewidget.h>
 
 struct Mapping
 {
@@ -37,13 +38,23 @@ struct Mapping
     }
 };
 
+enum ExtendedWidgetType
+{
+    QExtendedLineEdit_T,
+    QExtendedCheckBox_T,
+    QExtendedComboBox_T,
+    QExtendedRadioButtons_T,
+    QExtendedSlider_T
+};
+
 class QExtendedWidget
 {
     std::vector<QExtendedWidget*> children;
     SaveFieldID sfID;
+    int rows = 1, cols = 1;
 public:
-    virtual void setField(QString value) = 0;
-    virtual QString getField() = 0;
+    virtual void setField(QString value, int row = 0, int col = 0) = 0;
+    virtual QString getField(int row = 0, int col = 0) = 0;
     virtual void setFieldEnabled(bool enabled) = 0;
 
     virtual const Mapping* getMapping() { return nullptr; }
@@ -54,6 +65,11 @@ public:
 
     virtual SaveFieldID getSaveFieldID() { return this->sfID; }
     virtual void setSaveFieldID(SaveFieldID sfID) { this->sfID = sfID; }
+
+    int getRows() { return this->rows; }
+    int getCols() { return this->cols; }
+    void setRows(int rows) { this->rows = rows; }
+    void setCols(int cols) { this->cols = cols; }
 };
 
 class QExtendedLineEdit : public QLineEdit, public QExtendedWidget
@@ -61,8 +77,8 @@ class QExtendedLineEdit : public QLineEdit, public QExtendedWidget
     Q_OBJECT
 public:
     QExtendedLineEdit(QWidget* parent = nullptr) : QLineEdit(parent) { }
-    void setField(QString value) { this->setText(value); }
-    QString getField() { return this->text(); }
+    void setField(QString value, int row = 0, int col = 0) { this->setText(value); }
+    QString getField(int row = 0, int col = 0) { return this->text(); }
     void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
 };
 
@@ -72,11 +88,11 @@ class QExtendedCheckBox : public QCheckBox, public QExtendedWidget
     bool inverted = false;
 public:
     QExtendedCheckBox(QWidget* parent = nullptr) : QCheckBox(parent) { }
-    void setField(QString value)
+    void setField(QString value, int row = 0, int col = 0)
     {
         inverted ? this->setChecked(!QString::compare(value, "0")) : this->setChecked(QString::compare(value, "0"));
     }
-    QString getField()
+    QString getField(int row = 0, int col = 0)
     {
         return inverted ? (this->isChecked() ? "1" : "0") : (this->isChecked() ? "1" : "0");
     }
@@ -97,8 +113,17 @@ class QExtendedComboBox : public QComboBox, public QExtendedWidget
     }
 public:
     QExtendedComboBox(QWidget* parent = nullptr) : QComboBox(parent) { }
-    void setField(QString value) { this->setCurrentText(value); }
-    QString getField() { return this->currentText(); }
+
+    void setField(QString value, int row = 0, int col = 0)
+    {
+        this->setCurrentText(value);
+    }
+
+    QString getField(int row = 0, int col = 0)
+    {
+        return this->currentText();
+    }
+
     void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
 
     void setMapping(const Mapping* mapping)
@@ -138,7 +163,7 @@ public:
         valueToButtonMapping.insert({val, rb});
     }
 
-    void setField(QString value)
+    void setField(QString value, int row = 0, int col = 0)
     {
         auto it = valueToButtonMapping.find(value);
         if (it != valueToButtonMapping.end())
@@ -149,7 +174,7 @@ public:
         else for (auto i = valueToButtonMapping.begin(); i != valueToButtonMapping.end(); ++i) i->second->setChecked(false);
     }
 
-    QString getField()
+    QString getField(int row = 0, int col = 0)
     {
         for (auto i = valueToButtonMapping.begin(); i != valueToButtonMapping.end(); ++i) if (i->second->isChecked()) return i->first;
         return "";
@@ -168,7 +193,7 @@ class QExtendedSlider : public QSlider, public QExtendedWidget
 public:
     QExtendedSlider(QWidget* parent = nullptr) : QSlider(parent) { }
 
-    void setField(QString value)
+    void setField(QString value, int row = 0, int col = 0)
     {
         int rawValue = value.toInt();
         for (int i = 0; i < sliderToRawValue.size(); i++)
@@ -181,7 +206,7 @@ public:
         }
     }
 
-    QString getField()
+    QString getField(int row = 0, int col = 0)
     {
         return QString::number(sliderToRawValue.at(this->value()));
     }
@@ -197,4 +222,62 @@ public:
             start += spacing;
         }
     }
+};
+
+class QExtendedTableWidget : public QTableWidget, public QExtendedWidget
+{
+    Q_OBJECT
+    std::vector<std::vector<QExtendedWidget*>> widgetArray;
+    const Mapping* tableMapping;
+public:
+    QExtendedTableWidget(QWidget* parent = nullptr) : QTableWidget(parent) { }
+    void setup(int rows, QList<ExtendedWidgetType> types, QList<const Mapping*> columnMapping, const Mapping* tableMapping)
+    {
+        this->tableMapping = tableMapping;
+        for (int row = 0; row < rows; row++)
+        {
+            std::vector<QExtendedWidget*> newRow;
+            for (int col = 0; col < types.size(); col++)
+            {
+                switch (types.at(col))
+                {
+                case QExtendedLineEdit_T:
+                {
+                    QExtendedLineEdit* le = new QExtendedLineEdit();
+                    newRow.push_back(le);
+                    this->setCellWidget(row, col, le);
+                    break;
+                }
+                case QExtendedCheckBox_T:
+                    break;
+                case QExtendedComboBox_T:
+                {
+                    QExtendedComboBox* cb = new QExtendedComboBox();
+                    newRow.push_back(cb);
+                    this->setCellWidget(row, col, cb);
+                    if (columnMapping.at(col) != nullptr) cb->setMapping(columnMapping.at(col));
+                    break;
+                }
+                case QExtendedRadioButtons_T:
+                    break;
+                case QExtendedSlider_T:
+                    break;
+                }
+            }
+            widgetArray.push_back(newRow);
+        }
+    }
+
+    void setField(QString value, int row = 0, int col = 0)
+    {
+        widgetArray.at(row).at(col)->setField(value);
+    }
+
+    QString getField(int row = 0, int col = 0)
+    {
+        return widgetArray.at(row).at(col)->getField();
+    }
+
+    void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
+    const Mapping* getMapping() { return this->tableMapping; }
 };

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "SaveFieldID.h"
+#include "ArrayID.h"
 #include "DataObject.h"
 #include "ArrayObject.h"
 #include "Types.h"
@@ -150,7 +151,7 @@ class SaveFile
 			{DataObject(0x240F0, 2, UINT_T), 0}, // MINECooldown
 			{DataObject(0x240F2, 1, UINT_T), 0}, // MINENumHarvests
 			{DataObject(0x240F3, 1, UINT_T), 0}, // MINEMineID
-			{DataObject(0x240F4, 2, UINT_T), 0}// MINEMapID
+            {DataObject(0x240F4, 2, UINT_T), 0}  // MINEMapID
 		}),
 
 		// TBOX

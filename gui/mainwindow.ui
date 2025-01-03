@@ -24,7 +24,7 @@
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>10</number>
+       <number>8</number>
       </property>
       <widget class="QWidget" name="THUMTab">
        <property name="sizePolicy">
@@ -1561,6 +1561,18 @@
        <attribute name="title">
         <string>Ether Mines</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_49">
+        <item row="0" column="0">
+         <widget class="QExtendedTableWidget" name="MINEArray">
+          <property name="sizeAdjustPolicy">
+           <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored</enum>
+          </property>
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>false</bool>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="TBOXTab">
        <attribute name="title">
@@ -2345,6 +2357,11 @@
   <customwidget>
    <class>QExtendedSlider</class>
    <extends>QSlider</extends>
+   <header>QExtendedWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QExtendedTableWidget</class>
+   <extends>QTableWidget</extends>
    <header>QExtendedWidget.h</header>
   </customwidget>
  </customwidgets>
