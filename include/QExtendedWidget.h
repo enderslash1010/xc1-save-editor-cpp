@@ -228,6 +228,14 @@ public:
     }
 };
 
+struct TableDefinition
+{
+    int row_count;
+    Mapping array_mapping;
+    QList<ExtendedWidgetType> widget_types;
+    QList<const Mapping*> column_mapping;
+};
+
 class QExtendedTableWidget : public QTableWidget, public QExtendedWidget
 {
     Q_OBJECT
@@ -247,15 +255,15 @@ signals:
 public:
 
     QExtendedTableWidget(QWidget* parent = nullptr) : QTableWidget(parent) { }
-    void setup(int rows, QList<ExtendedWidgetType> types, QList<const Mapping*> columnMapping, const Mapping* tableMapping)
+    void setup(const TableDefinition* def)
     {
-        this->tableMapping = tableMapping;
-        for (int row = 0; row < rows; row++)
+        this->tableMapping = &def->array_mapping;
+        for (int row = 0; row < def->row_count; row++)
         {
             std::vector<QExtendedWidget*> newRow;
-            for (int col = 0; col < types.size(); col++)
+            for (int col = 0; col < def->widget_types.size(); col++)
             {
-                switch (types.at(col))
+                switch (def->widget_types.at(col))
                 {
                 case QExtendedLineEdit_T:
                 {
@@ -276,10 +284,8 @@ public:
                     cb->setEditable(true);
                     newRow.push_back(cb);
                     this->setCellWidget(row, col, cb);
-                    if (columnMapping.at(col) != nullptr) cb->setMapping(columnMapping.at(col));
-
-                    if (cb->lineEdit() != nullptr) QObject::connect(cb->lineEdit(), &QLineEdit::editingFinished, this, &QExtendedTableWidget::cellEdited);
-                    else QObject::connect(cb, &QComboBox::currentTextChanged, this, &QExtendedTableWidget::cellEdited);
+                    if (def->column_mapping.at(col) != nullptr) cb->setMapping(def->column_mapping.at(col));
+                    QObject::connect(cb, &QComboBox::currentTextChanged, this, &QExtendedTableWidget::cellEdited);
 
                     cb->setProperty("row", row);
                     cb->setProperty("column", col);

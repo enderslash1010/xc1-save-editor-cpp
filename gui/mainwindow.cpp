@@ -263,35 +263,36 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedSlider* slider, int start, i
     slider->setScaling(start, spacing, count);
 }
 
-// TODO: consolidate these into struct?
-const int MINE_ARRAY_ROW_COUNT = 150;
-const Mapping MINEArrayMapping =
+const TableDefinition MINEArrayDefinition
 {
-    {MINE_MapID, MINE_MineID, MINE_NumHarvests, MINE_Cooldown},
-    {"Map ID", "Mine ID", "Number of Harvests", "Cooldown"}
+    150, // row count
+    { // array mapping
+        {MINE_MapID, MINE_MineID, MINE_NumHarvests, MINE_Cooldown},
+        {"Map ID", "Mine ID", "Number of Harvests", "Cooldown"}
+    },
+    {QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T},
+    {&MapMapping, nullptr, nullptr, nullptr}
 };
-QList<ExtendedWidgetType> MINEArrayWidgetTypes = {QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T};
-QList<const Mapping*> MINEArrayColumnMapping = {&MapMapping, nullptr, nullptr, nullptr};
 
 // QTableWidget
-void MainWindow::connect(SaveFieldID sfID, QExtendedTableWidget* table, const int rowCount, const Mapping* mapping, QList<ExtendedWidgetType> columnTypes)
+void MainWindow::connect(SaveFieldID sfID, QExtendedTableWidget* table, const TableDefinition* def)
 {
-    table->setRowCount(rowCount);
-    table->setColumnCount(std::size(mapping->keys));
-    table->setRows(rowCount);
-    table->setCols(std::size(mapping->keys));
+    table->setRowCount(def->row_count);
+    table->setColumnCount(std::size(def->array_mapping.keys));
+    table->setRows(def->row_count);
+    table->setCols(std::size(def->array_mapping.keys));
 
     QHeaderView* header = table->horizontalHeader();
     header->setSectionResizeMode(QHeaderView::Stretch);
 
-    table->setHorizontalHeaderLabels(mapping->values);
+    table->setHorizontalHeaderLabels(def->array_mapping.values);
 
     table->setProperty(SAVE_FIELD_PROPERTY, sfID);
     table->setSaveFieldID(sfID);
 
     saveFieldMap.insert({sfID, {table, Type::ARRAY_T}});
 
-    table->setup(rowCount, MINEArrayWidgetTypes, MINEArrayColumnMapping, &MINEArrayMapping);
+    table->setup(&MINEArrayDefinition);
 
     QObject::connect(table, &QExtendedTableWidget::tableCellChanged, this, &MainWindow::updateTable);
 }
@@ -389,7 +390,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(WTHRUnk2, ui->WTHRUnk2, Type::UINT_T);
 
     // MINE
-    connect(MINEArray, ui->MINEArray, MINE_ARRAY_ROW_COUNT, &MINEArrayMapping, MINEArrayWidgetTypes);
+    connect(MINEArray, ui->MINEArray, &MINEArrayDefinition);
 
     // TBOX
 
