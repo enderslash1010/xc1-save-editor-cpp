@@ -43,7 +43,7 @@ private:
 
     void showStatusBarMessage(std::string str);
 
-private slots:
+public slots:
     void actionOpen();
     void actionSave();
 

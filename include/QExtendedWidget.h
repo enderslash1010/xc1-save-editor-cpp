@@ -116,12 +116,16 @@ public:
 
     void setField(QString value, int row = 0, int col = 0)
     {
-        this->setCurrentText(value);
+        QString str = mappings.at(currMapping)->at(value.toUInt());
+        if (str == "") this->setCurrentText(value);
+        else this->setCurrentText(str);
     }
 
     QString getField(int row = 0, int col = 0)
     {
-        return this->currentText();
+        const int* num = mappings.at(currMapping)->at(this->currentText());
+        if (num == nullptr) return this->currentText();
+        return QString::number(*num);
     }
 
     void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
@@ -229,7 +233,19 @@ class QExtendedTableWidget : public QTableWidget, public QExtendedWidget
     Q_OBJECT
     std::vector<std::vector<QExtendedWidget*>> widgetArray;
     const Mapping* tableMapping;
+
+private slots:
+    void cellEdited()
+    {
+        QObject* obj = sender();
+        emit tableCellChanged(obj->property("row").toInt(), obj->property("column").toInt());
+    }
+
+signals:
+    void tableCellChanged(int row, int col);
+
 public:
+
     QExtendedTableWidget(QWidget* parent = nullptr) : QTableWidget(parent) { }
     void setup(int rows, QList<ExtendedWidgetType> types, QList<const Mapping*> columnMapping, const Mapping* tableMapping)
     {
@@ -246,6 +262,10 @@ public:
                     QExtendedLineEdit* le = new QExtendedLineEdit();
                     newRow.push_back(le);
                     this->setCellWidget(row, col, le);
+                    QObject::connect(le, &QLineEdit::editingFinished, this, &QExtendedTableWidget::cellEdited);
+
+                    le->setProperty("row", row);
+                    le->setProperty("column", col);
                     break;
                 }
                 case QExtendedCheckBox_T:
@@ -253,9 +273,16 @@ public:
                 case QExtendedComboBox_T:
                 {
                     QExtendedComboBox* cb = new QExtendedComboBox();
+                    cb->setEditable(true);
                     newRow.push_back(cb);
                     this->setCellWidget(row, col, cb);
                     if (columnMapping.at(col) != nullptr) cb->setMapping(columnMapping.at(col));
+
+                    if (cb->lineEdit() != nullptr) QObject::connect(cb->lineEdit(), &QLineEdit::editingFinished, this, &QExtendedTableWidget::cellEdited);
+                    else QObject::connect(cb, &QComboBox::currentTextChanged, this, &QExtendedTableWidget::cellEdited);
+
+                    cb->setProperty("row", row);
+                    cb->setProperty("column", col);
                     break;
                 }
                 case QExtendedRadioButtons_T:

@@ -208,7 +208,7 @@ inline void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* comboBox, c
     }
     comboBox->setSaveFieldID(sfID);
 
-    saveFieldMap.insert({sfID, {comboBox, Type::STRING_T}});
+    saveFieldMap.insert({sfID, {comboBox, Type::UINT_T}});
     comboBox->setMapping(mapping);
 }
 
@@ -227,7 +227,7 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExt
     }
     thisComboBox->setSaveFieldID(sfID);
 
-    saveFieldMap.insert({sfID, {thisComboBox, Type::STRING_T}});
+    saveFieldMap.insert({sfID, {thisComboBox, Type::UINT_T}});
     thisComboBox->setMapping(dynamicMapping);
 
     QObject::connect(sourceComboBox->lineEdit(), &QLineEdit::editingFinished, this, &MainWindow::updateChildMapping);
@@ -263,6 +263,7 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedSlider* slider, int start, i
     slider->setScaling(start, spacing, count);
 }
 
+// TODO: consolidate these into struct?
 const int MINE_ARRAY_ROW_COUNT = 150;
 const Mapping MINEArrayMapping =
 {
@@ -292,7 +293,7 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedTableWidget* table, const in
 
     table->setup(rowCount, MINEArrayWidgetTypes, MINEArrayColumnMapping, &MINEArrayMapping);
 
-    QObject::connect(table, &QTableWidget::cellChanged, this, &MainWindow::updateTable);
+    QObject::connect(table, &QExtendedTableWidget::tableCellChanged, this, &MainWindow::updateTable);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -466,33 +467,13 @@ void MainWindow::setField(SaveFieldID sfID)
             widget->setField(QString::number(saveFile->getValue<float>(sfID)));
             break;
         case STRING_T:
-        {
-            // TODO: move to QExtendedWidget
-            if (widget->getMapping() != nullptr)
-            {
-                const Mapping* mapping = widget->getMapping();
-                unsigned int value = saveFile->getValue<unsigned int>(sfID);
-                const QString str = (*mapping).at(value);
-                if (str != "") widget->setField(str);
-                else widget->setField(QString::number(value));
-            }
-            else
-            {
-                widget->setField(QString::fromStdString(saveFile->getValue<std::string>(sfID)));
-            }
-        }
-        break;
+            widget->setField(QString::fromStdString(saveFile->getValue<std::string>(sfID)));
+            break;
         case TPL_T:
-            // TODO
+            // TODO?
             break;
         case ARRAY_T:
-            for (int row = 0; row < widget->getRows(); row++)
-            {
-                for (int col = 0; col < widget->getCols(); col++)
-                {
-                    setArrayField(sfID, row, col);
-                }
-            }
+            for (int row = 0; row < widget->getRows(); row++) for (int col = 0; col < widget->getCols(); col++) setArrayField(sfID, row, col);
             break;
         }
     }
@@ -623,18 +604,10 @@ void MainWindow::updateComboBox()
             saveFile->setValue(sfID, *mappingIntPtr);
             this->setField(sfID);
         }
-        else if (isInt)
-        {
-            saveFile->setValue<unsigned int>(sfID, textToInt);
-        }
-        else if (isUInt)
-        {
-            saveFile->setValue<unsigned int>(sfID, textToUInt);
-        }
-        else
-        {
-            showStatusBarMessage("Invalid input");
-        }
+        else if (isInt) saveFile->setValue<unsigned int>(sfID, textToInt);
+        else if (isUInt) saveFile->setValue<unsigned int>(sfID, textToUInt);
+        else showStatusBarMessage("Invalid input");
+
         this->setField(sfID);
     }
 }
@@ -664,7 +637,12 @@ void MainWindow::updateTable(int row, int column)
     QObject* obj = sender();
     SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
     QExtendedWidget* table = saveFieldMap.at(sfID).first;
+    const Mapping* mapping = table->getMapping();
 
+    int saveColumn = mapping != nullptr ? mapping->keys[column] : column;
+
+    saveFile->setArrayValue(sfID, row, saveColumn, table->getField(row, column).toUInt());
+    this->setArrayField(sfID, row, column);
 }
 
 void MainWindow::updateChildMapping()
