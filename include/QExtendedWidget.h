@@ -2,6 +2,7 @@
 
 #include "QWidget"
 #include "SaveFieldID.h"
+#include "Types.h"
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qlineedit.h>
@@ -52,6 +53,7 @@ class QExtendedWidget
     std::vector<QExtendedWidget*> children;
     SaveFieldID sfID;
     int rows = 1, cols = 1;
+    Type type = Type::UINT_T;
 public:
     virtual void setField(QString value, int row = 0, int col = 0) = 0;
     virtual QString getField(int row = 0, int col = 0) = 0;
@@ -70,6 +72,11 @@ public:
     int getCols() { return this->cols; }
     void setRows(int rows) { this->rows = rows; }
     void setCols(int cols) { this->cols = cols; }
+
+    virtual Type getType() { return this->type; }
+    void setType(Type type) { this->type = type; }
+
+    virtual QExtendedWidget* at(int row = 0, int col = 0) { return this; }
 };
 
 class QExtendedLineEdit : public QLineEdit, public QExtendedWidget
@@ -210,11 +217,7 @@ public:
         }
     }
 
-    QString getField(int row = 0, int col = 0)
-    {
-        return QString::number(sliderToRawValue.at(this->value()));
-    }
-
+    QString getField(int row = 0, int col = 0) { return QString::number(sliderToRawValue.at(this->value())); }
     void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
 
     void setScaling(int start, int spacing, int count)
@@ -234,6 +237,7 @@ struct TableDefinition
     Mapping array_mapping;
     QList<ExtendedWidgetType> widget_types;
     QList<const Mapping*> column_mapping;
+    QList<Type> column_types;
 };
 
 class QExtendedTableWidget : public QTableWidget, public QExtendedWidget
@@ -248,16 +252,15 @@ private slots:
         QObject* obj = sender();
         emit tableCellChanged(obj->property("row").toInt(), obj->property("column").toInt());
     }
-
 signals:
     void tableCellChanged(int row, int col);
 
 public:
-
     QExtendedTableWidget(QWidget* parent = nullptr) : QTableWidget(parent) { }
     void setup(const TableDefinition* def)
     {
         this->tableMapping = &def->array_mapping;
+
         for (int row = 0; row < def->row_count; row++)
         {
             std::vector<QExtendedWidget*> newRow;
@@ -274,6 +277,7 @@ public:
 
                     le->setProperty("row", row);
                     le->setProperty("column", col);
+                    le->setType(def->column_types.at(col));
                     break;
                 }
                 case QExtendedCheckBox_T:
@@ -289,6 +293,7 @@ public:
 
                     cb->setProperty("row", row);
                     cb->setProperty("column", col);
+                    cb->setType(def->column_types.at(col));
                     break;
                 }
                 case QExtendedRadioButtons_T:
@@ -301,16 +306,11 @@ public:
         }
     }
 
-    void setField(QString value, int row = 0, int col = 0)
-    {
-        widgetArray.at(row).at(col)->setField(value);
-    }
-
-    QString getField(int row = 0, int col = 0)
-    {
-        return widgetArray.at(row).at(col)->getField();
-    }
+    void setField(QString value, int row = 0, int col = 0) { widgetArray.at(row).at(col)->setField(value); }
+    QString getField(int row = 0, int col = 0) { return widgetArray.at(row).at(col)->getField(); }
 
     void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
     const Mapping* getMapping() { return this->tableMapping; }
+
+    QExtendedWidget* at(int row = 0, int col = 0) { return widgetArray.at(row).at(col); }
 };

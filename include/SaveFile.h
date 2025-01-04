@@ -147,24 +147,24 @@ class SaveFile
 		// SNDS
 
 		// MINE
-		new ArrayObject(6, 150, std::vector<Element> { // MINEArray
-			{DataObject(0x240F0, 2, UINT_T), 0}, // MINECooldown
-			{DataObject(0x240F2, 1, UINT_T), 0}, // MINENumHarvests
-			{DataObject(0x240F3, 1, UINT_T), 0}, // MINEMineID
-            {DataObject(0x240F4, 2, UINT_T), 0}  // MINEMapID
+        new ArrayObject(6, 150, std::vector<Element> { // MINEArray*
+            {DataObject(0x240F0, 2, UINT_T), 0}, // MINECooldown*
+            {DataObject(0x240F2, 1, UINT_T), 0}, // MINENumHarvests*
+            {DataObject(0x240F3, 1, UINT_T), 0}, // MINEMineID*
+            {DataObject(0x240F4, 2, UINT_T), 0}  // MINEMapID*
 		}),
 
 		// TBOX
-		new DataObject(0x244A3, 1, UINT_T), // TBOXBoxCount
-		new ArrayObject(28, 21, std::vector<Element> { // TBOXArray
+        new DataObject(0x244A3, 1, UINT_T), // TBOXBoxCount*
+        new ArrayObject(28, 21, std::vector<Element> { // TBOXArray*
 			{DataObject(0x244A4, 4, UINT_T), 0}, // TBOXZeroObject
-			{DataObject(0x244A8, 4, FLOAT_T), 0}, // TBOXPositionX
-			{DataObject(0x244AC, 4, FLOAT_T), 0}, // TBOXPositionY
-			{DataObject(0x244B0, 4, FLOAT_T), 0},// TBOXPositionZ
-			{DataObject(0x244B4, 4, FLOAT_T), 0}, // TBOXAngle
-			{DataObject(0x244B8, 4, UINT_T), 0}, // TBOXRank
-			{DataObject(0x244BC, 2, UINT_T), 0},// TBOXDropTable (?)
-			{DataObject(0x244BE, 2, UINT_T), 0} // TBOXMapID
+            {DataObject(0x244A8, 4, FLOAT_T), 0}, // TBOXPositionX*
+            {DataObject(0x244AC, 4, FLOAT_T), 0}, // TBOXPositionY*
+            {DataObject(0x244B0, 4, FLOAT_T), 0},// TBOXPositionZ*
+            {DataObject(0x244B4, 4, FLOAT_T), 0}, // TBOXAngle*
+            {DataObject(0x244B8, 4, UINT_T), 0}, // TBOXRank*
+            {DataObject(0x244BC, 2, UINT_T), 0},// TBOXDropTable (?)*
+            {DataObject(0x244BE, 2, UINT_T), 0} // TBOXMapID*
 		}),
 
 		// OPTD

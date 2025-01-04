@@ -167,15 +167,21 @@ std::vector<const Mapping*> MapNumToBackgroundWeather =
     &RainBackgroundWeatherMapping // Default
 };
 
+const Mapping TreasureBoxRankMapping =
+{
+    {1, 2, 3},
+    {"Wood", "Silver", "Gold"}
+};
+
 // QLineEdit
 inline void MainWindow::connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, Type type)
 {
     Q_ASSERT(QObject::connect(lineEdit, &QLineEdit::editingFinished, this, &MainWindow::updateText));
 
-    // TODO: could use just one?
     lineEdit->setProperty(SAVE_FIELD_PROPERTY, sfID);
     lineEdit->setSaveFieldID(sfID);
 
+    lineEdit->setType(type);
     saveFieldMap.insert({sfID, {lineEdit, type}});
 }
 
@@ -184,17 +190,17 @@ inline void MainWindow::connect(SaveFieldID sfID, QExtendedCheckBox* checkBox, b
 {
     Q_ASSERT(QObject::connect(checkBox, &QCheckBox::stateChanged, this, &MainWindow::updateCheckBox));
 
-    // TODO: could use just one?
     checkBox->setProperty(SAVE_FIELD_PROPERTY, sfID);
     checkBox->setSaveFieldID(sfID);
 
     saveFieldMap.insert({sfID, {checkBox, Type::BOOL_T}});
+    checkBox->setType(Type::BOOL_T);
 
     checkBox->setInverted(invert);
 }
 
 // QComboBox
-inline void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* comboBox, const Mapping* mapping)
+inline void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* comboBox, const Mapping* mapping, Type type = Type::UINT_T)
 {
     if (comboBox->lineEdit() != nullptr)
     {
@@ -208,17 +214,19 @@ inline void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* comboBox, c
     }
     comboBox->setSaveFieldID(sfID);
 
-    saveFieldMap.insert({sfID, {comboBox, Type::UINT_T}});
+    saveFieldMap.insert({sfID, {comboBox, type}});
+    comboBox->setType(type);
+
     comboBox->setMapping(mapping);
 }
 
 // QComboBox with dynamic mapping
-void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExtendedComboBox* sourceComboBox, std::vector<const Mapping*>& dynamicMapping)
+void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExtendedComboBox* sourceComboBox, std::vector<const Mapping*>& dynamicMapping, Type type = Type::UINT_T)
 {
     if (thisComboBox->lineEdit() != nullptr)
     {
         QObject::connect(thisComboBox->lineEdit(), &QLineEdit::editingFinished, this, &MainWindow::updateComboBox);
-        thisComboBox->lineEdit()->setProperty(SAVE_FIELD_PROPERTY, sfID); // TODO: could use setSaveFieldID instead
+        thisComboBox->lineEdit()->setProperty(SAVE_FIELD_PROPERTY, sfID);
     }
     else
     {
@@ -227,7 +235,9 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExt
     }
     thisComboBox->setSaveFieldID(sfID);
 
-    saveFieldMap.insert({sfID, {thisComboBox, Type::UINT_T}});
+    saveFieldMap.insert({sfID, {thisComboBox, type}});
+    thisComboBox->setType(type);
+
     thisComboBox->setMapping(dynamicMapping);
 
     QObject::connect(sourceComboBox->lineEdit(), &QLineEdit::editingFinished, this, &MainWindow::updateChildMapping);
@@ -235,7 +245,8 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExt
 }
 
 // QRadioButton
-void MainWindow::connect(SaveFieldID sfID, QExtendedRadioButtons* radioButtonFrame, std::unordered_map<QString, QRadioButton*>& rbs)
+void MainWindow::connect(SaveFieldID sfID, QExtendedRadioButtons* radioButtonFrame, std::unordered_map<QString, QRadioButton*>& rbs, Type type = Type::UINT_T)
+
 {
     radioButtonFrame->setSaveFieldID(sfID);
 
@@ -247,11 +258,11 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedRadioButtons* radioButtonFra
         radioButtonFrame->addButton(i->second, i->first);
     }
 
-    saveFieldMap.insert({sfID, {radioButtonFrame, Type::UINT_T}});
+    saveFieldMap.insert({sfID, {radioButtonFrame, type}});
 }
 
 // QSlider
-void MainWindow::connect(SaveFieldID sfID, QExtendedSlider* slider, int start, int spacing, int count)
+void MainWindow::connect(SaveFieldID sfID, QExtendedSlider* slider, int start, int spacing, int count, Type type = Type::UINT_T)
 {
     QObject::connect(slider, &QSlider::valueChanged, this, &MainWindow::updateSlider);
 
@@ -266,12 +277,37 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedSlider* slider, int start, i
 const TableDefinition MINEArrayDefinition
 {
     150, // row count
-    { // array mapping
+    {
         {MINE_MapID, MINE_MineID, MINE_NumHarvests, MINE_Cooldown},
         {"Map ID", "Mine ID", "Number of Harvests", "Cooldown"}
-    },
-    {QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T},
-    {&MapMapping, nullptr, nullptr, nullptr}
+    }, // array mapping
+    {QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
+    {&MapMapping, nullptr, nullptr, nullptr}, // column mapping
+    {UINT_T, UINT_T, UINT_T, UINT_T} // column types
+};
+
+const TableDefinition TBOXArrayDefinition
+{
+    21, // row count
+    {
+        {TBOX_MapID, TBOX_Rank, TBOX_PositionX, TBOX_PositionY, TBOX_PositionZ, TBOX_Angle, TBOX_DropTable},
+        {"Map ID", "Rank", "X", "Y", "Z", "Angle", "Drop Table"}
+    }, // array mapping
+    {QExtendedComboBox_T, QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
+    {&MapMapping, &TreasureBoxRankMapping, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping
+    {UINT_T, UINT_T, FLOAT_T, FLOAT_T, FLOAT_T, FLOAT_T, UINT_T} // column types
+};
+
+const TableDefinition ITEMWeaponArrayDefinition
+{
+    150, // row count
+    {
+        {ITEMWeapon_ID1, ITEMWeapon_ID2, ITEMWeapon_NumGemSlots, ITEMWeapon_Gem1Index, ITEMWeapon_Gem2Index, ITEMWeapon_Gem3Index, ITEMWeapon_InventorySlot},
+        {"Weapon ID", "Weapon ID (Name)", "Gem Slot Count", "Gem 1 Index", "Gem 2 Index", "Gem 3 Index", "Inventory Slot"}
+    }, // array mapping
+    {QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T},
+    {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping
+    {UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T} // column types
 };
 
 // QTableWidget
@@ -290,9 +326,10 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedTableWidget* table, const Ta
     table->setProperty(SAVE_FIELD_PROPERTY, sfID);
     table->setSaveFieldID(sfID);
 
-    saveFieldMap.insert({sfID, {table, Type::ARRAY_T}});
+    table->setup(def);
 
-    table->setup(&MINEArrayDefinition);
+    saveFieldMap.insert({sfID, {table, Type::ARRAY_T}});
+    table->setType(Type::ARRAY_T);
 
     QObject::connect(table, &QExtendedTableWidget::tableCellChanged, this, &MainWindow::updateTable);
 }
@@ -380,6 +417,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(CAMDDistance, ui->CAMDDistance, Type::FLOAT_T);
 
     // ITEM
+    connect(ITEMMoney, ui->ITEMMoney, Type::INT_T);
+    connect(ITEMWeaponArray, ui->ITEMWeaponArray, &ITEMWeaponArrayDefinition);
 
     // WTHR
     connect(WTHRReroll, ui->WTHRReroll, Type::FLOAT_T);
@@ -393,6 +432,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(MINEArray, ui->MINEArray, &MINEArrayDefinition);
 
     // TBOX
+    connect(TBOXArray, ui->TBOXArray, &TBOXArrayDefinition);
+    connect(TBOXBoxCount, ui->TBOXBoxCount, Type::UINT_T);
 
     // OPTD
     std::unordered_map<QString, QRadioButton*> OPTDJapaneseVoiceMap = {{"0", ui->OPTDJapaneseVoice0}, {"1", ui->OPTDJapaneseVoice1}};
@@ -449,7 +490,7 @@ void MainWindow::setField(SaveFieldID sfID)
     if (this->saveFieldMap.find(sfID) == this->saveFieldMap.end()) return;
 
     QExtendedWidget* widget = this->saveFieldMap.at(sfID).first;
-    Type type = this->saveFieldMap.at(sfID).second;
+    Type type = widget->getType();
 
     if (saveFile != nullptr)
     {
@@ -486,10 +527,36 @@ void MainWindow::setArrayField(SaveFieldID sfID, int row, int column)
 
     QExtendedWidget* widget = this->saveFieldMap.at(sfID).first;
     const Mapping* mapping = widget->getMapping();
-
     int saveColumn = mapping != nullptr ? mapping->keys[column] : column;
 
-    widget->setField(QString::number(saveFile->getArrayValue<unsigned int>(sfID, row, saveColumn)), row, column);
+    if (saveFile != nullptr)
+    {
+        Type type = widget->at(row, column)->getType();
+        switch (type)
+        {
+        case UINT_T:
+            widget->setField(QString::number(saveFile->getArrayValue<unsigned int>(sfID, row, saveColumn)), row, column);
+            break;
+        case INT_T:
+            widget->setField(QString::number(saveFile->getArrayValue<int>(sfID, row, saveColumn)), row, column);
+            break;
+        case BOOL_T:
+            widget->setField(QString::number(saveFile->getArrayValue<bool>(sfID, row, saveColumn)), row, column);
+            break;
+        case FLOAT_T:
+            widget->setField(QString::number(saveFile->getArrayValue<float>(sfID, row, saveColumn)), row, column);
+            break;
+        case STRING_T:
+            widget->setField(QString::fromStdString(saveFile->getArrayValue<std::string>(sfID, row, saveColumn)), row, column);
+            break;
+        case TPL_T:
+            // TODO?
+            break;
+        case ARRAY_T:
+            // not intended
+            break;
+        }
+    }
 }
 
 void MainWindow::setFieldEnabled(SaveFieldID sfID, bool enabled)
@@ -534,7 +601,9 @@ void MainWindow::updateText()
 {
     QObject* obj = sender();
     SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
-    Type type = saveFieldMap.at(sfID).second;
+    QExtendedWidget* widget = saveFieldMap.at(sfID).first;
+
+    Type type = widget->getType();
     QString newText = this->getField(sfID);
 
     std::vector<uint8_t> previousBytes = saveFile->getRawBytes(sfID);
@@ -560,7 +629,7 @@ void MainWindow::updateText()
         saved = saveFile->setValue(sfID, newText.toStdString());
         break;
     case TPL_T:
-        // TODO
+        // TODO?
         break;
     case ARRAY_T:
         // TODO

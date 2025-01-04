@@ -28,10 +28,10 @@ private:
 
     void connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, Type type);
     void connect(SaveFieldID sfID, QExtendedCheckBox* checkBox, bool invert);
-    void connect(SaveFieldID sfID, QExtendedComboBox* comboBox, const Mapping* mapping);
-    void connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExtendedComboBox* sourceComboBox, std::vector<const Mapping*>& dynamicMapping);
-    void connect(SaveFieldID sfID, QExtendedRadioButtons* radioButtonFrame, std::unordered_map<QString, QRadioButton*>& rbs);
-    void connect(SaveFieldID sfID, QExtendedSlider* slider, int start, int spacing, int count);
+    void connect(SaveFieldID sfID, QExtendedComboBox* comboBox, const Mapping* mapping, Type type);
+    void connect(SaveFieldID sfID, QExtendedComboBox* thisComboBox, QExtendedComboBox* sourceComboBox, std::vector<const Mapping*>& dynamicMapping, Type type);
+    void connect(SaveFieldID sfID, QExtendedRadioButtons* radioButtonFrame, std::unordered_map<QString, QRadioButton*>& rbs, Type type);
+    void connect(SaveFieldID sfID, QExtendedSlider* slider, int start, int spacing, int count, Type type);
     void connect(SaveFieldID sfID, QExtendedTableWidget* table, const TableDefinition* def);
 
     void setField(SaveFieldID sfID);
