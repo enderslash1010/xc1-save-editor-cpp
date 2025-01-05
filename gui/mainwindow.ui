@@ -1393,18 +1393,8 @@
         <string>Items</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_52">
-        <item row="2" column="0" colspan="2">
-         <spacer name="verticalSpacer_8">
-          <property name="orientation">
-           <enum>Qt::Orientation::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
+        <item row="2" column="0">
+         <widget class="QExtendedTableWidget" name="ITEMGemArray"/>
         </item>
         <item row="0" column="0" colspan="2">
          <widget class="QFrame" name="frame_52">

@@ -173,6 +173,112 @@ const Mapping TreasureBoxRankMapping =
     {"Wood", "Silver", "Gold"}
 };
 
+const Mapping GemMapping =
+{
+    {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98},
+    {
+        "None",
+        "Strength Up",
+        "Chill Defence",
+        "Sleep Resist",
+        "Slow Resist",
+        "Bind Resist",
+        "Buff Time Plus",
+        "Weapon Power",
+        "Strength Down",
+        "Blaze Plus",
+        "Blaze Attack",
+        "Spike",
+        "Revival HP Up",
+        "Initial Tension",
+        "Aggro Up",
+        "EXP Up",
+        "Weaken", // Unused
+        "HP Up",
+        "Poison Defence",
+        "Spike Defence",
+        "Paralysis Resist",
+        "Debuff Resist",
+        "Recovery Up",
+        "Aura Heal",
+        "Damage Heal",
+        "Arts Heal",
+        "HP Steal",
+        "Unbeatable",
+        "AP Up",
+        "Aquatic Cloak",
+        "Auto-Heal Up",
+        "Terrain Defence",
+        "HP Weaken", // Unused
+        "Ether Up",
+        "Double Attack",
+        "Daze Resist",
+        "Pierce Resist",
+        "Daze Plus",
+        "Phys Def Down",
+        "Paralysis",
+        "Lightning Attack",
+        "Electric Plus",
+        "Back Atk Plus",
+        "First Attack Plus",
+        "Daze Up",
+        "Cast Quicken", // Unused
+        "Tension Swing",
+        "Daze Tension",
+        "Ether Weaken", // Unused
+        "Ether Def Up",
+        "Blaze Defence",
+        "Lock-On Resist",
+        "Confuse Resist",
+        "Critical Resist", // Unused
+        "Ether Protect",
+        "Slow",
+        "Bind",
+        "Ether Def Down",
+        "Chill Plus",
+        "Chill Attack",
+        "Auto-Atk Stealth",
+        "Arts Stealth",
+        "Talent Boost",
+        "Heat Sink",
+        "Ether Smash", // Unused
+        "Agility Up",
+        "Topple Resist",
+        "Good Footing",
+        "Arts Seal Resist",
+        "Accuracy Up", // Unused
+        "Haste",
+        "Topple Plus",
+        "Bleed Attack",
+        "Bleed Plus",
+        "Topple Up",
+        "Agility Down",
+        "Break",
+        "Quick Step",
+        "Fall Defence",
+        "Aerial Cloak",
+        "Agility Weaken", // Unused
+        "Muscle Up",
+        "Attack Stability",
+        "Attack Plus",
+        "Critical Up",
+        "Bleed Defence",
+        "Divine Protect",
+        "Physical Protect",
+        "Night Vision",
+        "Debuff Plus",
+        "Armour Power", // Unused
+        "Ether Down",
+        "Poison Plus",
+        "Poison Attack",
+        "Aggro Down",
+        "Earth Cloak",
+        "Muscle Waste", // Unused
+        "Unbeatable",
+        "Impurity" // Unused
+    }
+};
+
 // QLineEdit
 inline void MainWindow::connect(SaveFieldID sfID, QExtendedLineEdit* lineEdit, Type type)
 {
@@ -305,9 +411,21 @@ const TableDefinition ITEMWeaponArrayDefinition
         {ITEMWeapon_ID1, ITEMWeapon_ID2, ITEMWeapon_NumGemSlots, ITEMWeapon_Gem1Index, ITEMWeapon_Gem2Index, ITEMWeapon_Gem3Index, ITEMWeapon_InventorySlot},
         {"Weapon ID", "Weapon ID (Name)", "Gem Slot Count", "Gem 1 Index", "Gem 2 Index", "Gem 3 Index", "Inventory Slot"}
     }, // array mapping
-    {QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T},
+    {QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
     {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping
     {UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T} // column types
+};
+
+const TableDefinition ITEMGemArrayDefinition
+{
+    300, // row count
+    {
+        {ITEMGem_ID1, ITEMGem_ID2, ITEMGem_Rank, ITEMGem_Value, ITEMGem_InventorySlot, ITEMGem_Unk1, ITEMGem_Unk2, ITEMGem_Unk3},
+        {"Gem ID (Name)", "Gem ID (Description)", "Rank", "Value", "Inventory Slot", "Unknown 1", "Unknown 2", "Unknown 3"}
+    }, // array mapping
+    {QExtendedComboBox_T, QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
+    {&GemMapping, &GemMapping, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping
+    {UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T} // column types
 };
 
 // QTableWidget
@@ -418,7 +536,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // ITEM
     connect(ITEMMoney, ui->ITEMMoney, Type::INT_T);
-    connect(ITEMWeaponArray, ui->ITEMWeaponArray, &ITEMWeaponArrayDefinition);
+    connect(ITEMWeaponArray, ui->ITEMWeaponArray, &ITEMWeaponArrayDefinition); // TODO: implement weapon gem index behavior
+    connect(ITEMGemArray, ui->ITEMGemArray, &ITEMGemArrayDefinition);
 
     // WTHR
     connect(WTHRReroll, ui->WTHRReroll, Type::FLOAT_T);
