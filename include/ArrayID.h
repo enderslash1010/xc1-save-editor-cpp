@@ -10,10 +10,39 @@ enum ITEMWeaponArray
     ITEMWeapon_InventorySlot,
     ITEMWeapon_Static4, // 1
     ITEMWeapon_Static5, // 0
-    ITEMWeapon_Gem1ID,
-    ITEMWeapon_Gem2ID,
-    ITEMWeapon_Gem3ID,
-    ITEMWeapon_Gem4ID,
+
+    ITEMWeapon_Gem1Unk1,
+    ITEMWeapon_Gem1Value,
+    ITEMWeapon_Gem1Rank,
+    ITEMWeapon_Gem1Unk2,
+    ITEMWeapon_Gem1ID2,
+    ITEMWeapon_Gem1Static1, // 2
+    ITEMWeapon_Gem1Static2, // 0
+
+    ITEMWeapon_Gem2Unk1,
+    ITEMWeapon_Gem2Value,
+    ITEMWeapon_Gem2Rank,
+    ITEMWeapon_Gem2Unk2,
+    ITEMWeapon_Gem2ID2,
+    ITEMWeapon_Gem2Static1, // 2
+    ITEMWeapon_Gem2Static2, // 0
+
+    ITEMWeapon_Gem3Unk1,
+    ITEMWeapon_Gem3Value,
+    ITEMWeapon_Gem3Rank,
+    ITEMWeapon_Gem3Unk2,
+    ITEMWeapon_Gem3ID2,
+    ITEMWeapon_Gem3Static1, // 2
+    ITEMWeapon_Gem3Static2, // 0
+
+    ITEMWeapon_Gem4Unk1,
+    ITEMWeapon_Gem4Value,
+    ITEMWeapon_Gem4Rank,
+    ITEMWeapon_Gem4Unk2,
+    ITEMWeapon_Gem4ID2,
+    ITEMWeapon_Gem4Static1, // 2
+    ITEMWeapon_Gem4Static2, // 0
+
     ITEMWeapon_Gem1Index,
     ITEMWeapon_Gem2Index,
     ITEMWeapon_Gem3Index,

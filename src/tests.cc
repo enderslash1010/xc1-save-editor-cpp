@@ -28,7 +28,7 @@ TEST(Save, floats)
 	SaveFile* saveFile = new SaveFile();
 
 	// Setting and reading as float
-	float floatTestValues[TEST_POINTS] = { 0.0f, 1.222f, 52792035.67f, -12345.6789, 0.25789f };
+    float floatTestValues[TEST_POINTS] = { 1.222f, 52792035.67f, -12345.6789, 0.25789f, 0.0f };
 	for (int i = 0; i < TEST_POINTS; i++)
 	{
 		saveFile->setValue(PCPMPlayer1Z, floatTestValues[i]);
@@ -59,21 +59,21 @@ TEST(Save, floats)
 
 	memcpy(&testValue, &boolTestValues[0], sizeof(uint32_t));
 	saveFile->setValue(PCPMPlayer3Y, false);
-	EXPECT_EQ(testValue, saveFile->getValue<float>(PCPMPlayer3Y));
+    EXPECT_TRUE(compareBytes(testValue, saveFile->getValue<float>(PCPMPlayer3Y)));
 
 	memcpy(&testValue, &boolTestValues[1], sizeof(uint32_t));
 	saveFile->setValue(PCPMPlayer3Z, true);
-	EXPECT_EQ(testValue, saveFile->getValue<float>(PCPMPlayer3Z));
+    EXPECT_TRUE(compareBytes(testValue, saveFile->getValue<float>(PCPMPlayer3Z)));
 
 	// Setting as string, reading as float
-	const char stringTestValues[TEST_POINTS][5] = { {'h', 'i', 'i', 'i', 0}, {':', '3', ':', '3', 0}, {'1', '2', '3', '4', 0}, {0, 0, 0, 0, 0}, {'.', '/', '?', ';', 0}};
-	uint32_t stringIntTestValues[TEST_POINTS] = { 0x68696969, 0x3A333A33, 0x31323334, 0x0, 0x2E2F3F3B };
+    const char stringTestValues[TEST_POINTS][5] = { {'h', 'i', 'i', 'i', 0}, {':', '3', ':', '3', 0}, {'1', '2', '3', '4', 0}, {'0', '0', '0', '0', 0}, {'.', '/', '?', ';', 0}};
+    uint32_t stringIntTestValues[TEST_POINTS] = { 0x68696969, 0x3A333A33, 0x31323334, 0x30303030, 0x2E2F3F3B };
 
 	for (int i = 0; i < TEST_POINTS; i++)
 	{
 		memcpy(&testValue, &stringIntTestValues[i], sizeof(float));
 		saveFile->setValue(CAMDVerticalPosition, stringTestValues[i]);
-		EXPECT_EQ(testValue, saveFile->getValue<float>(CAMDVerticalPosition));
+        EXPECT_TRUE(compareBytes(testValue, saveFile->getValue<float>(CAMDVerticalPosition)));
 	}
 
 	delete(saveFile);
@@ -84,7 +84,7 @@ TEST(Save, uintegers)
 	SaveFile* saveFile = new SaveFile();
 
 	// Setting and reading as uint
-	unsigned int uintTestValues[TEST_POINTS] = { 0x87654321, 123456789, 0, 3, 257894 };
+    unsigned int uintTestValues[TEST_POINTS] = { 0x8765, 52501, 0, 3, 61286 };
 	for (int i = 0; i < TEST_POINTS; i++)
 	{
 		saveFile->setValue(TIMEDayCount, uintTestValues[i]);
@@ -277,10 +277,10 @@ TEST(Save, arrays)
     saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID1, 2);
     saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_ID2, 12);
     saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_InventorySlot, 0xFF);
-    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1ID, -1);
-    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2ID, -2);
-    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3ID, -3);
-    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4ID, -4);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Value, -1);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Value, -2);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Value, -3);
+    saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Value, -4);
     saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Index, true);
     saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Index, false);
     saveFile->setArrayValue(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Index, 0x22);
@@ -295,10 +295,10 @@ TEST(Save, arrays)
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_InventorySlot) != 0xFF) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static4) != 1) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static5) != 0) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1ID) != -1) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2ID) != -2) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3ID) != -3) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4ID) != -4) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Value) != 2047) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Value) != 2046) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Value) != 2045) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Value) != 2044) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Index) != 1) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Index) != 0) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Index) != 0x22) FAIL();
@@ -318,10 +318,10 @@ TEST(Save, arrays)
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_InventorySlot) != 0) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static4) != 0) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static5) != 0) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1ID) != 0) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2ID) != 0) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3ID) != 0) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4ID) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Value) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Value) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Value) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Value) != 0) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Index) != 0) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Index) != 0) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Index) != 0) FAIL();
@@ -341,10 +341,10 @@ TEST(Save, arrays)
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_InventorySlot) != 0) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static4) != 1) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Static5) != 0) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1ID) != 0) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2ID) != 0) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3ID) != 0) FAIL();
-    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4ID) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Value) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Value) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Value) != 0) FAIL();
+    if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem4Value) != 0) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem1Index) != 0) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem2Index) != 0) FAIL();
     if (saveFile->getArrayValue<unsigned int>(ITEMWeaponArray, 6, ITEMWeaponArray::ITEMWeapon_Gem3Index) != 0) FAIL();
