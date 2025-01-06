@@ -5,6 +5,7 @@
 #include "Types.h"
 #include <qcheckbox.h>
 #include <qcombobox.h>
+#include <qheaderview.h>
 #include <qlineedit.h>
 #include <qradiobutton.h>
 #include <qtablewidget.h>
@@ -48,6 +49,7 @@ enum ExtendedWidgetType
     QExtendedSlider_T
 };
 
+// TODO: make another superclass to hold array-specific stuff?
 class QExtendedWidget
 {
     std::vector<QExtendedWidget*> children;
@@ -77,6 +79,8 @@ public:
     void setType(Type type) { this->type = type; }
 
     virtual QExtendedWidget* at(int row = 0, int col = 0) { return this; }
+
+    virtual void setNullableCheckBox(int row, bool isChecked) {}
 };
 
 class QExtendedLineEdit : public QLineEdit, public QExtendedWidget
@@ -101,7 +105,7 @@ public:
     }
     QString getField(int row = 0, int col = 0)
     {
-        return inverted ? (this->isChecked() ? "1" : "0") : (this->isChecked() ? "1" : "0");
+        return inverted ? (this->isChecked() ? "0" : "1") : (this->isChecked() ? "1" : "0");
     }
     void setFieldEnabled(bool enabled) { this->setEnabled(enabled); }
     void setInverted(bool inverted) { this->inverted = inverted; }
@@ -240,11 +244,13 @@ struct TableDefinition
     QList<Type> column_types;
 };
 
+// TODO: use delegates instead of setCellWidget
 class QExtendedTableWidget : public QTableWidget, public QExtendedWidget
 {
     Q_OBJECT
     std::vector<std::vector<QExtendedWidget*>> widgetArray;
     const Mapping* tableMapping;
+    QList<QCheckBox*> nullableCheckBoxes;
 
 private slots:
     void cellEdited()
@@ -252,8 +258,14 @@ private slots:
         QObject* obj = sender();
         emit tableCellChanged(obj->property("row").toInt(), obj->property("column").toInt());
     }
+    void nullableEdited(Qt::CheckState checkState)
+    {
+        QObject* obj = sender();
+        emit nullableChanged(obj->property("row").toInt(), checkState == Qt::Unchecked);
+    }
 signals:
     void tableCellChanged(int row, int col);
+    void nullableChanged(int row, bool isNull);
 
 public:
     QExtendedTableWidget(QWidget* parent = nullptr) : QTableWidget(parent) { }
@@ -261,8 +273,28 @@ public:
     {
         this->tableMapping = &def->array_mapping;
 
+        this->setRowCount(def->row_count);
+        this->setColumnCount(std::size(def->array_mapping.keys) + 1);
+
+        this->setRows(def->row_count);
+        this->setCols(std::size(def->array_mapping.keys));
+
+        QHeaderView* header = this->horizontalHeader();
+        header->setSectionResizeMode(QHeaderView::Stretch);
+
+        QList<QString> columnLabels = def->array_mapping.values;
+        columnLabels.prepend("Enabled");
+        this->setHorizontalHeaderLabels(columnLabels);
+
         for (int row = 0; row < def->row_count; row++)
         {
+            QCheckBox* nullableCheckBox = new QCheckBox();
+            this->setCellWidget(row, 0, nullableCheckBox);
+            nullableCheckBox->setProperty("row", row);
+            QObject::connect(nullableCheckBox, &QCheckBox::checkStateChanged, this, &QExtendedTableWidget::nullableEdited);
+            nullableCheckBoxes.push_back(nullableCheckBox);
+            // TODO: set column width of nullableCheckbox
+
             std::vector<QExtendedWidget*> newRow;
             for (int col = 0; col < def->widget_types.size(); col++)
             {
@@ -272,7 +304,7 @@ public:
                 {
                     QExtendedLineEdit* le = new QExtendedLineEdit();
                     newRow.push_back(le);
-                    this->setCellWidget(row, col, le);
+                    this->setCellWidget(row, col + 1, le);
                     QObject::connect(le, &QLineEdit::editingFinished, this, &QExtendedTableWidget::cellEdited);
 
                     le->setProperty("row", row);
@@ -287,7 +319,7 @@ public:
                     QExtendedComboBox* cb = new QExtendedComboBox();
                     cb->setEditable(true);
                     newRow.push_back(cb);
-                    this->setCellWidget(row, col, cb);
+                    this->setCellWidget(row, col + 1, cb);
                     if (def->column_mapping.at(col) != nullptr) cb->setMapping(def->column_mapping.at(col));
                     QObject::connect(cb, &QComboBox::currentTextChanged, this, &QExtendedTableWidget::cellEdited);
 
@@ -313,4 +345,9 @@ public:
     const Mapping* getMapping() { return this->tableMapping; }
 
     QExtendedWidget* at(int row = 0, int col = 0) { return widgetArray.at(row).at(col); }
+
+    void setNullableCheckBox(int row, bool isChecked)
+    {
+        this->nullableCheckBoxes.at(row)->setCheckState(isChecked ? Qt::Checked : Qt::Unchecked);
+    }
 };

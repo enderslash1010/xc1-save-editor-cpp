@@ -24,7 +24,7 @@
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>6</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="THUMTab">
        <property name="sizePolicy">
@@ -592,6 +592,9 @@
            <enum>QFrame::Shadow::Raised</enum>
           </property>
           <layout class="QGridLayout" name="gridLayout_19">
+           <item row="0" column="1">
+            <widget class="QExtendedLineEdit" name="GAMEShulkLevel"/>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_34">
              <property name="text">
@@ -599,8 +602,15 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QExtendedLineEdit" name="GAMEShulkLevel"/>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_86">
+             <property name="text">
+              <string>HP:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QExtendedLineEdit" name="GAMEShulkHP"/>
            </item>
           </layout>
          </widget>

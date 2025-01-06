@@ -59,7 +59,9 @@ class SaveFile
         new DataObject(0xD212, 2, UINT_T), // GAMEPlayer6*
         new DataObject(0xD216, 2, UINT_T), // GAMEPlayer7*
         new DataObject(0xF8D0, 4, UINT_T), // GAMEShulkLevel*
+        new DataObject(0xF8E0, 4, FLOAT_T), // GAMEShulkHP*
         new DataObject(0xFBD4, 4, UINT_T), // GAMEReynLevel*
+        // TODO: rest of HP
         new DataObject(0xFED8, 4, UINT_T), // GAMEFioraLevel*
         new DataObject(0x101DC, 4, UINT_T), // GAMEDunbanLevel*
         new DataObject(0x104E0, 4, UINT_T), // GAMESharlaLevel*
@@ -107,10 +109,45 @@ class SaveFile
 			{DataObject(0x1C4F1, 1, UINT_T), 0}, // ITEMWeaponInventorySlot
 			{DataObject(0x1C4F2, 1, UINT_T), 1}, // ITEMWeaponStatic4 (1)
 			{DataObject(0x1C4F3, 1, UINT_T), 0}, // ITEMWeaponStatic5 (0)
-			{DataObject(0x1C4F4, 8, UINT_T), 0}, // ITEMWeaponGem1ID
-			{DataObject(0x1C4FC, 8, UINT_T), 0}, // ITEMWeaponGem2ID
-			{DataObject(0x1C504, 8, UINT_T), 0}, // ITEMWeaponGem3ID
-			{DataObject(0x1C50C, 8, UINT_T), 0}, // ITEMWeaponGem4ID
+
+            // TODO: separate to match gem array
+            // {DataObject(0x1C4F4, 8, UINT_T), 0}, // ITEMWeaponGem1ID
+            // {DataObject(0x1C4FC, 8, UINT_T), 0}, // ITEMWeaponGem2ID
+            // {DataObject(0x1C504, 8, UINT_T), 0}, // ITEMWeaponGem3ID
+            // {DataObject(0x1C50C, 8, UINT_T), 0}, // ITEMWeaponGem4ID
+
+            {DataObject(0x1C4F4, 7, 11, UINT_T), 0}, // ITEMWeaponGem1Unk1
+            {DataObject(0x1C4F5, 4, 11, UINT_T), 0}, // ITEMWeaponGem1Value
+            {DataObject(0x1C4F6, 1, 3, UINT_T), 0}, // ITEMWeaponGem1Rank
+            {DataObject(0x1C4F7, 6, 7, UINT_T), 0}, // ITEMWeaponGem1Unk2
+            {DataObject(0x1C4F8, 7, 12, UINT_T), 0}, // ITEMWeaponGem1ID2
+            {DataObject(0x1C4F9, 3, 4, UINT_T), 2}, // ITEMWeaponGem1Static1 (2)
+            {DataObject(0x1C4FA, 2, UINT_T), 0}, // ITEMGem1Static2 (0)
+
+            {DataObject(0x1C4FC, 7, 11, UINT_T), 0}, // ITEMWeaponGem2Unk1
+            {DataObject(0x1C4FD, 4, 11, UINT_T), 0}, // ITEMWeaponGem2Value
+            {DataObject(0x1C4FE, 1, 3, UINT_T), 0}, // ITEMWeaponGem2Rank
+            {DataObject(0x1C4FF, 6, 7, UINT_T), 0}, // ITEMWeaponGem2Unk2
+            {DataObject(0x1C500, 7, 12, UINT_T), 0}, // ITEMWeaponGem2ID2
+            {DataObject(0x1C501, 3, 4, UINT_T), 2}, // ITEMWeaponGem2Static1 (2)
+            {DataObject(0x1C502, 2, UINT_T), 0}, // ITEMGem2Static2 (0)
+
+            {DataObject(0x1C504, 7, 11, UINT_T), 0}, // ITEMWeaponGem3Unk1
+            {DataObject(0x1C505, 4, 11, UINT_T), 0}, // ITEMWeaponGem3Value
+            {DataObject(0x1C506, 1, 3, UINT_T), 0}, // ITEMWeaponGem3Rank
+            {DataObject(0x1C507, 6, 7, UINT_T), 0}, // ITEMWeaponGem3Unk2
+            {DataObject(0x1C508, 7, 12, UINT_T), 0}, // ITEMWeaponGem3ID2
+            {DataObject(0x1C509, 3, 4, UINT_T), 2}, // ITEMWeaponGem3Static1 (2)
+            {DataObject(0x1C50A, 2, UINT_T), 0}, // ITEMGem3Static2 (0)
+
+            {DataObject(0x1C50C, 7, 11, UINT_T), 0}, // ITEMWeaponGem4Unk1
+            {DataObject(0x1C50D, 4, 11, UINT_T), 0}, // ITEMWeaponGem4Value
+            {DataObject(0x1C50E, 1, 3, UINT_T), 0}, // ITEMWeaponGem4Rank
+            {DataObject(0x1C50F, 6, 7, UINT_T), 0}, // ITEMWeaponGem4Unk2
+            {DataObject(0x1C510, 7, 12, UINT_T), 0}, // ITEMWeaponGem4ID2
+            {DataObject(0x1C511, 3, 4, UINT_T), 2}, // ITEMWeaponGem4Static1 (2)
+            {DataObject(0x1C512, 2, UINT_T), 0}, // ITEMGem4Static2 (0)
+
 			{DataObject(0x1C514, 2, UINT_T), 0}, // ITEMWeaponGem1Index
 			{DataObject(0x1C516, 2, UINT_T), 0}, // ITEMWeaponGem2Index
 			{DataObject(0x1C518, 2, UINT_T), 0}, // ITEMWeaponGem3Index
@@ -127,6 +164,7 @@ class SaveFile
 			{DataObject(0x206DD, 1, UINT_T), 0}, // ITEMGemInventorySlot
 			{DataObject(0x206DE, 1, UINT_T), 1},// ITEMGemStatic3 (1)
 			{DataObject(0x206DF, 1, UINT_T), 0}, // ITEMGemStatic4 (0/3)
+
 			{DataObject(0x206E0, 7, 11, UINT_T), 0}, // ITEMGemUnk2
 			{DataObject(0x206E1, 4, 11, UINT_T), 0}, // ITEMGemValue
 			{DataObject(0x206E2, 1, 3, UINT_T), 0}, // ITEMGemRank
@@ -238,4 +276,5 @@ public:
     }
 
     void setArrayIndexNull(bool isNull, SaveFieldID aID, unsigned int index);
+    bool getArrayIndexNull(SaveFieldID aID, unsigned int index);
 };

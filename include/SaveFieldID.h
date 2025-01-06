@@ -41,6 +41,7 @@ enum SaveFieldID
 	GAMEPlayer6,
 	GAMEPlayer7,
 	GAMEShulkLevel,
+    GAMEShulkHP,
 	GAMEReynLevel,
 	GAMEFioraLevel,
 	GAMEDunbanLevel,

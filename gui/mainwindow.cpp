@@ -4,6 +4,8 @@
 
 #define SAVE_FIELD_PROPERTY "SaveField"
 
+bool Loading = false;
+
 // TODO: make these easier to read? more similar to 'hashmap' init
 const Mapping PlayerMapping
 {
@@ -39,7 +41,7 @@ const Mapping MapGapMapping
 
 const Mapping MapReverseGapMapping
 {
-    {0x0, 0x010001, 0x010002, 0x010003, 0x010004, 0x020004, 0x010005, 0x010006, 0x010007, 0x010008, 0x010009, 0x010010, 0x010011, 0x010012, 0x020012, 0x010013, 0x010014, 0x010015, 0x010016, 0x020016, 0x010017, 0x010019, 0x010020, 0x010021, 0x010022, 0x010023, 0x010024, 0x020001},
+    {0x0, 0x010001, 0x010002, 0x010003, 0x010004, 0x020004, 0x010005, 0x010006, 0x010007, 0x010008, 0x010009, 0x01000A, 0x01000B, 0x01000C, 0x02000C, 0x01000D, 0x01000E, 0x01000F, 0x010010, 0x020010, 0x010011, 0x010013, 0x010014, 0x010015, 0x010016, 0x010017, 0x010018, 0x020001},
     {
         "Title Screen (ma0000)", "Colony 9 (ma0101)", "Tephra Cave (ma0201)", "Bionis' Leg (ma0301)", "Colony 6 (ma0401)",
         "Ether Mine (ma0402)", "Satorl Marsh (ma0501)", "Makna Forest (ma0601)", "Frontier Village (ma0701)", "Bionis' Shoulder (ma0801)",
@@ -412,7 +414,7 @@ const TableDefinition ITEMWeaponArrayDefinition
         {"Weapon ID", "Weapon ID (Name)", "Gem Slot Count", "Gem 1 Index", "Gem 2 Index", "Gem 3 Index", "Inventory Slot"}
     }, // array mapping
     {QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
-    {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping
+    {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping TODO: create mapping for weapon ID
     {UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T} // column types
 };
 
@@ -431,16 +433,6 @@ const TableDefinition ITEMGemArrayDefinition
 // QTableWidget
 void MainWindow::connect(SaveFieldID sfID, QExtendedTableWidget* table, const TableDefinition* def)
 {
-    table->setRowCount(def->row_count);
-    table->setColumnCount(std::size(def->array_mapping.keys));
-    table->setRows(def->row_count);
-    table->setCols(std::size(def->array_mapping.keys));
-
-    QHeaderView* header = table->horizontalHeader();
-    header->setSectionResizeMode(QHeaderView::Stretch);
-
-    table->setHorizontalHeaderLabels(def->array_mapping.values);
-
     table->setProperty(SAVE_FIELD_PROPERTY, sfID);
     table->setSaveFieldID(sfID);
 
@@ -450,6 +442,7 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedTableWidget* table, const Ta
     table->setType(Type::ARRAY_T);
 
     QObject::connect(table, &QExtendedTableWidget::tableCellChanged, this, &MainWindow::updateTable);
+    QObject::connect(table, &QExtendedTableWidget::nullableChanged, this, &MainWindow::updateTableNullable);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -497,6 +490,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(GAMEPlayer6, ui->GAMEPlayer6, &PlayerMapping);
     connect(GAMEPlayer7, ui->GAMEPlayer7, &PlayerMapping);
     connect(GAMEShulkLevel, ui->GAMEShulkLevel, Type::UINT_T);
+    connect(GAMEShulkHP, ui->GAMEShulkHP, Type::FLOAT_T);
     connect(GAMEReynLevel, ui->GAMEReynLevel, Type::UINT_T);
     connect(GAMEFioraLevel, ui->GAMEFioraLevel, Type::UINT_T);
     connect(GAMEDunbanLevel, ui->GAMEDunbanLevel, Type::UINT_T);
@@ -536,7 +530,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // ITEM
     connect(ITEMMoney, ui->ITEMMoney, Type::INT_T);
-    connect(ITEMWeaponArray, ui->ITEMWeaponArray, &ITEMWeaponArrayDefinition); // TODO: implement weapon gem index behavior
+    connect(ITEMWeaponArray, ui->ITEMWeaponArray, &ITEMWeaponArrayDefinition);
+    // TODO: implement weapon gem index behavior
+
     connect(ITEMGemArray, ui->ITEMGemArray, &ITEMGemArrayDefinition);
 
     // WTHR
@@ -648,6 +644,12 @@ void MainWindow::setArrayField(SaveFieldID sfID, int row, int column)
     const Mapping* mapping = widget->getMapping();
     int saveColumn = mapping != nullptr ? mapping->keys[column] : column;
 
+    if (Loading)
+    {
+        bool isNull = saveFile->getArrayIndexNull(sfID, row);
+        widget->setNullableCheckBox(row, !isNull);
+    }
+
     if (saveFile != nullptr)
     {
         Type type = widget->at(row, column)->getType();
@@ -676,6 +678,49 @@ void MainWindow::setArrayField(SaveFieldID sfID, int row, int column)
             break;
         }
     }
+
+    // TODO: make this more generic?
+    // TODO: When gem index changed in weapon array, set gem ID in weapon array to specified index from gem array
+    if (sfID == ITEMWeaponArray)
+    {
+        switch (saveColumn)
+        {
+        case ITEMWeapon_Gem1Index:
+
+            break;
+        case ITEMWeapon_Gem2Index:
+
+            break;
+        case ITEMWeapon_Gem3Index:
+
+            break;
+        case ITEMWeapon_Gem4Index:
+
+            break;
+        }
+    }
+
+    // TODO: When gem values changed in gem array, set gem values in weapon array to new gem value
+    // (only if a weapon has that gem equipped)
+    if (sfID == ITEMGemArray)
+    {
+        unsigned int gemArrVal;
+        switch (saveColumn)
+        {
+        case ITEMGem_Unk2:
+            gemArrVal = saveFile->getArrayValue<unsigned int>(ITEMGemArray, row, ITEMGem_Unk2);
+
+            break;
+        case ITEMGem_Value:
+        case ITEMGem_Rank:
+        case ITEMGem_Unk3:
+        case ITEMGem_ID2:
+        case ITEMGem_Static5:
+        case ITEMGem_Static6:
+
+            break;
+        }
+    }
 }
 
 void MainWindow::setFieldEnabled(SaveFieldID sfID, bool enabled)
@@ -689,6 +734,7 @@ void MainWindow::actionOpen()
 {
     QString fileName = QFileDialog::getOpenFileName();
     try {
+        Loading = true;
         saveFile = new SaveFile(fileName.toStdString());
 
         for (int i = 0; i < LAST_INDEX; i++)
@@ -701,6 +747,7 @@ void MainWindow::actionOpen()
     } catch (std::runtime_error e) {
         showStatusBarMessage(e.what());
     }
+    Loading = false;
 }
 
 void MainWindow::actionSave()
@@ -832,6 +879,23 @@ void MainWindow::updateTable(int row, int column)
 
     saveFile->setArrayValue(sfID, row, saveColumn, table->getField(row, column).toUInt());
     this->setArrayField(sfID, row, column);
+}
+
+void MainWindow::updateTableNullable(int row, bool isNull)
+{
+    if (Loading) return;
+
+    QObject* obj = sender();
+    SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
+    QExtendedWidget* table = saveFieldMap.at(sfID).first;
+
+    saveFile->setArrayIndexNull(isNull, sfID, row);
+
+    // update row cells
+    for (int col = 0; col < table->getCols(); col++)
+    {
+        this->setArrayField(sfID, row, col);
+    }
 }
 
 void MainWindow::updateChildMapping()

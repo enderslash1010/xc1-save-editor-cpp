@@ -53,6 +53,7 @@ public slots:
     void updateRadioButton();
     void updateSlider();
     void updateTable(int row, int column);
+    void updateTableNullable(int row, bool isNull);
 
     void updateChildMapping();
 };

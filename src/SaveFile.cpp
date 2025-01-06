@@ -176,6 +176,18 @@ void SaveFile::setArrayIndexNull(bool isNull, SaveFieldID aID, unsigned int inde
 	}
 }
 
+bool SaveFile::getArrayIndexNull(SaveFieldID aID, unsigned int index)
+{
+    const DataObject* arrayObj = dataMap[aID];
+    int size = arrayObj->getNumColumns();
+    for (int i = 0; i < size; i++)
+    {
+        // if value is true, then array index isn't null
+        if (this->getArrayValue<bool>(aID, index, i) == true) return false;
+    }
+    return true;
+}
+
 // CRC16 Polynomial: 1 + x^2 + x^15 + x^16 -> 0x8005 (1000 0000 0000 0101)
 const int lookupTable[] =
 {
