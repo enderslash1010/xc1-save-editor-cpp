@@ -258,7 +258,7 @@ private slots:
         QObject* obj = sender();
         emit tableCellChanged(obj->property("row").toInt(), obj->property("column").toInt());
     }
-    void nullableEdited(Qt::CheckState checkState)
+    void nullableEdited(int checkState)
     {
         QObject* obj = sender();
         emit nullableChanged(obj->property("row").toInt(), checkState == Qt::Unchecked);
@@ -291,7 +291,7 @@ public:
             QCheckBox* nullableCheckBox = new QCheckBox();
             this->setCellWidget(row, 0, nullableCheckBox);
             nullableCheckBox->setProperty("row", row);
-            QObject::connect(nullableCheckBox, &QCheckBox::checkStateChanged, this, &QExtendedTableWidget::nullableEdited);
+            QObject::connect(nullableCheckBox, &QCheckBox::stateChanged, this, &QExtendedTableWidget::nullableEdited);
             nullableCheckBoxes.push_back(nullableCheckBox);
             // TODO: set column width of nullableCheckbox
 
