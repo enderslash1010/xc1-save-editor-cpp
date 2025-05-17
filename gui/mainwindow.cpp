@@ -382,68 +382,68 @@ void MainWindow::connect(SaveFieldID sfID, QExtendedSlider* slider, int start, i
     slider->setScaling(start, spacing, count);
 }
 
-const TableDefinition MINEArrayDefinition
-{
-    150, // row count
-    {
-        {MINE_MapID, MINE_MineID, MINE_NumHarvests, MINE_Cooldown},
-        {"Map ID", "Mine ID", "Number of Harvests", "Cooldown"}
-    }, // array mapping
-    {QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
-    {&MapMapping, nullptr, nullptr, nullptr}, // column mapping
-    {UINT_T, UINT_T, UINT_T, UINT_T} // column types
-};
+// const TableDefinition MINEArrayDefinition
+// {
+//     150, // row count
+//     {
+//         {MINE_MapID, MINE_MineID, MINE_NumHarvests, MINE_Cooldown},
+//         {"Map ID", "Mine ID", "Number of Harvests", "Cooldown"}
+//     }, // array mapping
+//     {QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
+//     {&MapMapping, nullptr, nullptr, nullptr}, // column mapping
+//     {UINT_T, UINT_T, UINT_T, UINT_T} // column types
+// };
 
-const TableDefinition TBOXArrayDefinition
-{
-    21, // row count
-    {
-        {TBOX_MapID, TBOX_Rank, TBOX_PositionX, TBOX_PositionY, TBOX_PositionZ, TBOX_Angle, TBOX_DropTable},
-        {"Map ID", "Rank", "X", "Y", "Z", "Angle", "Drop Table"}
-    }, // array mapping
-    {QExtendedComboBox_T, QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
-    {&MapMapping, &TreasureBoxRankMapping, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping
-    {UINT_T, UINT_T, FLOAT_T, FLOAT_T, FLOAT_T, FLOAT_T, UINT_T} // column types
-};
+// const TableDefinition TBOXArrayDefinition
+// {
+//     21, // row count
+//     {
+//         {TBOX_MapID, TBOX_Rank, TBOX_PositionX, TBOX_PositionY, TBOX_PositionZ, TBOX_Angle, TBOX_DropTable},
+//         {"Map ID", "Rank", "X", "Y", "Z", "Angle", "Drop Table"}
+//     }, // array mapping
+//     {QExtendedComboBox_T, QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
+//     {&MapMapping, &TreasureBoxRankMapping, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping
+//     {UINT_T, UINT_T, FLOAT_T, FLOAT_T, FLOAT_T, FLOAT_T, UINT_T} // column types
+// };
 
-const TableDefinition ITEMWeaponArrayDefinition
-{
-    150, // row count
-    {
-        {ITEMWeapon_ID1, ITEMWeapon_ID2, ITEMWeapon_NumGemSlots, ITEMWeapon_Gem1Index, ITEMWeapon_Gem2Index, ITEMWeapon_Gem3Index, ITEMWeapon_InventorySlot},
-        {"Weapon ID", "Weapon ID (Name)", "Gem Slot Count", "Gem 1 Index", "Gem 2 Index", "Gem 3 Index", "Inventory Slot"}
-    }, // array mapping
-    {QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
-    {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping TODO: create mapping for weapon ID
-    {UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T} // column types
-};
+// const TableDefinition ITEMWeaponArrayDefinition
+// {
+//     150, // row count
+//     {
+//         {ITEMWeapon_ID1, ITEMWeapon_ID2, ITEMWeapon_NumGemSlots, ITEMWeapon_Gem1Index, ITEMWeapon_Gem2Index, ITEMWeapon_Gem3Index, ITEMWeapon_InventorySlot},
+//         {"Weapon ID", "Weapon ID (Name)", "Gem Slot Count", "Gem 1 Index", "Gem 2 Index", "Gem 3 Index", "Inventory Slot"}
+//     }, // array mapping
+//     {QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
+//     {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping TODO: create mapping for weapon ID
+//     {UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T} // column types
+// };
 
-const TableDefinition ITEMGemArrayDefinition
-{
-    300, // row count
-    {
-        {ITEMGem_ID1, ITEMGem_ID2, ITEMGem_Rank, ITEMGem_Value, ITEMGem_InventorySlot, ITEMGem_Unk1, ITEMGem_Unk2, ITEMGem_Unk3},
-        {"Gem ID (Name)", "Gem ID (Description)", "Rank", "Value", "Inventory Slot", "Unknown 1", "Unknown 2", "Unknown 3"}
-    }, // array mapping
-    {QExtendedComboBox_T, QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
-    {&GemMapping, &GemMapping, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping
-    {UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T} // column types
-};
+// const TableDefinition ITEMGemArrayDefinition
+// {
+//     300, // row count
+//     {
+//         {ITEMGem_ID1, ITEMGem_ID2, ITEMGem_Rank, ITEMGem_Value, ITEMGem_InventorySlot, ITEMGem_Unk1, ITEMGem_Unk2, ITEMGem_Unk3},
+//         {"Gem ID (Name)", "Gem ID (Description)", "Rank", "Value", "Inventory Slot", "Unknown 1", "Unknown 2", "Unknown 3"}
+//     }, // array mapping
+//     {QExtendedComboBox_T, QExtendedComboBox_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T, QExtendedLineEdit_T}, // widget types
+//     {&GemMapping, &GemMapping, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, // column mapping
+//     {UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T, UINT_T} // column types
+// };
 
 // QTableWidget
-void MainWindow::connect(SaveFieldID sfID, QExtendedTableWidget* table, const TableDefinition* def)
-{
-    table->setProperty(SAVE_FIELD_PROPERTY, sfID);
-    table->setSaveFieldID(sfID);
+// void MainWindow::connect(SaveFieldID sfID, QExtendedTableWidget* table, const TableDefinition* def)
+// {
+//     table->setProperty(SAVE_FIELD_PROPERTY, sfID);
+//     table->setSaveFieldID(sfID);
 
-    table->setup(def);
+//     table->setup(def);
 
-    saveFieldMap.insert({sfID, {table, Type::ARRAY_T}});
-    table->setType(Type::ARRAY_T);
+//     saveFieldMap.insert({sfID, {table, Type::ARRAY_T}});
+//     table->setType(Type::ARRAY_T);
 
-    QObject::connect(table, &QExtendedTableWidget::tableCellChanged, this, &MainWindow::updateTable);
-    QObject::connect(table, &QExtendedTableWidget::nullableChanged, this, &MainWindow::updateTableNullable);
-}
+//     QObject::connect(table, &QExtendedTableWidget::tableCellChanged, this, &MainWindow::updateTable);
+//     QObject::connect(table, &QExtendedTableWidget::nullableChanged, this, &MainWindow::updateTableNullable);
+// }
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -530,10 +530,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // ITEM
     connect(ITEMMoney, ui->ITEMMoney, Type::INT_T);
-    connect(ITEMWeaponArray, ui->ITEMWeaponArray, &ITEMWeaponArrayDefinition);
+    //connect(ITEMWeaponArray, ui->ITEMWeaponArray, &ITEMWeaponArrayDefinition);
     // TODO: implement weapon gem index behavior
 
-    connect(ITEMGemArray, ui->ITEMGemArray, &ITEMGemArrayDefinition);
+    //connect(ITEMGemArray, ui->ITEMGemArray, &ITEMGemArrayDefinition);
 
     // WTHR
     connect(WTHRReroll, ui->WTHRReroll, Type::FLOAT_T);
@@ -544,10 +544,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(WTHRUnk2, ui->WTHRUnk2, Type::UINT_T);
 
     // MINE
-    connect(MINEArray, ui->MINEArray, &MINEArrayDefinition);
+    //connect(MINEArray, ui->MINEArray, &MINEArrayDefinition);
 
     // TBOX
-    connect(TBOXArray, ui->TBOXArray, &TBOXArrayDefinition);
+    //connect(TBOXArray, ui->TBOXArray, &TBOXArrayDefinition);
     connect(TBOXBoxCount, ui->TBOXBoxCount, Type::UINT_T);
 
     // OPTD
@@ -595,9 +595,9 @@ void MainWindow::showStatusBarMessage(std::string str)
     ui->statusbar->showMessage(QString::fromStdString(str));
 }
 
-QString MainWindow::getField(SaveFieldID sfID, int row, int col)
+QString MainWindow::getField(SaveFieldID sfID)
 {
-    return this->saveFieldMap.at(sfID).first->getField(row, col);
+    return this->saveFieldMap.at(sfID).first->getField();
 }
 
 void MainWindow::setField(SaveFieldID sfID)
@@ -630,98 +630,98 @@ void MainWindow::setField(SaveFieldID sfID)
             // TODO?
             break;
         case ARRAY_T:
-            for (int row = 0; row < widget->getRows(); row++) for (int col = 0; col < widget->getCols(); col++) setArrayField(sfID, row, col);
+            //for (int row = 0; row < widget->getRows(); row++) for (int col = 0; col < widget->getCols(); col++) setArrayField(sfID, row, col);
             break;
         }
     }
 }
 
-void MainWindow::setArrayField(SaveFieldID sfID, int row, int column)
-{
-    if (this->saveFieldMap.find(sfID) == this->saveFieldMap.end()) return;
+// void MainWindow::setArrayField(SaveFieldID sfID, int row, int column)
+// {
+//     if (this->saveFieldMap.find(sfID) == this->saveFieldMap.end()) return;
 
-    QExtendedWidget* widget = this->saveFieldMap.at(sfID).first;
-    const Mapping* mapping = widget->getMapping();
-    int saveColumn = mapping != nullptr ? mapping->keys[column] : column;
+//     QExtendedWidget* widget = this->saveFieldMap.at(sfID).first;
+//     const Mapping* mapping = widget->getMapping();
+//     int saveColumn = mapping != nullptr ? mapping->keys[column] : column;
 
-    if (Loading)
-    {
-        bool isNull = saveFile->getArrayIndexNull(sfID, row);
-        widget->setNullableCheckBox(row, !isNull);
-    }
+//     if (Loading)
+//     {
+//         bool isNull = saveFile->getArrayIndexNull(sfID, row);
+//         widget->setNullableCheckBox(row, !isNull);
+//     }
 
-    if (saveFile != nullptr)
-    {
-        Type type = widget->at(row, column)->getType();
-        switch (type)
-        {
-        case UINT_T:
-            widget->setField(QString::number(saveFile->getArrayValue<unsigned int>(sfID, row, saveColumn)), row, column);
-            break;
-        case INT_T:
-            widget->setField(QString::number(saveFile->getArrayValue<int>(sfID, row, saveColumn)), row, column);
-            break;
-        case BOOL_T:
-            widget->setField(QString::number(saveFile->getArrayValue<bool>(sfID, row, saveColumn)), row, column);
-            break;
-        case FLOAT_T:
-            widget->setField(QString::number(saveFile->getArrayValue<float>(sfID, row, saveColumn)), row, column);
-            break;
-        case STRING_T:
-            widget->setField(QString::fromStdString(saveFile->getArrayValue<std::string>(sfID, row, saveColumn)), row, column);
-            break;
-        case TPL_T:
-            // TODO?
-            break;
-        case ARRAY_T:
-            // not intended
-            break;
-        }
-    }
+//     if (saveFile != nullptr)
+//     {
+//         Type type = widget->at(row, column)->getType();
+//         switch (type)
+//         {
+//         case UINT_T:
+//             widget->setField(QString::number(saveFile->getArrayValue<unsigned int>(sfID, row, saveColumn)), row, column);
+//             break;
+//         case INT_T:
+//             widget->setField(QString::number(saveFile->getArrayValue<int>(sfID, row, saveColumn)), row, column);
+//             break;
+//         case BOOL_T:
+//             widget->setField(QString::number(saveFile->getArrayValue<bool>(sfID, row, saveColumn)), row, column);
+//             break;
+//         case FLOAT_T:
+//             widget->setField(QString::number(saveFile->getArrayValue<float>(sfID, row, saveColumn)), row, column);
+//             break;
+//         case STRING_T:
+//             widget->setField(QString::fromStdString(saveFile->getArrayValue<std::string>(sfID, row, saveColumn)), row, column);
+//             break;
+//         case TPL_T:
+//             // TODO?
+//             break;
+//         case ARRAY_T:
+//             // not intended
+//             break;
+//         }
+//     }
 
-    // TODO: make this more generic?
-    // TODO: When gem index changed in weapon array, set gem ID in weapon array to specified index from gem array
-    if (sfID == ITEMWeaponArray)
-    {
-        switch (saveColumn)
-        {
-        case ITEMWeapon_Gem1Index:
+//     // TODO: make this more generic?
+//     // TODO: When gem index changed in weapon array, set gem ID in weapon array to specified index from gem array
+//     if (sfID == ITEMWeaponArray)
+//     {
+//         switch (saveColumn)
+//         {
+//         case ITEMWeapon_Gem1Index:
 
-            break;
-        case ITEMWeapon_Gem2Index:
+//             break;
+//         case ITEMWeapon_Gem2Index:
 
-            break;
-        case ITEMWeapon_Gem3Index:
+//             break;
+//         case ITEMWeapon_Gem3Index:
 
-            break;
-        case ITEMWeapon_Gem4Index:
+//             break;
+//         case ITEMWeapon_Gem4Index:
 
-            break;
-        }
-    }
+//             break;
+//         }
+//     }
 
-    // TODO: When gem values changed in gem array, set gem values in weapon array to new gem value
-    // (only if a weapon has that gem equipped)
-    if (sfID == ITEMGemArray)
-    {
-        unsigned int gemArrVal;
-        switch (saveColumn)
-        {
-        case ITEMGem_Unk2:
-            gemArrVal = saveFile->getArrayValue<unsigned int>(ITEMGemArray, row, ITEMGem_Unk2);
+//     // TODO: When gem values changed in gem array, set gem values in weapon array to new gem value
+//     // (only if a weapon has that gem equipped)
+//     if (sfID == ITEMGemArray)
+//     {
+//         unsigned int gemArrVal;
+//         switch (saveColumn)
+//         {
+//         case ITEMGem_Unk2:
+//             gemArrVal = saveFile->getArrayValue<unsigned int>(ITEMGemArray, row, ITEMGem_Unk2);
 
-            break;
-        case ITEMGem_Value:
-        case ITEMGem_Rank:
-        case ITEMGem_Unk3:
-        case ITEMGem_ID2:
-        case ITEMGem_Static5:
-        case ITEMGem_Static6:
+//             break;
+//         case ITEMGem_Value:
+//         case ITEMGem_Rank:
+//         case ITEMGem_Unk3:
+//         case ITEMGem_ID2:
+//         case ITEMGem_Static5:
+//         case ITEMGem_Static6:
 
-            break;
-        }
-    }
-}
+//             break;
+//         }
+//     }
+// }
 
 void MainWindow::setFieldEnabled(SaveFieldID sfID, bool enabled)
 {
@@ -868,35 +868,35 @@ void MainWindow::updateSlider()
     this->setField(sfID);
 }
 
-void MainWindow::updateTable(int row, int column)
-{
-    QObject* obj = sender();
-    SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
-    QExtendedWidget* table = saveFieldMap.at(sfID).first;
-    const Mapping* mapping = table->getMapping();
+// void MainWindow::updateTable(int row, int column)
+// {
+//     QObject* obj = sender();
+//     SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
+//     QExtendedWidget* table = saveFieldMap.at(sfID).first;
+//     const Mapping* mapping = table->getMapping();
 
-    int saveColumn = mapping != nullptr ? mapping->keys[column] : column;
+//     int saveColumn = mapping != nullptr ? mapping->keys[column] : column;
 
-    saveFile->setArrayValue(sfID, row, saveColumn, table->getField(row, column).toUInt());
-    this->setArrayField(sfID, row, column);
-}
+//     saveFile->setArrayValue(sfID, row, saveColumn, table->getField(row, column).toUInt());
+//     this->setArrayField(sfID, row, column);
+// }
 
-void MainWindow::updateTableNullable(int row, bool isNull)
-{
-    if (Loading) return;
+// void MainWindow::updateTableNullable(int row, bool isNull)
+// {
+//     if (Loading) return;
 
-    QObject* obj = sender();
-    SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
-    QExtendedWidget* table = saveFieldMap.at(sfID).first;
+//     QObject* obj = sender();
+//     SaveFieldID sfID = (SaveFieldID)obj->property(SAVE_FIELD_PROPERTY).toInt();
+//     QExtendedWidget* table = saveFieldMap.at(sfID).first;
 
-    saveFile->setArrayIndexNull(isNull, sfID, row);
+//     saveFile->setArrayIndexNull(isNull, sfID, row);
 
-    // update row cells
-    for (int col = 0; col < table->getCols(); col++)
-    {
-        this->setArrayField(sfID, row, col);
-    }
-}
+//     // update row cells
+//     for (int col = 0; col < table->getCols(); col++)
+//     {
+//         this->setArrayField(sfID, row, col);
+//     }
+// }
 
 void MainWindow::updateChildMapping()
 {
@@ -907,7 +907,7 @@ void MainWindow::updateChildMapping()
     std::vector<QExtendedWidget*> children = widget->getChildren();
 
     const Mapping* mapping = widget->getMapping();
-    int index = mapping->indexAt(widget->getField());
+    int index = mapping->indexAt(widget->getField().toInt());
 
     for (QExtendedWidget* child : children)
     {

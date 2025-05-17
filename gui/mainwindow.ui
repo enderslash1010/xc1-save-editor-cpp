@@ -24,7 +24,7 @@
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>9</number>
       </property>
       <widget class="QWidget" name="THUMTab">
        <property name="sizePolicy">
@@ -1403,9 +1403,6 @@
         <string>Items</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_52">
-        <item row="2" column="0">
-         <widget class="QExtendedTableWidget" name="ITEMGemArray"/>
-        </item>
         <item row="0" column="0" colspan="2">
          <widget class="QFrame" name="frame_52">
           <property name="sizePolicy">
@@ -1435,7 +1432,10 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QExtendedTableWidget" name="ITEMWeaponArray"/>
+         <widget class="QTableWidget" name="ITEMWeaponArray"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QTableWidget" name="ITEMGemArray"/>
         </item>
        </layout>
       </widget>
@@ -1609,7 +1609,7 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_49">
         <item row="0" column="0">
-         <widget class="QExtendedTableWidget" name="MINEArray">
+         <widget class="QTableWidget" name="MINEArray">
           <property name="sizeAdjustPolicy">
            <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored</enum>
           </property>
@@ -1667,7 +1667,7 @@
          </spacer>
         </item>
         <item row="0" column="0" colspan="2">
-         <widget class="QExtendedTableWidget" name="TBOXArray">
+         <widget class="QTableWidget" name="TBOXArray">
           <property name="sizeAdjustPolicy">
            <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored</enum>
           </property>
@@ -2456,11 +2456,6 @@
   <customwidget>
    <class>QExtendedSlider</class>
    <extends>QSlider</extends>
-   <header>QExtendedWidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QExtendedTableWidget</class>
-   <extends>QTableWidget</extends>
    <header>QExtendedWidget.h</header>
   </customwidget>
  </customwidgets>
