@@ -166,7 +166,7 @@ std::vector<const Mapping*> MapNumToBackgroundWeather =
     &RebirthBackgroundWeatherMapping, // Mechonis Core (ma2301)
     &NoBackgroundWeatherMapping, // Junks (ma2401)
     &NoBackgroundWeatherMapping, // Post-Game Colony 9 (ma0102) TODO: does post-game colony 9 have weather?
-    &RainBackgroundWeatherMapping // Default
+    &NoBackgroundWeatherMapping // Default
 };
 
 const Mapping TreasureBoxRankMapping =
